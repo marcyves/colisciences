@@ -1,0 +1,730 @@
+<?xml encoding="UTF-8"?>
+<!--
+How to create your XML menu:
+- link menu constructor:
+
+  <TREE>Title</TREE>
+
+  <TREE FUNCTION="_root|prova|bonjour">Title</TREE>
+
+  <TREE URL="http://www.colisciences.net|_blank">Title</TREE>
+
+  <TREE FRAME="_root|5">Title</T="url | window";
+  
+- ATTRIBUTE: FRAME="target | number or label";
+  
+- ATTRIBUTE: FUNCTION="target | name | parameters";
+-->
+<TREE_MENU colorLiv="EFEFEF|BFFF80|EFEFEF|FFFFE6|FFFFFF|EFEFEF">
+<TREE_1>LES OUVRAGES DE CLAUDE BERNARD ETUDIES
+<TREE_2>INTRODUCTION A L'ETUDE DE LA MEDECINE EXPERIMENTALE
+<TREE_3>PAR NOTIONS
+<TREE_4>Les notions principales et leurs relations  
+<TREE_5>physiologie
+ <TREE_6>développement</TREE_6>
+  <TREE_6>développement</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+</TREE_5>
+<TREE_5>vie
+  <TREE_6>composition</TREE_6>
+  <TREE_6>opposition</TREE_6>
+  <TREE_6>développement</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>définition</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>développement</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>opposition</TREE_6>
+  <TREE_6>définition</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+</TREE_5>
+<TREE_5>médecine expérimentale
+ <TREE_6>développement</TREE_6>
+</TREE_5>
+<TREE_5>méthode expérimentale
+  <TREE_6>développement</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+</TREE_5>
+<TREE_5>déterminisme
+  <TREE_6>association</TREE_6>
+  <TREE_6>définition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>développement</TREE_6>
+  <TREE_6>développement</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>association</TREE_6>
+</TREE_5>
+<TREE_5>médecine
+<TREE_6>association</TREE_6>
+  <TREE_6>association</TREE_6>
+</TREE_5>
+<TREE_5>expérience
+ <TREE_6>redéfinition</TREE_6>
+  <TREE_6>développement</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>association</TREE_6>
+</TREE_5>
+<TREE_5>physico-chimie
+ <TREE_6>redéfinition</TREE_6>
+  <TREE_6>développement</TREE_6>
+</TREE_5>
+<TREE_5>vérité
+  <TREE_6>opposition</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>association</TREE_6>
+</TREE_5>
+<TREE_5>science
+  <TREE_6>développement</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>composition</TREE_6>
+</TREE_5>
+<TREE_5>loi
+<TREE_6>développement</TREE_6>
+  <TREE_6>redéfinition</TREE_6>
+</TREE_5></TREE_4>
+<TREE_4>Les relations et les notions secondaires
+<TREE_5>développement
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>physiologie</TREE_6>
+  <TREE_6>vie</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+</TREE_5>
+<TREE_5>composition
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>vie</TREE_6>
+  <TREE_6>physiologie</TREE_6>
+  <TREE_6>expérience</TREE_6>
+</TREE_5>
+<TREE_5>opposition
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>mort</TREE_6>
+  <TREE_6>expérience</TREE_6>
+</TREE_5>
+<TREE_5>association
+  <TREE_6>méthode expérimentale</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>déterminisme</TREE_6>
+  <TREE_6>physiologie</TREE_6>
+  <TREE_6>vie</TREE_6>
+  <TREE_6>expérience</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>déterminisme</TREE_6>
+  <TREE_6>raisonnement</TREE_6>
+  <TREE_6>science</TREE_6>
+  <TREE_6>vérité</TREE_6>
+  <TREE_6>vérité</TREE_6>
+</TREE_5>
+<TREE_5>définition
+</TREE_5>
+<TREE_5>redéfinition
+</TREE_5>
+</TREE_4>
+<TREE_4>Les notions principales et leurs notions secondaires  
+ <TREE_5>physiologie 
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>vie</TREE_6>
+  <TREE_6>vie</TREE_6>
+</TREE_5>
+<TREE_5>vie
+<TREE_6>physico-chimie</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>physiologie</TREE_6>
+  <TREE_6>méthode expérimentale</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>déterminisme</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>physiologie</TREE_6>
+  <TREE_6>mort</TREE_6>
+  <TREE_6>physiologie</TREE_6>
+</TREE_5>
+<TREE_5>médecine expérimentale
+</TREE_5>
+<TREE_5>méthode expérimentale
+  <TREE_6>déterminisme</TREE_6>
+</TREE_5>
+<TREE_5>déterminisme
+<TREE_6>vie</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>physico-chimie</TREE_6>
+  <TREE_6>déterminisme</TREE_6>
+</TREE_5>
+<TREE_5>médecine
+<TREE_6>expérience</TREE_6>
+  <TREE_6>raisonnement</TREE_6>
+</TREE_5>
+<TREE_5>expérience
+  <TREE_6>raisonnement</TREE_6>
+</TREE_5>
+<TREE_5>physico-chimie
+</TREE_5>
+<TREE_5>vérité
+<TREE_6>expérience</TREE_6>
+  <TREE_6>science</TREE_6>
+</TREE_5>
+<TREE_5>science
+  <TREE_6>vérité</TREE_6>
+  <TREE_6>vérité</TREE_6>
+  <TREE_6>expérience</TREE_6>
+</TREE_5>
+<TREE_5>loi
+</TREE_5>
+</TREE_4>
+<TREE_4>Les relations et les notions principales
+<TREE_5>développement
+  <TREE_6>physiologie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>physiologie
+
+    
+    
+  </TREE_6>
+  <TREE_6>médecine expérimentale
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>méthode expérimentale
+
+    
+    
+  </TREE_6>
+  <TREE_6>physico-chimie
+
+    
+    
+  </TREE_6>
+  <TREE_6>déterminisme
+
+    
+    
+  </TREE_6>
+  <TREE_6>déterminisme
+
+    
+    
+  </TREE_6>
+  <TREE_6>observation
+
+    
+    
+  </TREE_6>
+  <TREE_6>science
+
+    
+    
+  </TREE_6>
+  <TREE_6>loi
+</TREE_6>
+</TREE_5>
+<TREE_5>composition
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>physiologie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>science
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>opposition
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vérité
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>association
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>déterminisme
+
+    
+    
+  </TREE_6>
+  <TREE_6>médecine
+
+    
+    
+  </TREE_6>
+  <TREE_6>déterminisme
+
+    
+    
+  </TREE_6>
+  <TREE_6>méthode expérimentale
+
+    
+    
+  </TREE_6>
+  <TREE_6>expérience
+
+    
+    
+  </TREE_6>
+  <TREE_6>vérité
+
+    
+    
+  </TREE_6>
+  <TREE_6>science
+
+    
+    
+  </TREE_6>
+  <TREE_6>science
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>définition
+  <TREE_6>vitalisme
+
+    
+    
+  </TREE_6>
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>déterminisme
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>redéfinition
+  <TREE_6>expérience
+
+    
+    
+  </TREE_6>
+  <TREE_6>physico-chimie
+
+    
+    
+  </TREE_6>
+  <TREE_6>déterminisme
+
+    
+    
+  </TREE_6>
+  <TREE_6>méthode expérimentale
+
+    
+    
+  </TREE_6>
+  <TREE_6>physiologie
+
+    
+    
+  </TREE_6>
+  <TREE_6>méthode expérimentale
+
+    
+    
+  </TREE_6>
+  <TREE_6>physiologie
+
+    
+    
+ </TREE_6>
+  <TREE_6>méthode expérimentale
+</TREE_6>
+  <TREE_6>expérience
+</TREE_6>
+  <TREE_6>loi
+</TREE_6>
+  <TREE_6>expérience
+</TREE_6>
+  <TREE_6>méthode expérimentale
+</TREE_6>
+  <TREE_6>méthode expérimentale
+</TREE_6>
+  <TREE_6>vérité
+</TREE_6>
+  <TREE_6>science
+</TREE_6>
+</TREE_5>
+</TREE_4>
+<TREE_4>Les notions secondaires et les notions principales
+<TREE_5>physico-chimie
+  <TREE_6>physiologie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>déterminisme
+</TREE_6>
+  <TREE_6>déterminisme
+</TREE_6>
+</TREE_5>
+<TREE_5>""
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vitalisme
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>médecine expérimentale
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>méthode expérimentale
+</TREE_6>
+  <TREE_6>vie
+ </TREE_6>
+  <TREE_6>déterminisme
+</TREE_6>
+  <TREE_6>physico-chimie
+</TREE_6>
+  <TREE_6>physico-chimie
+</TREE_6>
+  <TREE_6>déterminisme
+</TREE_6>
+<TREE_6>méthode expérimentale
+</TREE_6>
+ <TREE_6>physiologie
+</TREE_6>
+  <TREE_6>méthode expérimentale
+</TREE_6>
+  <TREE_6>physiologie
+</TREE_6>
+  <TREE_6>méthode expérimentale
+</TREE_6>
+  <TREE_6>déterminisme
+</TREE_6>
+  <TREE_6>observation
+</TREE_6>
+  <TREE_6>expérience
+</TREE_6>
+  <TREE_6>science
+</TREE_6>
+  <TREE_6>loi
+</TREE_6>
+  <TREE_6>loi
+</TREE_6>
+  <TREE_6>expérience
+</TREE_6>
+  <TREE_6>méthode expérimentale
+</TREE_6>
+  <TREE_6>méthode expérimentale
+</TREE_6>
+  <TREE_6>vérité
+</TREE_6>
+  <TREE_6>science
+</TREE_6>
+</TREE_5>
+<TREE_5>physiologie
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+  <TREE_6>vie
+</TREE_6>
+</TREE_5>
+<TREE_5>vie
+  <TREE_6>physiologie
+
+    
+    
+  </TREE_6>
+  <TREE_6>physiologie
+
+    
+    
+  </TREE_6>
+  <TREE_6>déterminisme
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>méthode expérimentale
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>déterminisme
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+  <TREE_6>méthode expérimentale
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>mort
+  <TREE_6>vie
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>expérience
+  <TREE_6>médecine
+
+    
+    
+  </TREE_6>
+  <TREE_6>vérité
+
+    
+    
+  </TREE_6>
+  <TREE_6>science
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>sélectionner une notion liée
+  <TREE_6>expérience
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>raisonnement
+  <TREE_6>expérience
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>science
+  <TREE_6>vérité
+
+    
+    
+  </TREE_6>
+</TREE_5>
+<TREE_5>vérité
+  <TREE_6>science
+
+    
+    
+  </TREE_6>
+  <TREE_6>science
+  </TREE_6>
+</TREE_5>
+</TREE_4>
+<TREE_4>Les notions secondaires et les relations
+<TREE_5>physico-chimie
+  <TREE_6>développement</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>opposition</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>développement</TREE_6>
+  <TREE_6>développement</TREE_6>
+  <TREE_6>association</TREE_6>
+</TREE_5>
+<TREE_5>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>définition</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>développement</TREE_6>
+  <TREE_6>définition</TREE_6>
+  <TREE_6>développement</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>définition</TREE_6>
+</TREE_5>
+<TREE_5>physiologie
+  <TREE_6>développement</TREE_6>
+  <TREE_6>association</TREE_6>
+  <TREE_6>composition</TREE_6>
+</TREE_5>
+<TREE_5>vie
+  <TREE_6>développement</TREE_6>
+  <TREE_6>composition</TREE_6>
+  <TREE_6>association</TREE_6>
+</TREE_5>
+<TREE_5>méthode expérimentale
+  <TREE_6>association</TREE_6>
+</TREE_5>
+<TREE_5>déterminisme
+  <TREE_6>association</TREE_6>
+  <TREE_6>association</TREE_6>
+</TREE_5>
+<TREE_5>mort
+  <TREE_6>opposition</TREE_6>
+</TREE_5>
+<TREE_5>expérience
+  <TREE_6>association</TREE_6>
+  <TREE_6>opposition</TREE_6>
+  <TREE_6>composition</TREE_6>
+</TREE_5>
+<TREE_5>sélectionner une notion liée
+  <TREE_6>redéfinition</TREE_6>
+</TREE_5>
+<TREE_5>raisonnement
+  <TREE_6>association</TREE_6>
+</TREE_5>
+<TREE_5>science
+  <TREE_6>association</TREE_6>
+</TREE_5>
+<TREE_5>vérité
+  <TREE_6>association</TREE_6>
+  <TREE_6>association</TREE_6>
+</TREE_5>
+</TREE_4>
+</TREE_3>
+
+</TREE_2>
+<TREE_2>LA SCIENCE EXPERIMENTALE
+<TREE_3>PAR NOTIONS
+<TREE_4>Les notions principales</TREE_4>
+<TREE_4>Les notions par type de relation</TREE_4>
+<TREE_4>Les notions secondaires</TREE_4>
+</TREE_3>
+
+</TREE_2>
+</TREE_1>
+</TREE_MENU> 

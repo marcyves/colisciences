@@ -1,0 +1,21 @@
+FONT		{FONT-FAMILY: Verdana,Helvetica; FONT-SIZE: 12px}
+TD		{FONT-FAMILY: Verdana,Helvetica; FONT-SIZE: 12px}
+BODY		{FONT-FAMILY: Verdana,Helvetica; FONT-SIZE: 12px}
+P		{FONT-FAMILY: Verdana,Helvetica; FONT-SIZE: 12px}
+DIV		{FONT-FAMILY: Verdana,Helvetica; FONT-SIZE: 12px}
+INPUT		{FONT-FAMILY: Verdana,Helvetica; FONT-SIZE: 12px}
+TEXTAREA	{FONT-FAMILY: Verdana,Helvetica; FONT-SIZE: 12px}
+FORM 		{FONT-FAMILY: Verdana,Helvetica; FONT-SIZE: 12px}
+.title 		{COLOR: #000000; FONT-SIZE: 16px; FONT-WEIGHT: bold; FONT-FAMILY: Verdana, Helvetica;}
+.content 	{COLOR: #000000; FONT-SIZE: 12px; FONT-FAMILY: Verdana, Helvetica}
+.storytitle 	{COLOR: #363636; FONT-SIZE: 14px; FONT-WEIGHT: bold; FONT-FAMILY: Verdana, Helvetica;}
+.storycat	{COLOR: #000000; FONT-SIZE: 14px; FONT-WEIGHT: bold; FONT-FAMILY: Verdana, Helvetica; TEXT-DECORATION: underline}
+.boxtitle 	{COLOR: #363636; FONT-SIZE: 12px; FONT-WEIGHT: bold; FONT-FAMILY: Verdana, Helvetica;}
+.boxcontent 	{COLOR: #000000; FONT-SIZE: 12px; FONT-FAMILY: Verdana, Helvetica}
+.option 	{COLOR: #000000; FONT-SIZE: 14px; FONT-WEIGHT: bold; FONT-FAMILY: Verdana, Helvetica;}
+.tiny		{
+	COLOR: Purple;
+	FONT-SIZE: 10px;
+	FONT-WEIGHT: normal;
+	FONT-FAMILY: Verdana, Helvetica;
+}

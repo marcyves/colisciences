@@ -1,0 +1,11 @@
+Petite regex permettant de mettre des mots en évidence dans un texte sans tenir compte de la casse.
+Dans notre exemple, le mot sera affiché avec un background en jaune. 
+
+<?php 
+$texte='Les regex pour php c\'est sympa, mais on trouve aussi des regex pour mysql'; 
+$mot='regex'; 
+$motif='`(.*?)('.$mot.')(.*?)`si'; 
+$sortie='$1<span style="background-color:#ffcc00">$2</span>$3'; 
+echo preg_replace($motif,$sortie,$texte); 
+?>  
+ 

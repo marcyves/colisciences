@@ -1,0 +1,73 @@
+			A Blork Engine v0.2
+			Fichier d'aide
+			zulios@blork.net
+
+
+Quelques messages d'erreur possibles
+
+
+Erreur 1
+------------------------
+
+Warning: OpenDir: No such file or directory (errno 2) in [...] on line...
+
+Warning: Supplied argument is not a valid Directory resource in [...] on line...
+
+Si ces deux messages apparaissent a la suite, c'est que vous avez mal configuré le fichier au niveau des dossiers à scanner. Le dossier que vous avez indiqué n'existe pas.
+
+
+Erreur 2
+------------------------
+
+Parse error: parse error, expecting `')'' in config.php on line...
+
+Warning: Invalid argument supplied for foreach() in engine.php on line...
+
+Warning: Wrong datatype in ksort() call in engine.php on line...
+
+Warning: Variable passed to reset() is not an array or object in engine.php on line...
+
+Ne paniquez pas ! Vous avez simplement fait une faute au niveau de la config des dossiers à scanner. Vérifiez que le code est le suivant :
+
+$dossier=array(
+
+"description du dossier 1"=>"chemin d'accès au dossier 1",
+"description du dossier 2"=>"chemin d'accès au dossier 2",
+
+);
+
+Si l'erreur persiste contactez moi...
+
+- par le forum à l'adresse suivante :
+http://www.blork.net/#scripts
+
+- ou par mail : 
+zulios@blork.net
+
+Précisez bien dans le sujet du mail "a blork engine" et n'envoyez pas de fichier joint sinon je supprimerai le mail sans même le lire. 
+
+
+
+Erreur 3 
+------------------------
+
+Warning: OpenDir: Permission denied (errno 13) in /home/ju21565/zulios/engine.php on line 32
+
+Warning: Supplied argument is not a valid Directory resource in /home/ju21565/zulios/engine.php on line 34
+
+Ce problème la vient des permissions données à vos dossiers. Vérifiez à l'aide de votre logiciel ftp les permissions données aux dossiers scannés (clic droit puis propriétés sur ftp expert, clic droit puis tools => change permissions sur crystal ftp). Le chiffre doit être au minimum de 755 ou 644 sur free, c'est à dire que le dossier doit être accessible en lecture pour tous.
+
+
+
+Autres problèmes
+------------------------
+
+Vous avez un problème avec mon script ? Contactez moi soit :
+
+- par le forum à l'adresse suivante :
+http://www.blork.net/#scripts
+
+- par mail : 
+zulios@blork.net
+
+Précisez bien dans le sujet du mail "a blork engine" et n'envoyez pas de fichier joint sinon je supprimerai le mail sans même le lire. 

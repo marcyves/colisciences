@@ -1,0 +1,221 @@
+<HTML><HEAD>
+<SCRIPT LANGUAGE="JavaScript">
+
+<!-- This script and many more are available free online at -->
+<!-- The JavaScript Source!! http://javascript.internet.com -->
+
+<!--//Heres the code for the RGB in paint.
+function rgb(x)
+  {
+  var value=0;
+  var value_array=new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f");
+  var first=x.charAt(0);
+  var second=x.charAt(1);
+  var a=0;
+  var b=0;
+  while (value_array[value]!=first)
+    {
+    value++;
+    a=a+16;
+    }
+  value="0";
+  while (value_array[value]!=second)
+    {
+    value++;
+    b++;
+    }
+  x=a+b;
+  return x;
+  }
+// end RGB in paint-->
+</script>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Heres the code to type in you own Hexadecimal value
+function changeBack()
+  {
+  var hex=window.document.f.c.value;
+  document.bgColor=hex;
+  var hex1=hex.charAt(0);
+  if (hex1!="#")
+    {
+    hex=document.bgColor;
+    }
+  var red=hex.substring (1,3);
+  var rdd=rgb(red);
+  document.bb.re.value=rdd;
+  var green=hex.substring (3,5);
+  var grn=rgb(green);
+  document.cc.gr.value=grn;
+  var blue=hex.substring (5,7);
+  var blue1=rgb(blue);
+  document.dd.bl.value=blue1;
+  }
+// End own Hexadecimal-->
+</script>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--Here\'s the code to type in your own RGB
+  function changeBackRGB()
+  {
+  var red=window.document.bb.re.value;
+  var green=window.document.cc.gr.value;
+  var blue=window.document.dd.bl.value;
+  red1=rgb_hex(red);
+  green1=rgb_hex(green);
+  blue1=rgb_hex(blue);
+  var hex="#"+red1+green1+blue1;
+  document.bgColor=hex;
+  document.f.c.value=hex;
+  }
+// End your own RGB-->
+
+//<!-- Change from RGB to hexadecimal
+function rgb_hex(colour)
+{
+ var rgb_array=new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f");
+if (colour==0)
+  {
+  var colour="00";
+  return colour;
+  }
+else
+  {
+  var y=colour/16;
+  var y=y+"a";
+  if (y.indexOf(".")==-1)
+    {
+    var hex2="0";
+    var u=y.indexOf("a");
+    var q=y.substring(0,u);
+    var hex1=rgb_array[q];
+    }
+  else
+    {
+    var l=y.split(".");
+    var q=l[0];
+    var z=q*16;
+    var xyz=colour-z;
+    var hex1=rgb_array[q];
+    var hex2=rgb_array[xyz];
+    }
+  var colour=hex1+hex2;
+  return colour;
+  }
+}
+// end-->
+</script>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--Here\'s the background changer for the cube
+leftclick=0;
+
+function r(hval)
+  {
+    if (leftclick==0)
+      {
+      document.bgColor=hval;
+      document.f.c.value=hval;
+      var red=hval.substring (1,3);
+      var rdd=rgb(red);
+      document.bb.re.value=rdd;
+      var green=hval.substring (3,5);
+      var grn=rgb(green);
+      document.cc.gr.value=grn;
+      var blue=hval.substring (5,7);
+      var blue1=rgb(blue);
+      document.dd.bl.value=blue1;
+      document.colour1.colour2.value="";
+      }
+  }
+//end changer
+//Heres the lock button
+function lock()
+  {
+  if (leftclick==0)
+    {
+    leftclick=1;
+    }
+  else
+    {
+    leftclick=0;
+    }
+  }
+//end lock-->
+</script>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--  Reverse Lookup Color
+function changeColor()
+{
+var clr=window.document.colour1.colour2.value;
+document.f.c.value=clr;
+var clr=changeBack();
+var clr=changeBackRGB();
+}
+// End Reverse Lookup Color-->
+</script>
+
+</HEAD><BODY><center><TABLE width=450 border=0 cellpadding=0 cellspacing=0><TR><TD><center>Passez sur les cubes pour voir apparaitre leur couleur en fond de la page. Si la couleur vous plait cliquez sur le cube pour bloquer la couleur et regardez la valeur hexadécimale correspondante a entrer pour le script en bas de la page. La couleur correspondante en RGB est indiquée également pour que vous puissiez l'obtenir dans votre logiciel de dessin préféré. Pour débloquer la couleur il suffit de cliquer sur n'importe quel cube.<p><table>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Cube Maker
+var hex_Red=new Array("00","33","66","99","cc","ff");
+var hex_Green=new Array("00","33","66","99","cc","ff");
+var hex_Blue=new Array("00","33","66","99","cc","ff");
+var hexred="00";
+var hexgreen="00";
+var hexblue="00";
+var red=0;
+var green=0;
+var blue=0;
+var x=0;
+var y=0;
+var z=0;
+var xyz=0;
+
+while (y<6)
+  {
+  window.document.write("<tr>");
+  var x=0;
+  var hexblue=hex_Blue[blue];
+    while (x<6)
+    {
+    var z=0;
+    var hexgreen=hex_Green[green];
+      while (z<6)
+      {
+      var hexred=hex_Red[red];
+      var hexadecimal="#"+hexred+hexgreen+hexblue;
+      window.document.write("<td bgColor="+hexadecimal+"><a href=\"javascript:lock()\" onmouseover=\"r(\'"+hexadecimal+"\'); return true\"><img src=vide.gif border=\"0\" height=\"20\" width=\"20\"/></a></td>");
+      z++;
+      red++;
+      if (red==6)
+      {
+      red=0;
+      }
+      }
+    x++;
+    green++;
+    if (green==6)
+    {
+    green=0;
+    }
+    xyz++;
+    if (xyz==3)
+    {
+    window.document.write("</tr>");
+    xyz=0;
+    }
+    }
+  y++;
+  blue++
+  if (blue==6)
+  {
+  blue=0;
+  }
+  }
+// End color cube. -->
+</script>
+
+</table></center><center><form name="f" onSubmit="changeBack(); return false;">Couleur correspondante en hexadécimal pour le script :<br><input type="text" name="c" size="7"></form></center><center>Couleur en RGB correspondante pour pouvoir l'utiliser dans un logiciel de dessin :<br></center><table align="center">  <tr>     <td align="center" width="100">Red</td>     <td align="center" width="100">Green</td>     <td align="center" width="100">Blue</td>  </tr>  <tr>     <td align="center"><form name="bb" onSubmit="changeBackRGB(); return false;"><input type="text" name="re" size="2"></form></td>     <td align="center"><form name="cc" onSubmit="changeBackRGB(); return false;"><input type="text" name="gr" size="2"></form></td>     <td align="center"><form name="dd" onSubmit="changeBackRGB(); return false;"><input type="text" name="bl" size="2"></form></td>  </tr><TR><TD colspan=15><center><form name="colour1"><input type="hidden" name="colour2"></form></table>
