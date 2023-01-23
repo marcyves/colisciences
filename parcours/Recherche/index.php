@@ -8,8 +8,8 @@ $index = 1;
 			Script du moteur 
 			zulios@blork.net
 
-Pour les gens qui veulent modifier le moteur é leur goét, je vous ai 
-mis des commentaires au cours du script qui vous aideront é vous 
+Pour les gens qui veulent modifier le moteur à leur goût, je vous ai 
+mis des commentaires au cours du script qui vous aideront à vous 
 repérer. Je ne vous demande qu'une chose : ne supprimez pas l'image 
 avec le lien vers mon forum, ne serait-ce que par respect pour mon 
 travail. Merci.
