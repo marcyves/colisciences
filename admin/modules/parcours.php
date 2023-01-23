@@ -15,7 +15,7 @@
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 
 $result = sql_query("select radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminsuper) = sql_fetch_row($result, $dbi);
+list($radminsuper) = mysqli_fetch_row($result, $dbi);
 if ($radminsuper==1) {
 
 /*********************************************************/
@@ -42,14 +42,14 @@ function module_parcours() {
     for ($i=0; $i < sizeof($modlist); $i++) {
         if($modlist[$i] != "") {
             $result = sql_query("select mid from ".$prefix."_modules_parcours where title='$modlist[$i]'", $dbi);
-            list ($mid) = sql_fetch_row($result, $dbi);
+            list ($mid) = mysqli_fetch_row($result, $dbi);
             if ($mid == "") {
                 sql_query("insert into ".$prefix."_modules_parcours values (NULL, '$modlist[$i]', '$modlist[$i]', '0', '0')", $dbi);
             }
         }
     }
     $result = sql_query("select title from ".$prefix."_modules_parcours", $dbi);
-    while (list($title) = sql_Fetch_row($result, $dbi)) {
+    while (list($title) = mysqli_fetch_row($result, $dbi)) {
         $a = 0;
         $handle=opendir('parcours');
         while ($file = readdir($handle)) {
@@ -71,9 +71,9 @@ function module_parcours() {
         ."<table border=\"1\" align=\"center\" width=\"90%\"><tr><td align=\"center\" bgcolor=\"$bgcolor2\">"
         ."<b>"._TITLE."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._CUSTOMTITLE."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._STATUS."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._VIEW."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._FUNCTIONS."</b></td></tr>";
     $main_m = sql_query("select main_module from ".$prefix."_main", $dbi);
-    list($main_module) = sql_fetch_row($main_m, $dbi);
+    list($main_module) = mysqli_fetch_row($main_m, $dbi);
     $result = sql_query("select mid, title, custom_title, active, view from ".$prefix."_modules_parcours order by title ASC", $dbi);
-    while(list($mid, $title, $custom_title, $active, $view) = sql_fetch_row($result, $dbi)) {
+    while(list($mid, $title, $custom_title, $active, $view) = mysqli_fetch_row($result, $dbi)) {
         if ($active == 1) {
             $active = _ACTIVE;
             $change = _DEACTIVATE;
@@ -122,9 +122,9 @@ function home_module($mid, $ok=0) {
         title(""._HOMECONFIG."");
         OpenTable();
         $result = sql_query("select title from ".$prefix."_modules_parcours where mid='$mid'", $dbi);
-        list($new_m) = sql_fetch_row($result, $dbi);
+        list($new_m) = mysqli_fetch_row($result, $dbi);
         $result = sql_query("select main_module from ".$prefix."_main", $dbi);
-        list($old_m) = sql_fetch_row($result, $dbi);
+        list($old_m) = mysqli_fetch_row($result, $dbi);
         echo "<center><b>"._DEFHOMEMODULE."</b><br><br>"
             .""._SURETOCHANGEMOD." <b>$old_m</b> "._TO." <b>$new_m</b>?<br><br>"
             ."[ <a href=\"admin.php?op=parcours\">"._NO."</a> | <a href=\"admin.php?op=home_module&mid=$mid&ok=1\">"._YES."</a> ]</center>";
@@ -132,7 +132,7 @@ function home_module($mid, $ok=0) {
         include("footer.php");
     } else {
         $result = sql_query("select title from ".$prefix."_modules_parcours where mid='$mid'", $dbi);
-        list($title) = sql_fetch_row($result, $dbi);
+        list($title) = mysqli_fetch_row($result, $dbi);
         $active = 1;
         $view = 0;
         $result = sql_query("update ".$prefix."_main set main_module='$title'", $dbi);
@@ -150,9 +150,9 @@ function module_status($mid, $active) {
 function module_edit($mid) {
     global $prefix, $dbi;
     $main_m = sql_query("select main_module from ".$prefix."_main", $dbi);
-    list($main_module) = sql_fetch_row($main_m, $dbi);
+    list($main_module) = mysqli_fetch_row($main_m, $dbi);
     $result = sql_query("select title, custom_title, view from ".$prefix."_modules_parcours where mid='$mid'", $dbi);
-    list($title, $custom_title, $view) = sql_fetch_row($result, $dbi);
+    list($title, $custom_title, $view) = mysqli_fetch_row($result, $dbi);
     include ("header.php");
     
     GraphicAdmin();

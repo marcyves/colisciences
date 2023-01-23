@@ -15,7 +15,7 @@
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 
 $result = sql_query("select radminsurvey, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminsurvey, $radminsuper) = sql_fetch_row($result, $dbi);
+list($radminsurvey, $radminsuper) = mysqli_fetch_row($result, $dbi);
 if (($radminsurvey==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -61,7 +61,7 @@ function SelectCategory($cat) {
 	$sel = "";
     }
     echo "<option name=\"catid\" value=\"0\" $sel>"._ARTICLES."</option>";
-    while(list($catid, $title) = sql_fetch_row($selcat, $dbi)) {
+    while(list($catid, $title) = mysqli_fetch_row($selcat, $dbi)) {
 	if ($catid == $cat) {
 	    $sel = "selected";
 	} else {
@@ -131,7 +131,7 @@ function poll_createPoll() {
     echo "<b>"._TOPIC."</b> <select name=\"topic\">";
     $toplist = sql_query("select topicid, topictext from ".$prefix."_topics order by topictext", $dbi);
     echo "<option value=\"\">"._SELECTTOPIC."</option>\n";
-    while(list($topicid, $topics) = sql_fetch_row($toplist, $dbi)) {
+    while(list($topicid, $topics) = mysqli_fetch_row($toplist, $dbi)) {
         echo "<option value=\"$topicid\">$topics</option>\n";
     }
     echo "</select>";
@@ -173,7 +173,7 @@ function poll_createPosted($pollTitle, $optionText, $planguage, $title, $hometex
     if(!sql_query("INSERT INTO ".$prefix."_poll_desc VALUES (NULL, '$pollTitle', '$timeStamp', 0, '$planguage', '0')", $dbi)) {
 	return;
     }
-    $object = sql_fetch_object(sql_query("SELECT pollID FROM ".$prefix."_poll_desc WHERE pollTitle='$pollTitle'", $dbi), $dbi);
+    $object = mysqli_fetch_object(sql_query("SELECT pollID FROM ".$prefix."_poll_desc WHERE pollTitle='$pollTitle'", $dbi), $dbi);
     $id = $object->pollID;
     for($i = 1; $i <= sizeof($optionText); $i++) {
 	if($optionText[$i] != "") {
@@ -213,7 +213,7 @@ function poll_removePoll() {
 	return;
     }
     /* cycle through the descriptions until everyone has been fetched */
-    while($object = sql_fetch_object($result, $dbi)) {
+    while($object = mysqli_fetch_object($result, $dbi)) {
 	$pollID = $object->pollID;
 	echo "<tr><td><input type=\"radio\" name=\"id\" value=\"".$object->pollID."\">".$object->pollTitle." - (".$object->planguage.")</td></tr>";
     }
@@ -251,7 +251,7 @@ function polledit_select() {
 	return;
     }
     /* cycle through the descriptions until everyone has been fetched */
-    while($object = sql_fetch_object($result, $dbi)) {
+    while($object = mysqli_fetch_object($result, $dbi)) {
 	$pollID = $object->pollID;
 	echo "<tr><td><input type=\"radio\" name=\"pollID\" value=\"".$object->pollID."\">".$object->pollTitle." - (".$object->planguage.")</td></tr>";
     }
@@ -269,7 +269,7 @@ function polledit($pollID) {
     OpenTable();
     echo "<center><font class=\"title\"><b>"._POLLSADMIN."</b></font></center>";
     $result = sql_query("select pollTitle from ".$prefix."_poll_desc where pollID=$pollID", $dbi);
-    list($pollTitle) = sql_fetch_row($result, $dbi);
+    list($pollTitle) = mysqli_fetch_row($result, $dbi);
     CloseTable();
     echo "<br>";
     OpenTable();
@@ -278,7 +278,7 @@ function polledit($pollID) {
     echo "<table border=\"0\" align=\"center\"><tr><td>";
     echo "<b>"._TITLE.":</b></td><td colspan=\"2\"><input type=\"text\" name=\"pollTitle\" value=\"$pollTitle\" size=\"40\" maxlength=\"100\"><br><br></td></tr>";
     $result = sql_query("select optionText, optionCount, voteID from ".$prefix."_poll_data where pollID=$pollID order by voteID", $dbi);
-    while(list($optionText, $optionCount, $voteID) = sql_fetch_row($result, $dbi)) {
+    while(list($optionText, $optionCount, $voteID) = mysqli_fetch_row($result, $dbi)) {
 	echo "<tr><td align=\"center\"><b>$voteID</b></td><td><input type=\"text\" name=\"optiontext$voteID\" value=\"$optionText\" size=\"40\" maxlength=\"50\"></td><td align=\"right\">$optionCount "._VOTES."</td></tr>";
     }
     echo "</table><input type=\"hidden\" name=\"pollID\" value=\"$pollID\"><input type=\"hidden\" name=\"op\" value=\"savepoll\">"

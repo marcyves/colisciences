@@ -15,7 +15,7 @@
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 
 $result = sql_query("select radminreviews, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminreviews, $radminsuper) = sql_fetch_row($result, $dbi);
+list($radminreviews, $radminsuper) = mysqli_fetch_row($result, $dbi);
 if (($radminreviews==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -40,7 +40,7 @@ function reviews() {
     CloseTable();
     echo "<br>";
     $resultrm = sql_query("select title, description from ".$prefix."_reviews_main", $dbi);
-    list($title, $description) = sql_fetch_row($resultrm, $dbi);
+    list($title, $description) = mysqli_fetch_row($resultrm, $dbi);
     OpenTable();
     echo "<form action=\"admin.php\" method=\"post\">"
 	."<center>"._REVTITLE."<br>"
@@ -57,7 +57,7 @@ function reviews() {
     $result = sql_query("select * from ".$prefix."_reviews_add order by id", $dbi);
     $numrows = sql_num_rows($result, $dbi);
     if ($numrows>0) {
-	while(list($id, $date, $title, $text, $reviewer, $email, $score, $url, $url_title, $rlanguage) = sql_fetch_row($result, $dbi)) {
+	while(list($id, $date, $title, $text, $reviewer, $email, $score, $url, $url_title, $rlanguage) = mysqli_fetch_row($result, $dbi)) {
 	    $title = stripslashes($title);
 	    $text = stripslashes($text);
 	    echo "<form action=\"admin.php\" method=\"post\">"

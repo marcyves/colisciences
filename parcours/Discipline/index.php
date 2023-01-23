@@ -40,7 +40,7 @@ function alpha($eid) {
     echo "<center>[ ";
     $counter = 0;
     while (list(, $ltr) = each($alphabet)) {
-	$result = sql_query("select * from ".$prefix."_encyclopedia_text where eid='$eid' AND UPPER(title) LIKE '$ltr%'", $dbi);
+	$result = mysqli_query($dbi, "select * from ".$prefix."_encyclopedia_text where eid='$eid' AND UPPER(title) LIKE '$ltr%'");
 	if (sql_num_rows($result) > 0) {
 	    echo "<a href=\"parcours.php?name=$module_name&op=terms&eid=$eid&ltr=$ltr\">$ltr</a>";
 	} else {
@@ -60,8 +60,8 @@ function alpha($eid) {
 
 function list_content($eid) {
     global $module_name, $prefix, $sitename, $dbi;
-    $result = sql_query("select title, description from ".$prefix."_encyclopedia where eid='$eid'", $dbi);
-    list($title, $description) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select title, description from ".$prefix."_encyclopedia where eid='$eid'");
+    list($title, $description) = mysqli_fetch_row($result);
     include("header.php");
     title("$title");
     OpenTable();
@@ -81,10 +81,10 @@ function list_content($eid) {
 
 function terms($eid, $ltr) {
     global $module_name, $prefix, $sitename, $dbi, $admin;
-    $result = sql_query("select active from ".$prefix."_encyclopedia where eid='$eid'", $dbi);
-    list($active) = sql_fetch_row($result, $dbi);
-    $result = sql_query("select title from ".$prefix."_encyclopedia where eid='$eid'", $dbi);
-    list($title) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select active from ".$prefix."_encyclopedia where eid='$eid'");
+    list($active) = mysqli_fetch_row($result);
+    $result = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia where eid='$eid'");
+    list($title) = mysqli_fetch_row($result);
     include("header.php");
     title("$title");
     OpenTable();
@@ -94,11 +94,11 @@ function terms($eid, $ltr) {
 	}
 	echo "<center>Please select one term from the following list:</center><br><br>"
 	    ."<table border=\"0\" align=\"center\">";
-	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE UPPER(title) LIKE '$ltr%' AND eid='$eid'", $dbi);
-	if (sql_num_rows($result, $dbi) == 0) {
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE UPPER(title) LIKE '$ltr%' AND eid='$eid'");
+	if (sql_num_rows($result) == 0) {
 	    echo "<center><i>"._NOCONTENTFORLETTER." $ltr.</i></center>";
 	}
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 	    echo "<tr><td><a href=\"parcours.php?name=$module_name&op=content&tid=$tid\">$title</a></td></tr>";
 	}
 	echo "</table><br><br>";
@@ -115,14 +115,14 @@ function content($tid, $ltr, $page=0, $query="") {
     global $prefix, $dbi, $sitename, $admin, $module_name;
     include("header.php");
     OpenTable();
-    $result = sql_query("SELECT * from ".$prefix."_encyclopedia_text where tid='$tid'", $dbi);
-    $ency = sql_fetch_array($result, $dbi);
-    $result = sql_query("select active from ".$prefix."_encyclopedia where eid='$ency[eid]'", $dbi);
-    list($active) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "SELECT * from ".$prefix."_encyclopedia_text where tid='$tid'");
+    $ency = mysqli_fetch_array($result);
+    $result = mysqli_query($dbi, "select active from ".$prefix."_encyclopedia where eid='$ency[eid]'");
+    list($active) = mysqli_fetch_row($result);
     if (($active == 1) OR ($active == 0 AND is_admin($admin))) {
-	sql_query("update ".$prefix."_encyclopedia_text set counter=counter+1 where tid='$tid'", $dbi);
-	$result = sql_query("SELECT title from ".$prefix."_encyclopedia where eid='$ency[eid]'", $dbi);
-	list($enc_title) = sql_fetch_row($result, $dbi);
+	mysqli_query($dbi, "update ".$prefix."_encyclopedia_text set counter=counter+1 where tid='$tid'");
+	$result = mysqli_query($dbi, "SELECT title from ".$prefix."_encyclopedia where eid='$ency[eid]'");
+	list($enc_title) = mysqli_fetch_row($result);
 	echo "<font class=\"title\">$ency[title]</font><br><br><br>";
 	$contentpages = explode( "<!--pagebreak-->", $ency[text] );
 	$pageno = count($contentpages);
@@ -179,9 +179,9 @@ function list_themes() {
     title("$sitename: "._ENCYCLOPEDIA."");
     OpenTable();
     echo "<center><font class=\"content\">"._AVAILABLEENCYLIST." $sitename:</center><br><br>";
-    $result = sql_query("SELECT eid, title, description, elanguage from ".$prefix."_encyclopedia WHERE active='1'", $dbi);
+    $result = mysqli_query($dbi, "SELECT eid, title, description, elanguage from ".$prefix."_encyclopedia WHERE active='1'");
     echo "<blockquote>";
-    while(list($eid, $title, $description, $elanguage) = sql_fetch_row($result, $dbi)) {
+    while(list($eid, $title, $description, $elanguage) = mysqli_fetch_row($result)) {
 	if ($multilingual == 1) {
 	    $the_lang = "<img src=\"images/language/flag-$elanguage.png\" hspace=\"3\" border=\"0\" height=\"10\" width=\"20\">";
 	} else {
@@ -200,10 +200,10 @@ function list_themes() {
     }
     echo "</blockquote>";
     if (is_admin($admin)) {
-	$result = sql_query("SELECT eid, title, description, elanguage from ".$prefix."_encyclopedia WHERE active='0'", $dbi);
+	$result = mysqli_query($dbi, "SELECT eid, title, description, elanguage from ".$prefix."_encyclopedia WHERE active='0'");
 	echo "<br><br><center><b>"._YOURADMININACTIVELIST."</b></center><br><br>";
 	echo "<blockquote>";
-	while(list($eid, $title, $description, $elanguage) = sql_fetch_row($result, $dbi)) {
+	while(list($eid, $title, $description, $elanguage) = mysqli_fetch_row($result)) {
 	    if ($multilingual == 1) {
 		$the_lang = "<img src=\"images/language/flag-$elanguage.png\" hspace=\"3\" border=\"0\" height=\"10\" width=\"20\">";
 	    } else {

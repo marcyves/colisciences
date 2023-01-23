@@ -12,8 +12,8 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-$result = sql_query("select radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radminsuper) = mysqli_fetch_row($result);
 if ($radminsuper==1) {
 
 /*********************************************************/
@@ -40,15 +40,15 @@ function BlocksAdmin() {
 	    echo "<td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._LANGUAGE."</b></td>";
 	}
 	echo "<td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._FUNCTIONS."</b></tr>";
-	$result = sql_query("select bid, bkey, title, url, position, weight, active, blanguage, blockfile, view from ".$prefix."_blocks order by position, weight", $dbi);
-	while(list($bid, $bkey, $title, $url, $position, $weight, $active, $blanguage, $blockfile, $view) = sql_fetch_row($result, $dbi)) {
+	$result = mysqli_query($dbi, "select bid, bkey, title, url, position, weight, active, blanguage, blockfile, view from ".$prefix."_blocks order by position, weight");
+	while(list($bid, $bkey, $title, $url, $position, $weight, $active, $blanguage, $blockfile, $view) = mysqli_fetch_row($result)) {
 	    $weight1 = $weight - 1;
 	    $weight3 = $weight + 1;
-	    $res = sql_query("select bid from ".$prefix."_blocks where weight='$weight1' AND position='$position'", $dbi);
-	    list ($bid1) = sql_fetch_array($res, $dbi);
+	    $res = mysqli_query($dbi, "select bid from ".$prefix."_blocks where weight='$weight1' AND position='$position'");
+	    list ($bid1) = mysqli_fetch_array($res);
 	    $con1 = "$bid1";
-	    $res2 = sql_query("select bid from ".$prefix."_blocks where weight='$weight3' AND position='$position'", $dbi);
-	    list ($bid2) = sql_fetch_array($res2, $dbi);
+	    $res2 = mysqli_query($dbi, "select bid from ".$prefix."_blocks where weight='$weight3' AND position='$position'");
+	    list ($bid2) = mysqli_fetch_array($res2);
 	    $con2 = "$bid2";
 	    echo "<tr>"
 		."<td align=\"center\">$title</td>";
@@ -134,8 +134,8 @@ function BlocksAdmin() {
 	    ."<tr><td>"._RSSFILE.":</td><td><input type=\"text\" name=\"url\" size=\"30\" maxlength=\"200\">&nbsp;&nbsp;"
 	    ."<select name=\"headline\">"
 	    ."<option name=\"headline\" value=\"0\" selected>"._CUSTOM."</option>";
-	$res = sql_query("select hid, sitename from ".$prefix."_headlines", $dbi);
-	while(list($hid, $htitle) = sql_fetch_row($res, $dbi)) {
+	$res = mysqli_query($dbi, "select hid, sitename from ".$prefix."_headlines");
+	while(list($hid, $htitle) = mysqli_fetch_row($res)) {
 	    echo "<option name=\"headline\" value=\"$hid\">$htitle</option>";
 	}
 	echo "</select>&nbsp;[ <a href=\"admin.php?op=HeadlinesAdmin\">Setup</a> ]<br><font class=\"tiny\">";
@@ -157,8 +157,8 @@ function BlocksAdmin() {
 		$bl = ereg_replace("block-","",$blockslist[$i]);
 		$bl = ereg_replace(".php","",$bl);
 		$bl = ereg_replace("_"," ",$bl);
-		$result = sql_query("select * from ".$prefix."_blocks where blockfile='$blockslist[$i]'", $dbi);
-		if (sql_num_rows($result, $dbi) == 0) {
+		$result = mysqli_query($dbi, "select * from ".$prefix."_blocks where blockfile='$blockslist[$i]'");
+		if (sql_num_rows($result) == 0) {
 		    echo "<option value=\"$blockslist[$i]\">$bl</option>\n";
 		}
 	    }
@@ -219,8 +219,8 @@ function block_show($bid) {
     GraphicAdmin();
     title(""._BLOCKSADMIN."");
     OpenTable2();
-    $result = sql_query("select bid, bkey, title, content, url, position, blockfile from ".$prefix."_blocks where bid='$bid'", $dbi);
-    list($bid, $bkey, $title, $content, $url, $position, $blockfile) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select bid, bkey, title, content, url, position, blockfile from ".$prefix."_blocks where bid='$bid'");
+    list($bid, $bkey, $title, $content, $url, $position, $blockfile) = mysqli_fetch_row($result);
     if ($bkey == main) {
         mainblock();
     } elseif ($bkey == admin) {
@@ -270,31 +270,31 @@ function fixweight() {
     $leftpos = "l";
     $rightpos = "r";
     $centerpos = "c";
-    $result = sql_query("select bid from ".$prefix."_blocks where position='$leftpos' order by weight ASC", $dbi);
+    $result = mysqli_query($dbi, "select bid from ".$prefix."_blocks where position='$leftpos' order by weight ASC");
     $weight = 0;
-    while(list($bid) = sql_fetch_row($result, $dbi)) {
+    while(list($bid) = mysqli_fetch_row($result)) {
 	$weight++;
-	sql_query("update ".$prefix."_blocks set weight='$weight' where bid=$bid", $dbi);
+	mysqli_query($dbi, "update ".$prefix."_blocks set weight='$weight' where bid=$bid");
     }
-    $result = sql_query("select bid from ".$prefix."_blocks where position='$rightpos' order by weight ASC", $dbi);
+    $result = mysqli_query($dbi, "select bid from ".$prefix."_blocks where position='$rightpos' order by weight ASC");
     $weight = 0;
-    while(list($bid) = sql_fetch_row($result, $dbi)) {
+    while(list($bid) = mysqli_fetch_row($result)) {
 	$weight++;
-	sql_query("update ".$prefix."_blocks set weight='$weight' where bid=$bid", $dbi);
+	mysqli_query($dbi, "update ".$prefix."_blocks set weight='$weight' where bid=$bid");
     }
-    $result = sql_query("select bid from ".$prefix."_blocks where position='$centerpos' order by weight ASC", $dbi);
+    $result = mysqli_query($dbi, "select bid from ".$prefix."_blocks where position='$centerpos' order by weight ASC");
     $weight = 0;
-    while(list($bid) = sql_fetch_row($result, $dbi)) {
+    while(list($bid) = mysqli_fetch_row($result)) {
 	$weight++;
-	sql_query("update ".$prefix."_blocks set weight='$weight' where bid=$bid", $dbi);
+	mysqli_query($dbi, "update ".$prefix."_blocks set weight='$weight' where bid=$bid");
     }
     Header("Location: admin.php?op=BlocksAdmin");
 }
 
 function BlockOrder ($weightrep,$weight,$bidrep,$bidori) {
     global $prefix, $dbi;
-    $result = sql_query("update ".$prefix."_blocks set weight='$weight' where bid='$bidrep'", $dbi);
-    $result2 = sql_query("update ".$prefix."_blocks set weight='$weightrep' where bid='$bidori'", $dbi);
+    $result = mysqli_query($dbi, "update ".$prefix."_blocks set weight='$weight' where bid='$bidrep'");
+    $result2 = mysqli_query($dbi, "update ".$prefix."_blocks set weight='$weightrep' where bid='$bidori'");
     Header("Location: admin.php?op=BlocksAdmin");
 }
 
@@ -317,11 +317,11 @@ function rssfail() {
 function BlocksAdd($title, $content, $url, $position, $active, $refresh, $headline, $blanguage, $blockfile, $view) {
     global $prefix, $dbi;
     if ($headline != 0) {
-	$result = sql_query("select sitename, headlinesurl from ".$prefix."_headlines where hid='$headline'", $dbi);
-	list ($title, $url) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select sitename, headlinesurl from ".$prefix."_headlines where hid='$headline'");
+	list ($title, $url) = mysqli_fetch_row($result);
     }
-    $result = sql_query("SELECT weight FROM ".$prefix."_blocks WHERE position='$position' ORDER BY weight DESC", $dbi);
-    list ($weight) = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "SELECT weight FROM ".$prefix."_blocks WHERE position='$position' ORDER BY weight DESC");
+    list ($weight) = mysqli_fetch_array($result);
     $weight++;
     $title = stripslashes(FixQuotes($title));
     $content = stripslashes(FixQuotes($content));
@@ -377,7 +377,7 @@ function BlocksAdd($title, $content, $url, $position, $active, $refresh, $headli
     if (($content == "") AND ($blockfile == "")) {
 	rssfail();
     } else {
-	sql_query("insert into ".$prefix."_blocks values (NULL, '$bkey', '$title', '$content', '$url', '$position', '$weight', '$active', '$refresh', '$btime', '$blanguage', '$blockfile', '$view')", $dbi);
+	mysqli_query($dbi, "insert into ".$prefix."_blocks values (NULL, '$bkey', '$title', '$content', '$url', '$position', '$weight', '$active', '$refresh', '$btime', '$blanguage', '$blockfile', '$view')");
 	Header("Location: admin.php?op=BlocksAdmin");
     }
 }
@@ -390,8 +390,8 @@ function BlocksEdit($bid) {
     echo "<center><font class=\"title\"><b>"._EDITBLOCK."</b></font></center>";
     CloseTable();
     echo "<br>";
-    $result = sql_query("select bkey, title, content, url, position, weight, active, refresh, blanguage, blockfile, view from ".$prefix."_blocks where bid='$bid'", $dbi);
-    list($bkey, $title, $content, $url, $position, $weight, $active, $refresh, $blanguage, $blockfile, $view) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select bkey, title, content, url, position, weight, active, refresh, blanguage, blockfile, view from ".$prefix."_blocks where bid='$bid'");
+    list($bkey, $title, $content, $url, $position, $weight, $active, $refresh, $blanguage, $blockfile, $view) = mysqli_fetch_row($result);
     if ($url != "") {
 	$type = _RSSCONTENT;
     } elseif ($blockfile != "") {
@@ -568,9 +568,9 @@ function SortWeight($position) {
     global $prefix, $dbi;
     $numbers = 1;
     $number_two = 1;
-    $result = sql_query("SELECT bid,weight FROM ".$prefix."_blocks WHERE position='$position' ORDER BY weight", $dbi);
-    while (list ($bid,$weight) = sql_fetch_row($result, $dbi)) {
-	$result2 = sql_query("update ".$prefix."_blocks set weight='$numbers' where bid='$bid'", $dbi);
+    $result = mysqli_query($dbi, "SELECT bid,weight FROM ".$prefix."_blocks WHERE position='$position' ORDER BY weight");
+    while (list ($bid,$weight) = mysqli_fetch_row($result)) {
+	$result2 = mysqli_query($dbi, "update ".$prefix."_blocks set weight='$numbers' where bid='$bid'");
 	$numbers++;
     }
     if ($position == l) {
@@ -578,9 +578,9 @@ function SortWeight($position) {
     } else {
 	$position_two = "l";
     }
-    $result_two = sql_query("SELECT bid,weight FROM ".$prefix."_blocks WHERE position='$position_two' ORDER BY weight", $dbi);
-    while (list ($bid2,$weight) = sql_fetch_row($result_two, $dbi)) {
-	$result_two2 = sql_query("update ".$prefix."_blocks set weight='$number_two' where bid='$bid2'", $dbi);
+    $result_two = mysqli_query($dbi, "SELECT bid,weight FROM ".$prefix."_blocks WHERE position='$position_two' ORDER BY weight");
+    while (list ($bid2,$weight) = mysqli_fetch_row($result_two)) {
+	$result_two2 = mysqli_query($dbi, "update ".$prefix."_blocks set weight='$number_two' where bid='$bid2'");
 	$number_two++;
     }
     return $numbers;
@@ -627,56 +627,56 @@ function BlocksEditSave($bid, $bkey, $title, $content, $url, $oldposition, $posi
 	    }
 	}
 	if ($oldposition != $position) {
-	    $result = sql_query("select bid from ".$prefix."_blocks where weight>='$weight' AND position='$position'", $dbi);
+	    $result = mysqli_query($dbi, "select bid from ".$prefix."_blocks where weight>='$weight' AND position='$position'");
 	    $fweight = $weight;
 	    $oweight = $weight;
-	    while (list($nbid) = sql_fetch_row($result, $dbi)) {
+	    while (list($nbid) = mysqli_fetch_row($result)) {
 		$weight++;
-		sql_query("update ".$prefix."_blocks set weight='$weight' where bid='$nbid'", $dbi);
+		mysqli_query($dbi, "update ".$prefix."_blocks set weight='$weight' where bid='$nbid'");
 	    }
-	    $result = sql_query("select bid from ".$prefix."_blocks where weight>'$oweight' AND position='$oldposition'", $dbi);
-	    while (list($obid) = sql_fetch_row($result, $dbi)) {
-		sql_query("update ".$prefix."_blocks set weight='$oweight' where bid='$obid'", $dbi);
+	    $result = mysqli_query($dbi, "select bid from ".$prefix."_blocks where weight>'$oweight' AND position='$oldposition'");
+	    while (list($obid) = mysqli_fetch_row($result)) {
+		mysqli_query($dbi, "update ".$prefix."_blocks set weight='$oweight' where bid='$obid'");
 		$oweight++;
 	    }
-	    $result = sql_query("select weight from ".$prefix."_blocks where position='$position' order by weight DESC limit 0,1", $dbi);
-	    list($lastw) = sql_fetch_row($result, $dbi);
+	    $result = mysqli_query($dbi, "select weight from ".$prefix."_blocks where position='$position' order by weight DESC limit 0,1");
+	    list($lastw) = mysqli_fetch_row($result);
 	    if ($lastw <= $fweight) {
 		$lastw++;
-		sql_query("update ".$prefix."_blocks set title='$title', content='$content', position='$position', weight='$lastw', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'", $dbi);
+		mysqli_query($dbi, "update ".$prefix."_blocks set title='$title', content='$content', position='$position', weight='$lastw', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'");
 	    } else {
-		sql_query("update ".$prefix."_blocks set title='$title', content='$content', position='$position', weight='$fweight', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'", $dbi);
+		mysqli_query($dbi, "update ".$prefix."_blocks set title='$title', content='$content', position='$position', weight='$fweight', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'");
 	    }
 	} else {
-	    $result = sql_query("update ".$prefix."_blocks set bkey='$bkey', title='$title', content='$content', url='$url', position='$position', weight='$weight', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'", $dbi);
+	    $result = mysqli_query($dbi, "update ".$prefix."_blocks set bkey='$bkey', title='$title', content='$content', url='$url', position='$position', weight='$weight', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'");
 	}
 	Header("Location: admin.php?op=BlocksAdmin");
     } else {
 	$title = stripslashes(FixQuotes($title));
 	$content = stripslashes(FixQuotes($content));
 	if ($oldposition != $position) {
-	    $result = sql_query("select bid from ".$prefix."_blocks where weight>='$weight' AND position='$position'", $dbi);
+	    $result = mysqli_query($dbi, "select bid from ".$prefix."_blocks where weight>='$weight' AND position='$position'");
 	    $fweight = $weight;
 	    $oweight = $weight;
-	    while (list($nbid) = sql_fetch_row($result, $dbi)) {
+	    while (list($nbid) = mysqli_fetch_row($result)) {
 		$weight++;
-		sql_query("update ".$prefix."_blocks set weight='$weight' where bid='$nbid'", $dbi);
+		mysqli_query($dbi, "update ".$prefix."_blocks set weight='$weight' where bid='$nbid'");
 	    }
-	    $result = sql_query("select bid from ".$prefix."_blocks where weight>'$oweight' AND position='$oldposition'", $dbi);
-	    while (list($obid) = sql_fetch_row($result, $dbi)) {
-		sql_query("update ".$prefix."_blocks set weight='$oweight' where bid='$obid'", $dbi);
+	    $result = mysqli_query($dbi, "select bid from ".$prefix."_blocks where weight>'$oweight' AND position='$oldposition'");
+	    while (list($obid) = mysqli_fetch_row($result)) {
+		mysqli_query($dbi, "update ".$prefix."_blocks set weight='$oweight' where bid='$obid'");
 		$oweight++;
 	    }
-	    $result = sql_query("select weight from ".$prefix."_blocks where position='$position' order by weight DESC limit 0,1", $dbi);
-	    list($lastw) = sql_fetch_row($result, $dbi);
+	    $result = mysqli_query($dbi, "select weight from ".$prefix."_blocks where position='$position' order by weight DESC limit 0,1");
+	    list($lastw) = mysqli_fetch_row($result);
 	    if ($lastw <= $fweight) {
 		$lastw++;
-		sql_query("update ".$prefix."_blocks set title='$title', content='$content', position='$position', weight='$lastw', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'", $dbi);
+		mysqli_query($dbi, "update ".$prefix."_blocks set title='$title', content='$content', position='$position', weight='$lastw', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'");
 	    } else {
-		sql_query("update ".$prefix."_blocks set title='$title', content='$content', position='$position', weight='$fweight', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'", $dbi);
+		mysqli_query($dbi, "update ".$prefix."_blocks set title='$title', content='$content', position='$position', weight='$fweight', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'");
 	    }
 	} else {
-	    $result = sql_query("update ".$prefix."_blocks set bkey='$bkey', title='$title', content='$content', url='$url', position='$position', weight='$weight', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'", $dbi);
+	    $result = mysqli_query($dbi, "update ".$prefix."_blocks set bkey='$bkey', title='$title', content='$content', url='$url', position='$position', weight='$weight', active='$active', refresh='$refresh', blanguage='$blanguage', view='$view' where bid='$bid'");
 	}
 	Header("Location: admin.php?op=BlocksAdmin");
     }
@@ -684,19 +684,19 @@ function BlocksEditSave($bid, $bkey, $title, $content, $url, $oldposition, $posi
 
 function ChangeStatus($bid, $ok=0) {
     global $prefix, $dbi;
-    $result = sql_query("select active from ".$prefix."_blocks where bid='$bid'", $dbi);
-    list($active) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select active from ".$prefix."_blocks where bid='$bid'");
+    list($active) = mysqli_fetch_row($result);
     if (($ok) OR ($active == 1)) {
 	if ($active == 0) {
 	    $active = 1;
 	} elseif ($active == 1) {
 	    $active = 0;
 	}
-	$result = sql_query("update ".$prefix."_blocks set active='$active' where bid='$bid'", $dbi);
+	$result = mysqli_query($dbi, "update ".$prefix."_blocks set active='$active' where bid='$bid'");
 	Header("Location: admin.php?op=BlocksAdmin");
     } else {
-	$result = sql_query("select title, content from ".$prefix."_blocks where bid='$bid'", $dbi);
-	list($title, $content) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select title, content from ".$prefix."_blocks where bid='$bid'");
+	list($title, $content) = mysqli_fetch_row($result);
 	include("header.php");
 	GraphicAdmin();
 	echo "<br>";
@@ -722,18 +722,18 @@ function ChangeStatus($bid, $ok=0) {
 function BlocksDelete($bid, $ok=0) {
     global $prefix, $dbi;
     if ($ok) {
-	$result = sql_query("select position, weight from ".$prefix."_blocks where bid='$bid'", $dbi);
-	list($position, $weight) = sql_fetch_row($result, $dbi);
-	$result = sql_query("select bid from ".$prefix."_blocks where weight>'$weight' AND position='$position'", $dbi);
-	while (list($nbid) = sql_fetch_row($result, $dbi)) {
-	    sql_query("update ".$prefix."_blocks set weight='$weight' where bid='$nbid'", $dbi);
+	$result = mysqli_query($dbi, "select position, weight from ".$prefix."_blocks where bid='$bid'");
+	list($position, $weight) = mysqli_fetch_row($result);
+	$result = mysqli_query($dbi, "select bid from ".$prefix."_blocks where weight>'$weight' AND position='$position'");
+	while (list($nbid) = mysqli_fetch_row($result)) {
+	    mysqli_query($dbi, "update ".$prefix."_blocks set weight='$weight' where bid='$nbid'");
 	    $weight++;
 	}
-	sql_query("delete from ".$prefix."_blocks where bid='$bid'", $dbi);
+	mysqli_query($dbi, "delete from ".$prefix."_blocks where bid='$bid'");
 	Header("Location: admin.php?op=BlocksAdmin");
     } else {
-        $result = sql_query("select title from ".$prefix."_blocks where bid='$bid'", $dbi);
-	list($title) = sql_fetch_row($result, $dbi);
+        $result = mysqli_query($dbi, "select title from ".$prefix."_blocks where bid='$bid'");
+	list($title) = mysqli_fetch_row($result);
 	include("header.php");
 	GraphicAdmin();
 	OpenTable();
@@ -762,8 +762,8 @@ function HeadlinesAdmin() {
 	."<td bgcolor=\"$bgcolor2\" align=\"center\"><b>"._SITENAME."</b></td>"
 	."<td bgcolor=\"$bgcolor2\" align=\"center\"><b>"._URL."</b></td>"
 	."<td bgcolor=\"$bgcolor2\" align=\"center\"><b>"._FUNCTIONS."</b></td><tr>";
-    $result = sql_query("select hid, sitename, headlinesurl from ".$prefix."_headlines order by hid", $dbi);
-    while(list($hid, $sitename, $headlinesurl) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select hid, sitename, headlinesurl from ".$prefix."_headlines order by hid");
+    while(list($hid, $sitename, $headlinesurl) = mysqli_fetch_row($result)) {
 	echo "<td bgcolor=\"$bgcolor1\" align=\"center\">$sitename</td>"
 	    ."<td bgcolor=\"$bgcolor1\" align=\"center\"><a href=\"$headlinesurl\" target=\"new\">$headlinesurl</a></td>"
 	    ."<td bgcolor=\"$bgcolor1\" align=\"center\">[ <a href=\"admin.php?op=HeadlinesEdit&amp;hid=$hid\">"._EDIT."</a> | <a href=\"admin.php?op=HeadlinesDel&amp;hid=$hid&amp;ok=0\">"._DELETE."</a> ]</td><tr>";
@@ -794,8 +794,8 @@ function HeadlinesEdit($hid) {
     echo "<center><font class=\"title\"><b>"._HEADLINESADMIN."</b></font></center>";
     CloseTable();
     echo "<br>";
-    $result = sql_query("select sitename, headlinesurl from ".$prefix."_headlines where hid='$hid'", $dbi);
-    list($xsitename, $headlinesurl) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select sitename, headlinesurl from ".$prefix."_headlines where hid='$hid'");
+    list($xsitename, $headlinesurl) = mysqli_fetch_row($result);
     OpenTable();
     echo "<center><font class=\"option\"><b>"._EDITHEADLINE."</b></font></center>
 	<form action=\"admin.php\" method=\"post\">
@@ -814,21 +814,21 @@ function HeadlinesEdit($hid) {
 function HeadlinesSave($hid, $xsitename, $headlinesurl) {
     global $prefix, $dbi;
     $xsitename = ereg_replace(" ", "", $xsitename);
-    sql_query("update ".$prefix."_headlines set sitename='$xsitename', headlinesurl='$headlinesurl' where hid='$hid'", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_headlines set sitename='$xsitename', headlinesurl='$headlinesurl' where hid='$hid'");
     Header("Location: admin.php?op=HeadlinesAdmin");
 }
 
 function HeadlinesAdd($xsitename, $headlinesurl) {
     global $prefix, $dbi;
     $xsitename = ereg_replace(" ", "", $xsitename);
-    sql_query("insert into ".$prefix."_headlines values (NULL, '$xsitename', '$headlinesurl')", $dbi);
+    mysqli_query($dbi, "insert into ".$prefix."_headlines values (NULL, '$xsitename', '$headlinesurl')");
     Header("Location: admin.php?op=HeadlinesAdmin");
 }
 
 function HeadlinesDel($hid, $ok=0) {
     global $prefix, $dbi;
     if($ok==1) {
-	sql_query("delete from ".$prefix."_headlines where hid=$hid", $dbi);
+	mysqli_query($dbi, "delete from ".$prefix."_headlines where hid=$hid");
 	Header("Location: admin.php?op=HeadlinesAdmin");
     } else {
 	include("header.php");

@@ -14,7 +14,7 @@
 
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 $result = sql_query("select radminarticle, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminarticle, $radminsuper) = sql_fetch_row($result, $dbi);
+list($radminarticle, $radminsuper) = mysqli_fetch_row($result, $dbi);
 if (($radminarticle==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -70,7 +70,7 @@ function SelectCategory($cat) {
 	$sel = "";
     }
     echo "<option name=\"catid\" value=\"0\" $sel>"._ARTICLES."</option>";
-    while(list($catid, $title) = sql_fetch_row($selcat, $dbi)) {
+    while(list($catid, $title) = mysqli_fetch_row($selcat, $dbi)) {
 	if ($catid == $cat) {
 	    $sel = "selected";
 	} else {
@@ -120,7 +120,7 @@ function AddCategory () {
 function EditCategory($catid) {
     global $prefix, $dbi;
     $result = sql_query("select title from ".$prefix."_stories_cat where catid='$catid'", $dbi);
-    list($title) = sql_fetch_row($result, $dbi);
+    list($title) = mysqli_fetch_row($result, $dbi);
     include ("header.php");
     GraphicAdmin();
     OpenTable();
@@ -135,7 +135,7 @@ function EditCategory($catid) {
 	echo "<b>"._ASELECTCATEGORY."</b>";
 	echo "<select name=\"catid\">";
 	echo "<option name=\"catid\" value=\"0\" $sel>Articles</option>";
-	while(list($catid, $title) = sql_fetch_row($selcat, $dbi)) {
+	while(list($catid, $title) = mysqli_fetch_row($selcat, $dbi)) {
 	    echo "<option name=\"catid\" value=\"$catid\" $sel>$title</option>";
 	}
 	echo "</select>";
@@ -160,7 +160,7 @@ function EditCategory($catid) {
 function DelCategory($cat) {
     global $prefix, $dbi;
     $result = sql_query("select title from ".$prefix."_stories_cat where catid='$cat'", $dbi);
-    list($title) = sql_fetch_row($result, $dbi);
+    list($title) = mysqli_fetch_row($result, $dbi);
     include ("header.php");
     GraphicAdmin();
     OpenTable();
@@ -174,7 +174,7 @@ function DelCategory($cat) {
 	echo "<form action=\"admin.php\" method=\"post\">"
 	    ."<b>"._SELECTCATDEL.": </b>"
 	    ."<select name=\"cat\">";
-	while(list($catid, $title) = sql_fetch_row($selcat, $dbi)) {
+	while(list($catid, $title) = mysqli_fetch_row($selcat, $dbi)) {
 	    echo "<option name=\"cat\" value=\"$catid\">$title</option>";
 	}
 	echo "</select>"
@@ -205,7 +205,7 @@ function YesDelCategory($catid) {
     global $prefix, $dbi;
     sql_query("delete from ".$prefix."_stories_cat where catid='$catid'", $dbi);
     $result = sql_query("select sid from ".$prefix."_stories where catid='$catid'", $dbi);
-    while(list($sid) = sql_fetch_row($result, $dbi)) {
+    while(list($sid) = mysqli_fetch_row($result, $dbi)) {
 	sql_query("delete from ".$prefix."_stories where catid='$catid'", $dbi);
 	sql_query("delete from ".$prefix."_comments where sid='$sid'", $dbi);
     }
@@ -215,7 +215,7 @@ function YesDelCategory($catid) {
 function NoMoveCategory($catid, $newcat) {
     global $prefix, $dbi;
     $result = sql_query("select title from ".$prefix."_stories_cat where catid='$catid'", $dbi);
-    list($title) = sql_fetch_row($result, $dbi);
+    list($title) = mysqli_fetch_row($result, $dbi);
     include ("header.php");
     GraphicAdmin();
     OpenTable();
@@ -231,7 +231,7 @@ function NoMoveCategory($catid, $newcat) {
 	echo "<b>"._SELECTNEWCAT.":</b> ";
 	echo "<select name=\"newcat\">";
         echo "<option name=\"newcat\" value=\"0\">"._ARTICLES."</option>";
-	while(list($newcat, $title) = sql_fetch_row($selcat, $dbi)) {
+	while(list($newcat, $title) = mysqli_fetch_row($selcat, $dbi)) {
     	    echo "<option name=\"newcat\" value=\"$newcat\">$title</option>";
 	}
 	echo "</select>";
@@ -241,7 +241,7 @@ function NoMoveCategory($catid, $newcat) {
 	echo "</form>";
     } else {
 	$resultm = sql_query("select sid from ".$prefix."_stories where catid='$catid'", $dbi);
-	while(list($sid) = sql_fetch_row($resultm, $dbi)) {
+	while(list($sid) = mysqli_fetch_row($resultm, $dbi)) {
 	    sql_query("update ".$prefix."_stories set catid='$newcat' where sid='$sid'", $dbi);
 	}
 	sql_query("delete from ".$prefix."_stories_cat where catid='$catid'", $dbi);
@@ -316,13 +316,13 @@ function autodelete($anid) {
 function autoEdit($anid) {
     global $aid, $bgcolor1, $bgcolor2, $prefix, $dbi, $multilingual;
     $result = sql_query("select radminarticle, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-    list($radminarticle, $radminsuper) = sql_fetch_row($result, $dbi);
+    list($radminarticle, $radminsuper) = mysqli_fetch_row($result, $dbi);
     $result2 = sql_query("select aid from ".$prefix."_stories where sid='$sid'", $dbi);
-    list($aaid) = sql_fetch_row($result2, $dbi);
+    list($aaid) = mysqli_fetch_row($result2, $dbi);
     if (($radminarticle == 1) AND ($aaid == $aid) OR ($radminsuper == 1)) {
     include ("header.php");
     $result = sql_query("select catid, aid, title, time, hometext, bodytext, topic, informant, notes, ihome, alanguage, acomm from ".$prefix."_autonews where anid=$anid", $dbi);
-    list($catid, $aid, $title, $time, $hometext, $bodytext, $topic, $informant, $notes, $ihome, $alanguage, $acomm) = sql_fetch_row($result, $dbi);
+    list($catid, $aid, $title, $time, $hometext, $bodytext, $topic, $informant, $notes, $ihome, $alanguage, $acomm) = mysqli_fetch_row($result, $dbi);
     ereg ("([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $time, $datetime);
     GraphicAdmin();
     OpenTable();
@@ -357,7 +357,7 @@ function autoEdit($anid) {
     $bodytext = stripslashes($bodytext);
     $notes = stripslashes($notes);
     $result=sql_query("select topicimage from ".$prefix."_topics where topicid=$topic", $dbi);
-    list($topicimage) = sql_fetch_row($result, $dbi);
+    list($topicimage) = mysqli_fetch_row($result, $dbi);
     echo "<table border=\"0\" width=\"75%\" cellpadding=\"0\" cellspacing=\"1\" bgcolor=\"$bgcolor2\" align=\"center\"><tr><td>"
 	."<table border=\"0\" width=\"100%\" cellpadding=\"8\" cellspacing=\"1\" bgcolor=\"$bgcolor1\"><tr><td>"
 	."<img src=\"images/topics/$topicimage\" border=\"0\" align=\"right\">";
@@ -368,7 +368,7 @@ function autoEdit($anid) {
 	."<b>"._TOPIC."</b> <select name=\"topic\">";
     $toplist = sql_query("select topicid, topictext from ".$prefix."_topics order by topictext", $dbi);
     echo "<option value=\"\">"._ALLTOPICS."</option>\n";
-    while(list($topicid, $topics) = sql_fetch_row($toplist, $dbi)) {
+    while(list($topicid, $topics) = mysqli_fetch_row($toplist, $dbi)) {
     if ($topicid==$topic) { $sel = "selected "; }
         echo "<option $sel value=\"$topicid\">$topics</option>\n";
 	$sel = "";
@@ -502,9 +502,9 @@ function autoEdit($anid) {
 function autoSaveEdit($anid, $year, $day, $month, $hour, $min, $title, $hometext, $bodytext, $topic, $notes, $catid, $ihome, $alanguage, $acomm) {
     global $aid, $ultramode, $prefix, $dbi;
     $result = sql_query("select radminarticle, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-    list($radminarticle, $radminsuper) = sql_fetch_row($result, $dbi);
+    list($radminarticle, $radminsuper) = mysqli_fetch_row($result, $dbi);
     $result2 = sql_query("select aid from ".$prefix."_stories where sid='$sid'", $dbi);
-    list($aaid) = sql_fetch_row($result2, $dbi);
+    list($aaid) = mysqli_fetch_row($result2, $dbi);
     if (($radminarticle == 1) AND ($aaid == $aid) OR ($radminsuper == 1)) {
     if ($day < 10) {
 	$day = "0$day";
@@ -575,7 +575,7 @@ function displayStory($qid) {
     }
     $date = "$tmonth $tday, $tyear @ $thour:$tmin:$tsec";
     $result = sql_query("SELECT qid, uid, uname, subject, story, storyext, topic, alanguage FROM ".$prefix."_queue where qid=$qid", $dbi);
-    list($qid, $uid, $uname, $subject, $story, $storyext, $topic, $alanguage) = sql_fetch_row($result, $dbi);
+    list($qid, $uid, $uname, $subject, $story, $storyext, $topic, $alanguage) = mysqli_fetch_row($result, $dbi);
     $subject = stripslashes($subject);
     $story = stripslashes($story);
     $storyext = stripslashes($storyext);
@@ -587,7 +587,7 @@ function displayStory($qid) {
 	."<input type=\"text\" NAME=\"author\" size=\"25\" value=\"$uname\">";
     if ($uname != $anonymous) {
 	$res = sql_query("select email from ".$prefix."_users where uname='$uname'", $dbi);
-	list($email) = sql_fetch_row($res, $dbi);
+	list($email) = mysqli_fetch_row($res, $dbi);
 	echo "&nbsp;&nbsp;<font class=\"content\">[ <a href=\"mailto:$email\">Email User</a> | <a href=\"modules.php?name=Private_Messges&amp;file=reply&amp;send=1&amp;uname=$uname\">Send Private Message</a> ]</font>";
     }
     echo "<br><br><b>"._TITLE."</b><br>"
@@ -596,7 +596,7 @@ function displayStory($qid) {
         $topic = 1;
     }
     $result = sql_query("select topicimage from ".$prefix."_topics where topicid=$topic", $dbi);
-    list($topicimage) = sql_fetch_row($result, $dbi);
+    list($topicimage) = mysqli_fetch_row($result, $dbi);
     echo "<table border=\"0\" width=\"70%\" cellpadding=\"0\" cellspacing=\"1\" bgcolor=\"$bgcolor2\" align=\"center\"><tr><td>"
 	."<table border=\"0\" width=\"100%\" cellpadding=\"8\" cellspacing=\"1\" bgcolor=\"$bgcolor1\"><tr><td>"
 	."<img src=\"images/topics/$topicimage\" border=\"0\" align=\"right\" alt=\"\">";
@@ -606,7 +606,7 @@ function displayStory($qid) {
 	."<br><b>"._TOPIC."</b> <select name=\"topic\">";
     $toplist = sql_query("select topicid, topictext from ".$prefix."_topics order by topictext", $dbi);
     echo "<option value=\"\">"._SELECTTOPIC."</option>\n";
-    while(list($topicid, $topics) = sql_fetch_row($toplist, $dbi)) {
+    while(list($topicid, $topics) = mysqli_fetch_row($toplist, $dbi)) {
         if ($topicid==$topic) {
 	    $sel = "selected ";
 	}
@@ -763,13 +763,13 @@ function previewStory($automated, $year, $day, $month, $hour, $min, $qid, $uid, 
 	."<input type=\"text\" name=\"author\" size=\"25\" value=\"$author\">";
     if ($author != $anonymous) {
 	$res = sql_query("select email from ".$prefix."_users where uname='$author'", $dbi);
-	list($email) = sql_fetch_row($res, $dbi);
+	list($email) = mysqli_fetch_row($res, $dbi);
 	echo "&nbsp;&nbsp;<font class=\"content\">[ <a href=\"mailto:$email\">Email User</a> | <a href=\"modules.php?name=Private_Messages&amp;file=reply&amp;send=1&amp;uname=$author\">Send Private Message</a> ]</font>";
     }
     echo "<br><br><b>"._TITLE."</b><br>"
 	."<input type=\"text\" name=\"subject\" size=\"50\" value=\"$subject\"><br><br>";
     $result = sql_query("select topicimage from ".$prefix."_topics where topicid=$topic", $dbi);
-    list($topicimage) = sql_fetch_row($result, $dbi);
+    list($topicimage) = mysqli_fetch_row($result, $dbi);
     echo "<table width=\"70%\" bgcolor=\"$bgcolor2\" cellpadding=\"0\" cellspacing=\"1\" border=\"0\"align=\"center\"><tr><td>"
 	."<table width=\"100%\" bgcolor=\"$bgcolor1\" cellpadding=\"8\" cellspacing=\"1\" border=\"0\"><tr><td>"
 	."<img src=\"images/topics/$topicimage\" border=\"0\" align=\"right\">";
@@ -778,7 +778,7 @@ function previewStory($automated, $year, $day, $month, $hour, $min, $qid, $uid, 
 	."<br><b>"._TOPIC."</b> <select name=\"topic\">";
     $toplist = sql_query("select topicid, topictext from ".$prefix."_topics order by topictext", $dbi);
     echo "<option value=\"\">"._ALLTOPICS."</option>\n";
-    while(list($topicid, $topics) = sql_fetch_row($toplist, $dbi)) {
+    while(list($topicid, $topics) = mysqli_fetch_row($toplist, $dbi)) {
         if ($topicid==$topic) {
 	    $sel = "selected ";
 	}
@@ -957,7 +957,7 @@ function postStory($automated, $year, $day, $month, $hour, $min, $qid, $uid, $au
 	    if(!sql_query("INSERT INTO ".$prefix."_poll_desc VALUES (NULL, '$pollTitle', '$timeStamp', 0, '$alanguage', '0')", $dbi)) {
 		return;
 	    }
-	    $object = sql_fetch_object(sql_query("SELECT pollID FROM ".$prefix."_poll_desc WHERE pollTitle='$pollTitle'", $dbi), $dbi);
+	    $object = mysqli_fetch_object(sql_query("SELECT pollID FROM ".$prefix."_poll_desc WHERE pollTitle='$pollTitle'", $dbi), $dbi);
 	    $id = $object->pollID;
 	    for($i = 1; $i <= sizeof($optionText); $i++) {
 		if($optionText[$i] != "") {
@@ -973,7 +973,7 @@ function postStory($automated, $year, $day, $month, $hour, $min, $qid, $uid, $au
 	}
 	$result = sql_query("insert into ".$prefix."_stories values (NULL, '$catid', '$aid', '$subject', now(), '$hometext', '$bodytext', '0', '0', '$topic', '$author', '$notes', '$ihome', '$alanguage', '$acomm', '$haspoll', '$id', '0', '0')", $dbi);
 	$result = sql_query("select sid from ".$prefix."_stories WHERE title='$subject' order by time DESC limit 0,1", $dbi);
-	list($artid) = sql_fetch_row($result, $dbi);
+	list($artid) = mysqli_fetch_row($result, $dbi);
 	sql_query("UPDATE ".$prefix."_poll_desc SET artid='$artid' WHERE pollID='$id'", $dbi);
 	if (!$result) {
 	    return;
@@ -993,9 +993,9 @@ function postStory($automated, $year, $day, $month, $hour, $min, $qid, $uid, $au
 function editStory($sid) {
     global $user, $bgcolor1, $bgcolor2, $aid, $prefix, $dbi, $multilingual;
     $result = sql_query("select radminarticle, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-    list($radminarticle, $radminsuper) = sql_fetch_row($result, $dbi);
+    list($radminarticle, $radminsuper) = mysqli_fetch_row($result, $dbi);
     $result2 = sql_query("select aid from ".$prefix."_stories where sid='$sid'", $dbi);
-    list($aaid) = sql_fetch_row($result2, $dbi);
+    list($aaid) = mysqli_fetch_row($result2, $dbi);
     if (($radminarticle == 1) AND ($aaid == $aid) OR ($radminsuper == 1)) {
 	include ('header.php');
 	GraphicAdmin();
@@ -1004,13 +1004,13 @@ function editStory($sid) {
 	CloseTable();
 	echo "<br>";
 	$result = sql_query("SELECT catid, title, hometext, bodytext, topic, notes, ihome, alanguage, acomm FROM ".$prefix."_stories where sid=$sid", $dbi);
-        list($catid, $subject, $hometext, $bodytext, $topic, $notes, $ihome, $alanguage, $acomm) = sql_fetch_row($result, $dbi);
+        list($catid, $subject, $hometext, $bodytext, $topic, $notes, $ihome, $alanguage, $acomm) = mysqli_fetch_row($result, $dbi);
 	$subject = stripslashes($subject);
         $hometext = stripslashes($hometext);
         $bodytext = stripslashes($bodytext);
         $notes = stripslashes($notes);
         $result2=sql_query("select topicimage from ".$prefix."_topics where topicid=$topic", $dbi);
-        list($topicimage) = sql_fetch_row($result2, $dbi);
+        list($topicimage) = mysqli_fetch_row($result2, $dbi);
         OpenTable();
         echo "<center><font class=\"option\"><b>"._EDITARTICLE."</b></font></center><br>"
 	    ."<table width=\"80%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\" bgcolor=\"$bgcolor2\" align=\"center\"><tr><td>"
@@ -1024,7 +1024,7 @@ function editStory($sid) {
 	    ."<b>"._TOPIC."</b> <select name=\"topic\">";
 	$toplist = sql_query("select topicid, topictext from ".$prefix."_topics order by topictext", $dbi);
 	echo "<option value=\"\">"._ALLTOPICS."</option>\n";
-	while(list($topicid, $topics) = sql_fetch_row($toplist, $dbi)) {
+	while(list($topicid, $topics) = mysqli_fetch_row($toplist, $dbi)) {
     	    if ($topicid==$topic) { $sel = "selected "; }
         	echo "<option $sel value=\"$topicid\">$topics</option>\n";
 		$sel = "";
@@ -1096,9 +1096,9 @@ function editStory($sid) {
 function removeStory($sid, $ok=0) {
     global $ultramode, $aid, $prefix, $dbi;
     $result = sql_query("select counter, radminarticle, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-    list($counter, $radminarticle, $radminsuper) = sql_fetch_row($result, $dbi);
+    list($counter, $radminarticle, $radminsuper) = mysqli_fetch_row($result, $dbi);
     $result2 = sql_query("select aid from ".$prefix."_stories where sid='$sid'", $dbi);
-    list($aaid) = sql_fetch_row($result2, $dbi);
+    list($aaid) = mysqli_fetch_row($result2, $dbi);
     if (($radminarticle == 1) AND ($aaid == $aid) OR ($radminsuper == 1)) {
 	if($ok) {
 	    $counter--;
@@ -1143,9 +1143,9 @@ function removeStory($sid, $ok=0) {
 function changeStory($sid, $subject, $hometext, $bodytext, $topic, $notes, $catid, $ihome, $alanguage, $acomm) {
     global $aid, $ultramode, $prefix, $dbi;
     $result = sql_query("select radminarticle, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-    list($radminarticle, $radminsuper) = sql_fetch_row($result, $dbi);
+    list($radminarticle, $radminsuper) = mysqli_fetch_row($result, $dbi);
     $result2 = sql_query("select aid from ".$prefix."_stories where sid='$sid'", $dbi);
-    list($aaid) = sql_fetch_row($result2, $dbi);
+    list($aaid) = mysqli_fetch_row($result2, $dbi);
     if (($radminarticle == 1) AND ($aaid == $aid) OR ($radminsuper == 1)) {
 	$subject = stripslashes(FixQuotes($subject));
 	$hometext = stripslashes(FixQuotes($hometext));
@@ -1201,7 +1201,7 @@ function adminStory() {
     $toplist = sql_query("select topicid, topictext from ".$prefix."_topics order by topictext", $dbi);
     echo "<select name=\"topic\">";
     echo "<option value=\"\">"._SELECTTOPIC."</option>\n";
-    while(list($topicid, $topics) = sql_fetch_row($toplist, $dbi)) {
+    while(list($topicid, $topics) = mysqli_fetch_row($toplist, $dbi)) {
         if ($topicid == $topic) {
 	    $sel = "selected ";
 	}
@@ -1349,7 +1349,7 @@ function previewAdminStory($automated, $year, $day, $month, $hour, $min, $subjec
     $hometext = stripslashes($hometext);
     $bodytext = stripslashes($bodytext);
     $result=sql_query("select topicimage from ".$prefix."_topics where topicid=$topic", $dbi);
-    list($topicimage) = sql_fetch_row($result, $dbi);
+    list($topicimage) = mysqli_fetch_row($result, $dbi);
     echo "<table border=\"0\" width=\"75%\" cellpadding=\"0\" cellspacing=\"1\" bgcolor=\"$bgcolor2\" align=\"center\"><tr><td>"
 	."<table border=\"0\" width=\"100%\" cellpadding=\"8\" cellspacing=\"1\" bgcolor=\"$bgcolor1\"><tr><td>"
 	."<img src=\"images/topics/$topicimage\" border=\"0\" align=\"right\" alt=\"\">";
@@ -1360,7 +1360,7 @@ function previewAdminStory($automated, $year, $day, $month, $hour, $min, $subjec
 	."<b>"._TOPIC."</b><select name=\"topic\">";
     $toplist = sql_query("select topicid, topictext from ".$prefix."_topics order by topictext", $dbi);
     echo "<option value=\"\">"._ALLTOPICS."</option>\n";
-    while(list($topicid, $topics) = sql_fetch_row($toplist, $dbi)) {
+    while(list($topicid, $topics) = mysqli_fetch_row($toplist, $dbi)) {
 	if ($topicid==$topic) {
 	    $sel = "selected ";
 	}
@@ -1524,7 +1524,7 @@ function postAdminStory($automated, $year, $day, $month, $hour, $min, $subject, 
 	    if(!sql_query("INSERT INTO ".$prefix."_poll_desc VALUES (NULL, '$pollTitle', '$timeStamp', 0, '$alanguage', '0')", $dbi)) {
 		return;
 	    }
-	    $object = sql_fetch_object(sql_query("SELECT pollID FROM ".$prefix."_poll_desc WHERE pollTitle='$pollTitle'", $dbi), $dbi);
+	    $object = mysqli_fetch_object(sql_query("SELECT pollID FROM ".$prefix."_poll_desc WHERE pollTitle='$pollTitle'", $dbi), $dbi);
 	    $id = $object->pollID;
 	    for($i = 1; $i <= sizeof($optionText); $i++) {
 		if($optionText[$i] != "") {
@@ -1540,7 +1540,7 @@ function postAdminStory($automated, $year, $day, $month, $hour, $min, $subject, 
 	}
 	$result = sql_query("insert into ".$prefix."_stories values (NULL, '$catid', '$aid', '$subject', now(), '$hometext', '$bodytext', '0', '0', '$topic', '$aid', '$notes', '$ihome', '$alanguage', '$acomm', '$haspoll', '$id', '0', '0')", $dbi);
 	$result = sql_query("select sid from ".$prefix."_stories WHERE title='$subject' order by time DESC limit 0,1", $dbi);
-	list($artid) = sql_fetch_row($result, $dbi);
+	list($artid) = mysqli_fetch_row($result, $dbi);
 	sql_query("UPDATE ".$prefix."_poll_desc SET artid='$artid' WHERE pollID='$id'", $dbi);
 	if (!$result) {
 	    exit();
@@ -1568,7 +1568,7 @@ function submissions() {
 	    echo "<table width=\"100%\"><tr><td bgcolor=\"$bgcolor1\" align=\"center\"><b>"._NOSUBMISSIONS."</b></td></tr></table>\n";
 	} else {
 	    echo "<center><font class=\"content\"><b>"._NEWSUBMISSIONS."</b></font><form action=\"admin.php\" method=\"post\"><table width=\"100%\" border=\"1\" bgcolor=\"$bgcolor2\">\n";
-	    while (list($qid, $subject, $timestamp, $alanguage) = sql_fetch_row($result, $dbi)) {
+	    while (list($qid, $subject, $timestamp, $alanguage) = mysqli_fetch_row($result, $dbi)) {
 		$hour = "AM";
 		ereg ("([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $timestamp, $datetime);
 		if ($datetime[4] > 12) { $datetime[4] = $datetime[4]-12; $hour = "PM"; }

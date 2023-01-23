@@ -29,7 +29,7 @@ $result = sql_query("SELECT sid, title FROM ".$prefix."_stories ORDER BY sid DES
         echo "<description>".htmlspecialchars($backend_title)."</description>\n";
 	echo "<language>$backend_language</language>\n\n";
         for ($m=0; $m < sql_num_rows($result, $dbi); $m++) {
-            list($sid, $title) = sql_fetch_row($result, $dbi);
+            list($sid, $title) = mysqli_fetch_row($result, $dbi);
             echo "<item>\n";
             echo "<title>".htmlspecialchars($title)."</title>\n";
             echo "<link>$nukeurl/modules.php?name=News&file=article&sid=$sid</link>\n";

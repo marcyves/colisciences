@@ -14,8 +14,8 @@
 
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 
-$result = sql_query("select radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radminsuper) = mysqli_fetch_row($result);
 if ($radminsuper==1) {
 
 /*********************************************************/
@@ -41,15 +41,15 @@ function modules() {
     sort($modlist);
     for ($i=0; $i < sizeof($modlist); $i++) {
 	if($modlist[$i] != "") {
-	    $result = sql_query("select mid from ".$prefix."_modules where title='$modlist[$i]'", $dbi);
-	    list ($mid) = sql_fetch_row($result, $dbi);
+	    $result = mysqli_query($dbi, "select mid from ".$prefix."_modules where title='$modlist[$i]'");
+	    list ($mid) = mysqli_fetch_row($result);
 	    if ($mid == "") {
-		sql_query("insert into ".$prefix."_modules values (NULL, '$modlist[$i]', '$modlist[$i]', '0', '0')", $dbi);
+		mysqli_query($dbi, "insert into ".$prefix."_modules values (NULL, '$modlist[$i]', '$modlist[$i]', '0', '0')");
 	    }
 	}
     }
-    $result = sql_query("select title from ".$prefix."_modules", $dbi);
-    while (list($title) = sql_Fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select title from ".$prefix."_modules");
+    while (list($title) = mysqli_fetch_row($result)) {
 	$a = 0;
 	$handle=opendir('modules');
 	while ($file = readdir($handle)) {
@@ -59,7 +59,7 @@ function modules() {
 	}
 	closedir($handle);
 	if ($a == 0) {
-	    sql_query("delete from ".$prefix."_modules where title='$title'", $dbi);
+	    mysqli_query($dbi, "delete from ".$prefix."_modules where title='$title'");
 	}
     }
     echo "<br>";
@@ -70,10 +70,10 @@ function modules() {
 	."<form action=\"admin.php\" method=\"post\">"
         ."<table border=\"1\" align=\"center\" width=\"90%\"><tr><td align=\"center\" bgcolor=\"$bgcolor2\">"
 	."<b>"._TITLE."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._CUSTOMTITLE."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._STATUS."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._VIEW."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._FUNCTIONS."</b></td></tr>";
-    $main_m = sql_query("select main_module from ".$prefix."_main", $dbi);
-    list($main_module) = sql_fetch_row($main_m, $dbi);
-    $result = sql_query("select mid, title, custom_title, active, view from ".$prefix."_modules order by title ASC", $dbi);
-    while(list($mid, $title, $custom_title, $active, $view) = sql_fetch_row($result, $dbi)) {
+    $main_m = mysqli_query($dbi, "select main_module from ".$prefix."_main");
+    list($main_module) = mysqli_fetch_row($main_m);
+    $result = mysqli_query($dbi, "select mid, title, custom_title, active, view from ".$prefix."_modules order by title ASC");
+    while(list($mid, $title, $custom_title, $active, $view) = mysqli_fetch_row($result)) {
 	if ($active == 1) {
 	    $active = _ACTIVE;
 	    $change = _DEACTIVATE;
@@ -121,38 +121,38 @@ function home_module($mid, $ok=0) {
 	GraphicAdmin();
 	title(""._HOMECONFIG."");
 	OpenTable();
-	$result = sql_query("select title from ".$prefix."_modules where mid='$mid'", $dbi);
-	list($new_m) = sql_fetch_row($result, $dbi);
-	$result = sql_query("select main_module from ".$prefix."_main", $dbi);
-	list($old_m) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select title from ".$prefix."_modules where mid='$mid'");
+	list($new_m) = mysqli_fetch_row($result);
+	$result = mysqli_query($dbi, "select main_module from ".$prefix."_main");
+	list($old_m) = mysqli_fetch_row($result);
 	echo "<center><b>"._DEFHOMEMODULE."</b><br><br>"
 	    .""._SURETOCHANGEMOD." <b>$old_m</b> "._TO." <b>$new_m</b>?<br><br>"
 	    ."[ <a href=\"admin.php?op=modules\">"._NO."</a> | <a href=\"admin.php?op=home_module&mid=$mid&ok=1\">"._YES."</a> ]</center>";
 	CloseTable();
 	include("footer.php");
     } else {
-	$result = sql_query("select title from ".$prefix."_modules where mid='$mid'", $dbi);
-	list($title) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select title from ".$prefix."_modules where mid='$mid'");
+	list($title) = mysqli_fetch_row($result);
 	$active = 1;
 	$view = 0;
-	$result = sql_query("update ".$prefix."_main set main_module='$title'", $dbi);
-	$result = sql_query("update ".$prefix."_modules set active='$active', view='$view' where mid='$mid'", $dbi);
+	$result = mysqli_query($dbi, "update ".$prefix."_main set main_module='$title'");
+	$result = mysqli_query($dbi, "update ".$prefix."_modules set active='$active', view='$view' where mid='$mid'");
 	Header("Location: admin.php?op=modules");
     }
 }
 
 function module_status($mid, $active) {
     global $prefix, $dbi;
-    sql_query("update ".$prefix."_modules set active='$active' where mid='$mid'", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_modules set active='$active' where mid='$mid'");
     Header("Location: admin.php?op=modules");
 }
 
 function module_edit($mid) {
     global $prefix, $dbi;
-    $main_m = sql_query("select main_module from ".$prefix."_main", $dbi);
-    list($main_module) = sql_fetch_row($main_m, $dbi);
-    $result = sql_query("select title, custom_title, view from ".$prefix."_modules where mid='$mid'", $dbi);
-    list($title, $custom_title, $view) = sql_fetch_row($result, $dbi);
+    $main_m = mysqli_query($dbi, "select main_module from ".$prefix."_main");
+    list($main_module) = mysqli_fetch_row($main_m);
+    $result = mysqli_query($dbi, "select title, custom_title, view from ".$prefix."_modules where mid='$mid'");
+    list($title, $custom_title, $view) = mysqli_fetch_row($result);
     include ("header.php");
     
     GraphicAdmin();
@@ -203,7 +203,7 @@ function module_edit($mid) {
 
 function module_edit_save($mid, $custom_title, $view) {
     global $prefix, $dbi;
-    $result = sql_query("update ".$prefix."_modules set custom_title='$custom_title', view='$view' where mid='$mid'", $dbi);
+    $result = mysqli_query($dbi, "update ".$prefix."_modules set custom_title='$custom_title', view='$view' where mid='$mid'");
     Header("Location: admin.php?op=modules");
 }
 

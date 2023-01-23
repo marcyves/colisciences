@@ -12,8 +12,8 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-$result = sql_query("select radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radminsuper) = mysqli_fetch_row($result);
 if ($radminsuper==1) {
 
 
@@ -32,8 +32,8 @@ function displayadmins() {
     OpenTable();
     echo "<center><font class=\"option\"><b>"._EDITADMINS."</b></font></center><br>"
 	."<table border=\"1\" align=\"center\">";
-    $result = sql_query("select aid, name, admlanguage from ".$prefix."_authors", $dbi);
-    while(list($a_aid, $name, $admlanguage) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select aid, name, admlanguage from ".$prefix."_authors");
+    while(list($a_aid, $name, $admlanguage) = mysqli_fetch_row($result)) {
         echo "<tr><td align=\"center\">$a_aid</td>";
 	if ($admlanguage == "") {
 	    $admlanguage = ""._ALL."";
@@ -128,8 +128,8 @@ function modifyadmin($chng_aid) {
     OpenTable();
     echo "<center><font class=\"option\"><b>"._MODIFYINFO."</b></font></center><br><br>";
     $adm_aid = $chng_aid;
-    $result = sql_query("select aid, name, url, email, pwd, radminarticle,radmintopic,radminuser,radminsurvey,radminsection,radminlink,radminephem,radminfaq,radmindownload,radminreviews,radminnewsletter,radminforum,radmincontent,radminency,radminsuper,admlanguage from ".$prefix."_authors where aid='$chng_aid'", $dbi);
-    list($chng_aid, $chng_name, $chng_url, $chng_email, $chng_pwd, $chng_radminarticle, $chng_radmintopic, $chng_radminuser, $chng_radminsurvey, $chng_radminsection, $chng_radminlink, $chng_radminephem, $chng_radminfaq, $chng_radmindownload, $chng_radminreviews, $chng_radminnewsletter, $chng_radminforum, $chng_radmincontent, $chng_radminency, $chng_radminsuper, $chng_admlanguage) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select aid, name, url, email, pwd, radminarticle,radmintopic,radminuser,radminsurvey,radminsection,radminlink,radminephem,radminfaq,radmindownload,radminreviews,radminnewsletter,radminforum,radmincontent,radminency,radminsuper,admlanguage from ".$prefix."_authors where aid='$chng_aid'");
+    list($chng_aid, $chng_name, $chng_url, $chng_email, $chng_pwd, $chng_radminarticle, $chng_radmintopic, $chng_radminuser, $chng_radminsurvey, $chng_radminsection, $chng_radminlink, $chng_radminephem, $chng_radminfaq, $chng_radmindownload, $chng_radminreviews, $chng_radminnewsletter, $chng_radminforum, $chng_radmincontent, $chng_radminency, $chng_radminsuper, $chng_admlanguage) = mysqli_fetch_row($result);
     $aid = $chng_aid;
     echo "<form action=\"admin.php\" method=\"post\">"
 	."<table border=\"0\">"
@@ -297,28 +297,28 @@ function updateadmin($chng_aid, $chng_name, $chng_email, $chng_url, $chng_radmin
 	}
 	$chng_pwd = md5($chng_pwd);
 	if ($chng_radminsuper == 1) {
-	    $result = sql_query("update ".$prefix."_authors set aid='$chng_aid', email='$chng_email', url='$chng_url', radminarticle='0', radmintopic='0', radminuser='0', radminsurvey='0', radminsection='0', radminlink='0', radminephem='0', radminfaq='0', radmindownload='0', radminreviews='0', radminnewsletter='0', radminforum='0', radmincontent='0', radminency='0', radminsuper='$chng_radminsuper', pwd='$chng_pwd', admlanguage='$chng_admlanguage' where name='$chng_name'", $dbi);
+	    $result = mysqli_query($dbi, "update ".$prefix."_authors set aid='$chng_aid', email='$chng_email', url='$chng_url', radminarticle='0', radmintopic='0', radminuser='0', radminsurvey='0', radminsection='0', radminlink='0', radminephem='0', radminfaq='0', radmindownload='0', radminreviews='0', radminnewsletter='0', radminforum='0', radmincontent='0', radminency='0', radminsuper='$chng_radminsuper', pwd='$chng_pwd', admlanguage='$chng_admlanguage' where name='$chng_name'");
 	    Header("Location: admin.php?op=mod_authors");
 	} else {
-	    $result = sql_query("update ".$prefix."_authors set aid='$chng_aid', email='$chng_email', url='$chng_url', radminarticle='$chng_radminarticle', radmintopic='$chng_radmintopic', radminuser='$chng_radminuser', radminsurvey='$chng_radminsurvey', radminsection='$chng_radminsection', radminlink='$chng_radminlink', radminephem='$chng_radminephem', radminfaq='$chng_radminfaq', radmindownload='$chng_radmindownload', radminreviews='$chng_radminreviews', radminnewsletter='$chng_radminnewsletter', radminforum='$chng_radminforum', radmincontent='$chng_radmincontent', radminency='$chng_radminency', radminsuper='0', pwd='$chng_pwd', admlanguage='$chng_admlanguage' where name='$chng_name'", $dbi);
+	    $result = mysqli_query($dbi, "update ".$prefix."_authors set aid='$chng_aid', email='$chng_email', url='$chng_url', radminarticle='$chng_radminarticle', radmintopic='$chng_radmintopic', radminuser='$chng_radminuser', radminsurvey='$chng_radminsurvey', radminsection='$chng_radminsection', radminlink='$chng_radminlink', radminephem='$chng_radminephem', radminfaq='$chng_radminfaq', radmindownload='$chng_radmindownload', radminreviews='$chng_radminreviews', radminnewsletter='$chng_radminnewsletter', radminforum='$chng_radminforum', radmincontent='$chng_radmincontent', radminency='$chng_radminency', radminsuper='0', pwd='$chng_pwd', admlanguage='$chng_admlanguage' where name='$chng_name'");
 	    Header("Location: admin.php?op=mod_authors");
 	}
     } else {
 	if ($chng_radminsuper == 1) {
-	    $result = sql_query("update ".$prefix."_authors set aid='$chng_aid', email='$chng_email', url='$chng_url', radminarticle='0', radmintopic='0', radminuser='0', radminsurvey='0', radminsection='0', radminlink='0', radminephem='0', radminfaq='0', radmindownload='0', radminreviews='0', radminnewsletter='0', radminforum='$chng_radminforum', radmincontent='$chng_radmincontent', radminency='$chng_radminency', radminsuper='$chng_radminsuper', admlanguage='$chng_admlanguage' where name='$chng_name'", $dbi);
+	    $result = mysqli_query($dbi, "update ".$prefix."_authors set aid='$chng_aid', email='$chng_email', url='$chng_url', radminarticle='0', radmintopic='0', radminuser='0', radminsurvey='0', radminsection='0', radminlink='0', radminephem='0', radminfaq='0', radmindownload='0', radminreviews='0', radminnewsletter='0', radminforum='$chng_radminforum', radmincontent='$chng_radmincontent', radminency='$chng_radminency', radminsuper='$chng_radminsuper', admlanguage='$chng_admlanguage' where name='$chng_name'");
 	    Header("Location: admin.php?op=mod_authors");
 	} else {
-	    $result = sql_query("update ".$prefix."_authors set aid='$chng_aid', email='$chng_email', url='$chng_url', radminarticle='$chng_radminarticle', radmintopic='$chng_radmintopic', radminuser='$chng_radminuser', radminsurvey='$chng_radminsurvey', radminsection='$chng_radminsection', radminlink='$chng_radminlink', radminephem='$chng_radminephem', radminfaq='$chng_radminfaq', radmindownload='$chng_radmindownload', radminreviews='$chng_radminreviews', radminnewsletter='$chng_radminnewsletter', radminforum='$chng_radminforum', radmincontent='$chng_radmincontent', radminency='$chng_radminency', radminsuper='0', admlanguage='$chng_admlanguage' where name='$chng_name'", $dbi);
+	    $result = mysqli_query($dbi, "update ".$prefix."_authors set aid='$chng_aid', email='$chng_email', url='$chng_url', radminarticle='$chng_radminarticle', radmintopic='$chng_radmintopic', radminuser='$chng_radminuser', radminsurvey='$chng_radminsurvey', radminsection='$chng_radminsection', radminlink='$chng_radminlink', radminephem='$chng_radminephem', radminfaq='$chng_radminfaq', radmindownload='$chng_radmindownload', radminreviews='$chng_radminreviews', radminnewsletter='$chng_radminnewsletter', radminforum='$chng_radminforum', radmincontent='$chng_radmincontent', radminency='$chng_radminency', radminsuper='0', admlanguage='$chng_admlanguage' where name='$chng_name'");
 	    Header("Location: admin.php?op=mod_authors");
 	}
     }
     if ($adm_aid != $chng_aid) {
-	$result = sql_query("select sid, aid, informant from ".$prefix."_stories where aid='$adm_aid'", $dbi);
-	while(list($sid, $old_aid, $informant) = sql_fetch_row($result)) {
+	$result = mysqli_query($dbi, "select sid, aid, informant from ".$prefix."_stories where aid='$adm_aid'");
+	while(list($sid, $old_aid, $informant) = mysqli_fetch_row($result)) {
 	    if ($old_aid == $informant) {
-		sql_query("update ".$prefix."_stories set informant='$chng_aid' where sid='$sid'", $dbi);
+		mysqli_query($dbi, "update ".$prefix."_stories set informant='$chng_aid' where sid='$sid'");
 	    }
-	    sql_query("update ".$prefix."_stories set aid='$chng_aid' WHERE sid='$sid'", $dbi);
+	    mysqli_query($dbi, "update ".$prefix."_stories set aid='$chng_aid' WHERE sid='$sid'");
 
 	}
     }
@@ -326,11 +326,11 @@ function updateadmin($chng_aid, $chng_name, $chng_email, $chng_url, $chng_radmin
 
 function deladmin2($del_aid) {
     global $prefix, $dbi;
-    $result = sql_query("select radminarticle from ".$prefix."_authors where aid='$del_aid'", $dbi);
-    list($radminarticle) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select radminarticle from ".$prefix."_authors where aid='$del_aid'");
+    list($radminarticle) = mysqli_fetch_row($result);
     if ($radminarticle == 1) {
-	$result2 = sql_query("select sid from ".$prefix."_stories where aid='$del_aid'", $dbi);
-	list($sid) = sql_fetch_row($result2, $dbi);
+	$result2 = mysqli_query($dbi, "select sid from ".$prefix."_stories where aid='$del_aid'");
+	list($sid) = mysqli_fetch_row($result2);
 	if ($sid != "") {
 	    include("header.php");
 	    GraphicAdmin();
@@ -341,9 +341,9 @@ function deladmin2($del_aid) {
 	    OpenTable();
 	    echo "<center><font class=\"option\"><b>"._PUBLISHEDSTORIES."</b></font><br><br>"
 		.""._SELECTNEWADMIN.":<br><br>";
-	    $res = sql_query("select aid from ".$prefix."_authors where aid!='$del_aid'", $dbi);
+	    $res = mysqli_query($dbi, "select aid from ".$prefix."_authors where aid!='$del_aid'");
 	    echo "<form action=\"admin.php\" method=\"post\"><select name=\"newaid\">";
-	    while(list($oaid) = sql_fetch_row($res, $dbi)) {
+	    while(list($oaid) = mysqli_fetch_row($res)) {
 		echo "<option name=\"newaid\" value=\"$oaid\">$oaid</option>";
 	    }
 	    echo "</select><input type=\"hidden\" name=\"del_aid\" value=\"$del_aid\">"
@@ -389,7 +389,7 @@ switch ($op) {
 	return;
     }
     $add_pwd = md5($add_pwd);
-    $result = sql_query("insert into ".$prefix."_authors values ('$add_aid', '$add_name', '$add_url', '$add_email', '$add_pwd', '0', '$add_radminarticle','$add_radmintopic','$add_radminuser','$add_radminsurvey','$add_radminsection','$add_radminlink','$add_radminephem','$add_radminfaq','$add_radmindownload','$add_radminreviews','$add_radminnewsletter','$add_radminforum','$add_radmincontent','$add_radminency','$add_radminsuper','$add_admlanguage')", $dbi);
+    $result = mysqli_query($dbi, "insert into ".$prefix."_authors values ('$add_aid', '$add_name', '$add_url', '$add_email', '$add_pwd', '0', '$add_radminarticle','$add_radmintopic','$add_radminuser','$add_radminsurvey','$add_radminsection','$add_radminlink','$add_radminephem','$add_radminfaq','$add_radmindownload','$add_radminreviews','$add_radminnewsletter','$add_radminforum','$add_radmincontent','$add_radminency','$add_radminsuper','$add_admlanguage')");
     if (!$result) {
 	return;
     }
@@ -416,15 +416,15 @@ switch ($op) {
     break;
 
     case "assignstories":
-    $result = sql_query("select sid from ".$prefix."_stories where aid='$del_aid'", $dbi);
-    while(list($sid) = sql_fetch_row($result, $dbi)) {
-	sql_query("update ".$prefix."_stories set aid='$newaid', informant='$newaid' where aid='$del_aid'", $dbi);
+    $result = mysqli_query($dbi, "select sid from ".$prefix."_stories where aid='$del_aid'");
+    while(list($sid) = mysqli_fetch_row($result)) {
+	mysqli_query($dbi, "update ".$prefix."_stories set aid='$newaid', informant='$newaid' where aid='$del_aid'");
     }
     Header("Location: admin.php?op=deladminconf&del_aid=$del_aid");
     break;
 
     case "deladminconf":
-    sql_query("delete from ".$prefix."_authors where aid='$del_aid'", $dbi);
+    mysqli_query($dbi, "delete from ".$prefix."_authors where aid='$del_aid'");
     Header("Location: admin.php?op=mod_authors");
     break;
 

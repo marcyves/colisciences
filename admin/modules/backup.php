@@ -16,7 +16,7 @@
 /************************************************************************/
 
 $result = mysql_query("select name, radminsuper from ".$prefix."_authors where aid='$aid'");
-list($name, $radminsuper) = mysql_fetch_row($result);
+list($name, $radminsuper) = mysqli_fetch_row($result);
 
 if ($radminsuper==1) {
 
@@ -30,19 +30,19 @@ if ($radminsuper==1) {
 		{
 			case french : 
 				// French Text
-				$strNoTablesFound	= "Aucune table n'a �t� trouv�e dans cette base.";
+				$strNoTablesFound	= "Aucune table n'a été trouvée dans cette base.";
 				$strHost		= "Serveur";
-				$strDatabase		= "Base de donn�es";
+				$strDatabase		= "Base de données";
 				$strTableStructure	= "Structure de la table";
 				$strDumpingData		= "Contenu de la table";
 				$strError		= "Erreur";
-				$strSQLQuery		= "requ�te SQL";
-				$strMySQLSaid		= "MySQL a r�pondu:";
+				$strSQLQuery		= "requéte SQL";
+				$strMySQLSaid		= "MySQL a répondu:";
 				$strBack		= "Retour";
 				$strFileName		= "Sauvegarde BD";
-				$strName		= "Sauvegarde de la base de donn�es";
-				$strDone		= "effectu�e le";
-				$strat			= "�";
+				$strName		= "Sauvegarde de la base de données";
+				$strDone		= "effectuée le";
+				$strat			= "é";
 				$strby			= "par";
 				$date_jour = date ("d-m-Y");
 				break;
@@ -96,7 +96,7 @@ if ($radminsuper==1) {
 		{
 		    $result = mysql_db_query($db, "SELECT * FROM $table") or mysql_die();
 		    $i = 0;
-		    while($row = mysql_fetch_row($result))
+		    while($row = mysqli_fetch_row($result))
 		    {
 		//        set_time_limit(60); // HaRa
 		        $table_list = "(";
@@ -138,7 +138,7 @@ if ($radminsuper==1) {
 		    $schema_create .= "CREATE TABLE $table ($crlf";
 		
 		    $result = mysql_db_query($db, "SHOW FIELDS FROM $table") or mysql_die();
-		    while($row = mysql_fetch_array($result))
+		    while($row = mymysqli_fetch_array($result))
 		    {
 		        $schema_create .= "   $row[Field] $row[Type]";
 		
@@ -152,7 +152,7 @@ if ($radminsuper==1) {
 		    }
 		    $schema_create = ereg_replace(",".$crlf."$", "", $schema_create);
 		    $result = mysql_db_query($db, "SHOW KEYS FROM $table") or mysql_die();
-		    while($row = mysql_fetch_array($result))
+		    while($row = mymysqli_fetch_array($result))
 		    {
 		        $kname=$row['Key_name'];
 		        if(($kname != "PRIMARY") && ($row['Non_unique'] == 0))

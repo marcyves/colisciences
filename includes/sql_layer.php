@@ -131,11 +131,11 @@ switch ($dbtype) {
 
 
 /* 
- * sql_query($query, $id)
+ * mysqli_query($dbi, $query, $id)
  * executes an SQL statement, returns a result identifier
  */
   
-function sql_query($query, $id)
+function mysqli_query($dbi, $query, $id)
 {
 global $dbtype;
 global $sql_debug;
@@ -203,12 +203,12 @@ switch ($dbtype) {
 }
 
 /*
- * sql_fetch_row($res,$row)           
+ * mysqli_fetch_row($res,$row)           
  * given a result identifier, returns an array with the resulting row  
  * Needs also a row number for compatibility with PostgreSQL           
  */                                  
                                      
-function sql_fetch_row($res, $nr)    
+function mysqli_fetch_row($res, $nr)    
 {                                    
 global $dbtype;                    
 
@@ -243,13 +243,13 @@ switch ($dbtype) {
 }                                    
                                      
 /*                                   
- * sql_fetch_array($res,$row)        
+ * mysqli_fetch_array($res,$row)        
  * given a result identifier, returns an associative array             
  * with the resulting row using field names as keys.                   
  * Needs also a row number for compatibility with PostgreSQL.          
  */                                  
                                      
-function sql_fetch_array($res, $nr)  
+function mysqli_fetch_array($res, $nr)  
 {                                    
 global $dbtype;                      
 switch ($dbtype) 
@@ -308,7 +308,7 @@ switch ($dbtype)
     }                                
 }
 
-function sql_fetch_object($res, $nr)
+function mysqli_fetch_object($res, $nr)
 {                                    
 global $dbtype;                      
 switch ($dbtype) 

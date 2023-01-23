@@ -28,17 +28,17 @@ $parcourspage = 1;
 require_once "fonctions.affichage.inc";
 
 /*
-$titre = "Mise � jour de la table cb_parcours_paragraphe";
-$sql = sql_query("select max(pid)  from cb_ouvrages",$dbi);
-list( $maxOuvrage) = sql_fetch_row($sql, $dbi);
+$titre = "Mise à jour de la table cb_parcours_paragraphe";
+$sql = mysqli_query($dbi, "select max(pid)  from cb_ouvrages");
+list( $maxOuvrage) = mysqli_fetch_row($sql);
 
 */
-$titre = "Mise � jour de la table cb_parcours_count";
+$titre = "Mise à jour de la table cb_parcours_count";
  $titre = stripslashes($titre);
 
 
 // --------------------------------------------------------------------------------//	
-// On envoie l'en-t�te de la page
+// On envoie l'en-téte de la page
 // --------------------------------------------------------------------------------//	
 include("header.php");
 
@@ -52,72 +52,72 @@ echo "<p>maxOuvrage = $maxOuvrage";
 for ($i=0;$i<=$maxOuvrage;$i++){
 	echo "<p>Ouvrage = $i";
 
-	$sql = sql_query("select nombre_noeuds from cb_ouvrages where pid='$i'",$dbi);
-	list( $maxNoeud) = sql_fetch_row($sql, $dbi);
+	$sql = mysqli_query($dbi, "select nombre_noeuds from cb_ouvrages where pid='$i'");
+	list( $maxNoeud) = mysqli_fetch_row($sql);
 	echo " maxNoeud = $maxNoeud<br>";
 	if ($maxNoeud>0){
 		//Boucle sur tous les paragraphes de l'ouvrage
 //		for ($paragraphe=1;$paragraphe<$maxNoeud;$paragraphe++){
 $paragraphe = $maxNoeud;
-			$sql = sql_query("select count(source) from cb_parcours where ouvrage=$i and source='$paragraphe'",$dbi);
-			sql_query($sql, $dbi);
-			list($count) = sql_fetch_row($sql, $dbi);
+			$sql = mysqli_query($dbi, "select count(source) from cb_parcours where ouvrage=$i and source='$paragraphe'");
+			mysqli_query($dbi, $sql);
+			list($count) = mysqli_fetch_row($sql);
 			echo "$paragraphe = $count |";
 			$sql = "INSERT INTO cb_parcours_paragraphe ( pid , ouvrage , paragraphe , count ) VALUES ('', '$i', '$paragraphe', '$count')";
-			if (!sql_query($sql, $dbi)) echo "<font color=red>ERREUR</font>";			
+			if (!mysqli_query($dbi, $sql)) echo "<font color=red>ERREUR</font>";			
 //		}
 	}
 
 }
 
 echo "<h1>Traitement cb_parcours</h1>";
-		$sql = mysql_query("select distinct idParcours, user from cb_parcours order by user",$dbi);
-		while (list($idParcours, $visiteur)=sql_fetch_row($sql, $dbi)){
+		$sql = mymysqli_query($dbi, "select distinct idParcours, user from cb_parcours order by user");
+		while (list($idParcours, $visiteur)=mysqli_fetch_row($sql)){
 			$user = clean_user_id($visiteur);
 			if ($user!=$visiteur){
 //			echo "change $visiteur en $user<br>";
 				$sql2 = "update cb_parcours set user='$user' where idParcours='$idParcours'";
-				$result = mysql_query($sql2, $dbi);
+				$result = mymysqli_query($dbi, $sql2);
 				if (!($result)) {
 					echo "<font color=red>ERREUR: $result</font>";
 				}
-				$rc = sql_query($sql2,$dbi);
+				$rc = mysqli_query($dbi, $sql2);
 //				echo $sql2.";<br>";
 			}else{
-				echo "$visiteur � revoir<br>";
+				echo "$visiteur é revoir<br>";
 			}
 		}
 
 echo "<h1>traitement cb_parcours_count</h1>";
-		$sql = sql_query("select distinct user from cb_parcours_count order by user",$dbi);
-		while (list($visiteur)=sql_fetch_row($sql, $dbi)){
+		$sql = mysqli_query($dbi, "select distinct user from cb_parcours_count order by user");
+		while (list($visiteur)=mysqli_fetch_row($sql)){
 			$user = clean_user_id($visiteur);
 			if ($user!=$visiteur){
 				echo "change $visiteur en $user<br>";
-				$sql2 = sql_query("update cb_parcours_count set user='$user' where user='$visiteur'",$dbi);
+				$sql2 = mysqli_query($dbi, "update cb_parcours_count set user='$user' where user='$visiteur'");
 			}else{
-				echo "$visiteur � revoir<br>";
+				echo "$visiteur é revoir<br>";
 			}
 		}
 
 */		
 echo "<h1>traitement cb_parcours_count</h1>";
-		$sql1 = mysql_query("select distinct ouvrage, user from cb_parcours_count order by user");
-		while (list($ouvrage, $visiteur)=mysql_fetch_row($sql1)){
+		$sql1 = mymysqli_query($dbi, "select distinct ouvrage, user from cb_parcours_count order by user");
+		while (list($ouvrage, $visiteur)=mymysqli_fetch_row($sql1)){
 			echo "<br>traitement pour $ouvrage et $visiteur: <br>";
 			$sql = "select sum(count) from cb_parcours_count where ouvrage='$ouvrage' and user='$visiteur'";
 //			echo $sql;
-			$result = mysql_query($sql);
-			list($count) = mysql_fetch_row($result);
+			$result = mymysqli_query($dbi, $sql);
+			list($count) = mymysqli_fetch_row($result);
 			echo "count=$count ";
 			$sql = "select sum(elapsed) from cb_parcours_count where ouvrage='$ouvrage' and user='$visiteur'";
-			$result = mysql_query($sql);
-			list($elapsed) = mysql_fetch_row($result);
+			$result = mymysqli_query($dbi, $sql);
+			list($elapsed) = mymysqli_fetch_row($result);
 			echo "elapsed=$elapsed";
 			$sql = "delete from cb_parcours_count where ouvrage='$ouvrage' and user='$visiteur'";
-			mysql_query($sql);
+			mymysqli_query($dbi, $sql);
 			$sql = "insert into cb_parcours_count values( NULL, '$ouvrage', '$count', '$elapsed', '$visiteur')";
-			mysql_query($sql);
+			mymysqli_query($dbi, $sql);
 		}
 
 

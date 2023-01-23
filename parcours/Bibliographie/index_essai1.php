@@ -1,7 +1,7 @@
 <?php
 
 /***********************************************************
-*modification Vincent LE Druillennec Romain Ferran 12 février 2004
+*modification Vincent LE Druillennec Romain Ferran 12 fÃ©vrier 2004
 * but refaire le moteur de recherche
 ************************************************************/	
 
@@ -34,7 +34,7 @@ if(isset($_GET["firstetou"]))$firstetou=$_GET["firstetou"];
 if(isset($_GET["secondetou"]))$secondetou=$_GET["secondetou"];	
 
 /*
-* on verifie si l'operateur methrecherhe existe sinon on le cré et on mets rien dedans
+* on verifie si l'operateur methrecherhe existe sinon on le crÃ© et on mets rien dedans
 * ceci impliquera l'affichage par default dans le switch
 */
 
@@ -44,8 +44,8 @@ if (!isset($methrecherhe))
 }
 
 /*
-*switch principale de la page qui permet d'aller au moteur à un critère au mutlicritère
-* par défaut mutlicritère
+*switch principale de la page qui permet d'aller au moteur Ã© un critÃ©re au mutlicritÃ©re
+* par dÃ©faut mutlicritÃ©re
 */
 
 switch($methrecherhe) {
@@ -81,7 +81,7 @@ function content($tid, $ltr, $page=0, $query="") {
     global $prefix, $dbi, $sitename, $admin, $module_name;
     include("header.php");
     OpenTable();
-    $result = sql_query("SELECT Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs, Hyperlien , TypeHyperlien from cb_biblio where Numero='$tid'", $dbi);		
+    $result = mysqli_query($dbi, "SELECT Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs, Hyperlien , TypeHyperlien from cb_biblio where Numero='$tid'");		
 	//afficheEntreesBiblio($result);
 	newafficheEntreesBiblio($result);
     CloseTable();
@@ -90,13 +90,13 @@ function content($tid, $ltr, $page=0, $query="") {
 
 /**
  * newafficheEntresBiblio()
- * Meme fonction que lla fonction afficheEntresBiblio.  La différence elle affiche les hyperliens
+ * Meme fonction que lla fonction afficheEntresBiblio.  La diffÃ©rence elle affiche les hyperliens
  * @return 
  */
 function newafficheEntreesBiblio($sql){
 	global $dbi, $theme;
 
-   	while (list($Dates, $type, $Titre, $Compil, $Lieu, $EditeurRevue, $Reference, $Commentaires, $Auteurs, $Hyperlien , $TypeHyperlien ) = sql_fetch_row($sql, $dbi)) 
+   	while (list($Dates, $type, $Titre, $Compil, $Lieu, $EditeurRevue, $Reference, $Commentaires, $Auteurs, $Hyperlien , $TypeHyperlien ) = mysqli_fetch_row($sql)) 
 	{
 		$type=strtolower($type);
 		switch ($type)
@@ -136,7 +136,7 @@ function newafficheEntreesBiblio($sql){
 	echo "<center><br><br>[ <a href=\"javascript:history.go(-1)\">Retour</a> ]</center>";
 }
 
-//****************************debut de la fonction à un critère************************************
+//****************************debut de la fonction Ã© un critÃ©re************************************
 
 function recherchesimple($op,$eid, $query, $ltr)
 {
@@ -144,7 +144,7 @@ function recherchesimple($op,$eid, $query, $ltr)
 
 	include("header.php");
 	OpenTable();
-	print("<a href=\"index.php?module=$module&methrecherhe=mutli\">recherche à multicritère</a><br> \n");//&amp;file=search
+	print("<a href=\"index.php?module=$module&methrecherhe=mutli\">recherche Ã© multicritÃ©re</a><br> \n");//&amp;file=search
 	
 	if (!isset($op))
 	{
@@ -206,15 +206,15 @@ function encysearch() {
 	
 	 	."<input type=hidden name=methrecherhe value=simple>"
 	     ." <select name=\"eid\" size=\"1\">
-           	<option value=\"\" selected>-- Mots Clés --</option>
+           	<option value=\"\" selected>-- Mots ClÃ©s --</option>
             <option value=\"Auteurs\">Auteur</option>
-	    	<option value=\"Titre\">Début du titre</option>
+	    	<option value=\"Titre\">DÃ©but du titre</option>
             <option value=\"Article\">Article</option>
 	    	<option value=\"Livre\">Livre</option>
             <option value=\"EditeurRevue\">Editeur</option>
 		     	</select> &nbsp;&nbsp;";
 				
-/*	<option value=\"Auteurs_foie\">Auteurs qui ont travaillé sur le foie</option>*/
+/*	<option value=\"Auteurs_foie\">Auteurs qui ont travaillÃ© sur le foie</option>*/
 
 	echo "<input type=\"text\" size=\"20\" name=\"query\">&nbsp;&nbsp;"
 	."<input type=\"hidden\" name=\"op\" value=\"search\">"
@@ -225,21 +225,21 @@ function encysearch() {
 
 function alpha($quoi) {
     	global $module, $prefix, $dbi;
-	echo "<h2>Bibliographie complète</h2><br>";
+	echo "<h2>Bibliographie complÃ©te</h2><br>";
 
 	if ($quoi == "Article")
 	{
-		print("<p align=\"justify\">Triée par titre et uniquement les articles :</p>\n");
+		print("<p align=\"justify\">TriÃ©e par titre et uniquement les articles :</p>\n");
 	}
 	else
 	{
 		if ($quoi == "Livre")
 		{
-			print("<p align=\"justify\">Triée par titre et uniquement les livres :</p>\n");
+			print("<p align=\"justify\">TriÃ©e par titre et uniquement les livres :</p>\n");
 		}
 		else
 		{
-			echo"<p align=\"justify\">Triée par : $quoi</p>\n";
+			echo"<p align=\"justify\">TriÃ©e par : $quoi</p>\n";
     		}
 	}
 	echo "<center>Choisissez une lettre</center><br><br>";
@@ -264,7 +264,7 @@ function alpha($quoi) {
 	{
 		$sql = "select Titre from cb_biblio where Titre LIKE '$ltr%'";
 	}
-	$result = mysql_query($sql,$dbi);
+	$result = mysqli_query($dbi, $sql);
 	$count = mysql_num_rows($result);
 
 	//print("$count");
@@ -291,33 +291,33 @@ function terms($quoi, $ltr) {
 	global $module_name, $prefix, $sitename, $dbi, $admin;
 	$ltr=addslashes($ltr);
 	title("Bibliographie");
-	echo "<center>Vous pouvez sélectionner un terme dans la liste ci-dessous:</center><br><br>"
+	echo "<center>Vous pouvez sÃ©lectionner un terme dans la liste ci-dessous:</center><br><br>"
 	."<table border=\"1\" align=\"center\">";
 	
 	$quoi= ucfirst($quoi);
 	if($quoi == "Auteurs" || $quoi == "Titre"  || $quoi == "EditeurRevue" )
 	{
 		//print("boucle 1 \n");
-		$result = sql_query("select Numero, $quoi, Titre from cb_biblio where $quoi LIKE '$ltr%' order by $quoi", $dbi); //------------->    UPPER($quoi)     , $dbi);
+		$result = mysqli_query($dbi, "select Numero, $quoi, Titre from cb_biblio where $quoi LIKE '$ltr%' order by $quoi"); //------------->    UPPER($quoi)     );
 	}
 	elseif ($quoi == "Article" || $quoi == "Livre")
 	{
 		//print("boucle 2 \n");
-		$result = sql_query("select Numero, Type, Titre from cb_biblio where Titre LIKE '$ltr%' AND Type LIKE '$quoi' order by Titre ", $dbi);
+		$result = mysqli_query($dbi, "select Numero, Type, Titre from cb_biblio where Titre LIKE '$ltr%' AND Type LIKE '$quoi' order by Titre ");
 	}
 	else
 	{
 		//print("boucle 4 \n");
-		$result = sql_query("select Numero, Titre, Titre from cb_biblio where Titre LIKE '$ltr%' order by Titre", $dbi);
+		$result = mysqli_query($dbi, "select Numero, Titre, Titre from cb_biblio where Titre LIKE '$ltr%' order by Titre");
 	}
 
-	//    $result = mysql_query("select Numero, $quoi, Titre from cb_biblio where $quoi LIKE '$ltr%' order by $quoi"); // , $dbi
-    	//list($numero, $biblio, $categorie, $dates, $type, $titre, $compil, $lieu, $editeurRevue, $reference, $commentaires, $auteurs) = mysql_fetch_row($result, $dbi);
+	//    $result = mysqli_query($dbi, "select Numero, $quoi, Titre from cb_biblio where $quoi LIKE '$ltr%' order by $quoi"); // , $dbi
+    	//list($numero, $biblio, $categorie, $dates, $type, $titre, $compil, $lieu, $editeurRevue, $reference, $commentaires, $auteurs) = mymysqli_fetch_row($result);
 	if (sql_num_rows($result) == 0)///, $dbi
 	{  
 		echo "<center><i>"._NOCONTENTFORLETTER." $ltr.</i></center>";
 	}
-	while(list($tid, $title, $detail) = sql_fetch_row($result, $dbi)) 
+	while(list($tid, $title, $detail) = mysqli_fetch_row($result)) 
 		{  
 			echo "<tr><td><a href=\"parcours.php?name=$module_name&amp;methrecherhe=content&amp;tid=$tid\">$title</a>";
 			if ($title != $detail)
@@ -329,7 +329,7 @@ function terms($quoi, $ltr) {
 		echo "</table><br><br>";
 		//alpha($quoi);
 }
-//****************************fin de la fonction à un critère *************************************
+//****************************fin de la fonction Ã© un critÃ©re *************************************
 
 //****************************debut de la fonction multicritere************************************
 
@@ -341,7 +341,7 @@ global $module, $prefix, $sitename, $dbi, $admin;
 //global $module_name, $db;
 
 	/*
-	* on verifie si l'operateur op existe sinon on le cré et on mets rien dedans
+	* on verifie si l'operateur op existe sinon on le crÃ© et on mets rien dedans
 	* ceci impliquera l'affichage par default dans le switch
 	*/
 
@@ -398,10 +398,10 @@ global $module, $prefix, $sitename, $dbi, $admin;
 
 
 	OpenTable();
-	echo "<center>Vous pouvez sélectionner un terme dans la liste ci-dessous:</center><br><br>";
+	echo "<center>Vous pouvez sÃ©lectionner un terme dans la liste ci-dessous:</center><br><br>";
 
 /*
-*Verification si il ya ua moin 1 des 3 critères
+*Verification si il ya ua moin 1 des 3 critÃ©res
 */
     if($titres !="" || $auteurs !="" || $firstdates !="" || $seconddates !="" )
      {
@@ -447,7 +447,7 @@ global $module, $prefix, $sitename, $dbi, $admin;
 	}
 /*
 //*****************************************************************************************		
-//parti non utilisé pour l'instant tant que les colonnes Disciplines et Domaines ne seront pas defini dans cb_biblio
+//parti non utilisÃ© pour l'instant tant que les colonnes Disciplines et Domaines ne seront pas defini dans cb_biblio
 //
 //
 //Verifie si la discipline contient des donnes
@@ -474,15 +474,15 @@ global $module, $prefix, $sitename, $dbi, $admin;
 
 
 		$queryencyclo1 = "SELECT eid FROM nuke_encyclopedia where title LIKE 'disciplines' "; 
-		$resultencyclo1 = mysql_query($queryencyclo1);
-       		while($row = mysql_fetch_array($resultencyclo1))
+		$resultencyclo1 = mysqli_query($dbi, $queryencyclo1);
+       		while($row = mymysqli_fetch_array($resultencyclo1))
        		{	
 			$netid=$row[eid];
 		}
 
 		$queryencyclo = "SELECT tid FROM nuke_encyclopedia_text where title LIKE '$disciplines' AND eid LIKE '$netid' "; 
-		$resultencyclo = mysql_query($queryencyclo);
-       		while($rowencyclo = mysql_fetch_array($resultencyclo))
+		$resultencyclo = mysqli_query($dbi, $queryencyclo);
+       		while($rowencyclo = mymysqli_fetch_array($resultencyclo))
        		{
 			$id=$rowencyclo[tid];
 		}
@@ -602,13 +602,13 @@ global $module, $prefix, $sitename, $dbi, $admin;
 	/*
 	*realise la requete
 	*/
-	$result = sql_query($query, $dbi);
+	$result = mysqli_query($dbi, $query);
      }
 	echo "<table border=\"1\" align=\"center\" valign=\"center\">";
 
 	/*
 	*si dans le cas une requete existe on affiche le contenu
-	* sinon voir( else ) affichage d'un message indiquant l'absence de donnée
+	* sinon voir( else ) affichage d'un message indiquant l'absence de donnÃ©e
 	*/
 
  	if($realiserequete == "1")
@@ -616,15 +616,15 @@ global $module, $prefix, $sitename, $dbi, $admin;
 			$num_rows = sql_num_rows($result);
 
 //*****************************************A SUPPRIMER********************
-			print(" le nombre de resultat correspondant à la requete est : $num_rows .\n");
+			print(" le nombre de resultat correspondant Ã© la requete est : $num_rows .\n");
 //********************************************************************
 
 			if($num_rows != FALSE)
 			{
 	/*
-	*Affichage des données s'il y en a!!!!
+	*Affichage des donnÃ©es s'il y en a!!!!
 	*/			
-				while($row = sql_fetch_array($result, $dbi))
+				while($row = mysqli_fetch_array($result))
 				{
 				echo "<tr>\n";
 				print("<td><a href=\"parcours.php?name=$module_name&methrecherhe=content&tid=$row[Numero]\">$row[Titre]</a> : <br> $row[Auteurs], $row[Dates] <br>\n");
@@ -635,10 +635,10 @@ global $module, $prefix, $sitename, $dbi, $admin;
 			}
 			else
 	/*
-	*Affichage d'un message indiquant via les critères il n'y a aucune solution
+	*Affichage d'un message indiquant via les critÃ©res il n'y a aucune solution
 	*/
 			{
-				echo "<tr><td> Il n'y a aucune donnée correspondant à votre demande (";
+				echo "<tr><td> Il n'y a aucune donnÃ©e correspondant Ã© votre demande (";
 				if($titres !="")
 				{
 					$mtitres=stripslashes($titres);					
@@ -661,7 +661,7 @@ global $module, $prefix, $sitename, $dbi, $admin;
 				{
 					$firstdates=stripslashes($firstdates);
 					$seconddates=stripslashes($seconddates);
-					echo" et periode de = <i> $firstdates </i> à <i> $seconddates </i>";
+					echo" et periode de = <i> $firstdates </i> Ã© <i> $seconddates </i>";
 				}
 				else
 				{
@@ -696,7 +696,7 @@ function search($titresinfo,$auteursinfo,$firstdatesinfo,$seconddatesinfo,$forma
  {
 global $module, $prefix, $sitename, $dbi, $admin;
 //global $module_name;
-print("<center><b> Rechercher à multiples critères :</b></center>");
+print("<center><b> Rechercher Ã© multiples critÃ©res :</b></center>");
 
 		print("<form name=\"form1\" method=\"post\" action=\"index.php?module=$module\">");
 		print("<input type=hidden name=opmulit value=result>");
@@ -721,7 +721,7 @@ print("<center><b> Rechercher à multiples critères :</b></center>");
 
 //*************************************************************************************************************
 /*
-*Partis non utilisé pour l'instant peut servir lorsqu'il y aura les collonnes disciplines et domaines dans la table cb-biblio
+*Partis non utilisÃ© pour l'instant peut servir lorsqu'il y aura les collonnes disciplines et domaines dans la table cb-biblio
 *
 *
 		print("<tr><td></td><td class=box> <b><input type=\"radio\" name=\"secondetou\" value=\"ET\" checked>ET / ");
@@ -729,18 +729,18 @@ print("<center><b> Rechercher à multiples critères :</b></center>");
 
 		print("<tr bordercolor=#cccccc><td class=box>Discipline : </td>");
 		print("<td class=box><select class=inpt_main name=disciplines :>");                                                                                                      
-            	print(" <option value=\"\" selected>- - - - - - - Mots Clés - - - - - - - </option>");
+            	print(" <option value=\"\" selected>- - - - - - - Mots ClÃ©s - - - - - - - </option>");
 
 		$query = "SELECT eid FROM nuke_encyclopedia where title LIKE 'disciplines' "; 
-		$result = mysql_query($query);
-       		while($row = mysql_fetch_array($result))
+		$result = mysqli_query($dbi, $query);
+       		while($row = mymysqli_fetch_array($result))
        		{	
 			$netid=$row[eid];
 		}
 
 		$query = "SELECT tid, title FROM nuke_encyclopedia_text where eid LIKE '$netid' "; 
-		$result = mysql_query($query);
-       		while($row = mysql_fetch_array($result))
+		$result = mysqli_query($dbi, $query);
+       		while($row = mymysqli_fetch_array($result))
        		{	
 			print("<option> $row[title] </option>");
 		}
@@ -753,18 +753,18 @@ print("<center><b> Rechercher à multiples critères :</b></center>");
 		print("<tr bordercolor=#cccccc><td class=box>Domaine : </td>");
 
 		print("<td class=box><select class=inpt_main name=domaines>");
-		print(" <option value=\"\" selected>-- Mots Clés --</option>");
+		print(" <option value=\"\" selected>-- Mots ClÃ©s --</option>");
 	
 		$query = "SELECT eid FROM nuke_encyclopedia where title LIKE 'Domaines' "; 
-		$result = mysql_query($query);
-       		while($row = mysql_fetch_array($result))
+		$result = mysqli_query($dbi, $query);
+       		while($row = mymysqli_fetch_array($result))
        		{	
 			$netid=$row[eid];
 		}
 
 		$query = "SELECT title FROM nuke_encyclopedia_text where eid LIKE '$netid' "; 
-		$result = mysql_query($query);
-       		while($row = mysql_fetch_array($result))
+		$result = mysqli_query($dbi, $query);
+       		while($row = mymysqli_fetch_array($result))
        		{	
 			print("<option> $row[title] </option>");
 		}
@@ -788,7 +788,7 @@ print("<center><b> Rechercher à multiples critères :</b></center>");
 
 		print("<tr bordercolor=#cccccc><td ><b>Annee de : </b> </td>");
 		print("<td ><b><input class=inpt_main type=\"text\" name=\"firstdates\" size=\"4\" maxlength=\"4\" value=\"$firstdatesinfo\">&nbsp;&nbsp;");
-		print("<b> à &nbsp;</b><input class=inpt_main type=\"text\" name=\"seconddates\" size=\"4\" maxlength=\"4\" value=\"$seconddatesinfo\"></td></tr>");
+		print("<b> Ã© &nbsp;</b><input class=inpt_main type=\"text\" name=\"seconddates\" size=\"4\" maxlength=\"4\" value=\"$seconddatesinfo\"></td></tr>");
 
 /*
 *Verifie le type de format

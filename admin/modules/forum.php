@@ -23,8 +23,8 @@
 ######################################################################
 
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
-$result = sql_query("select radminforum, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminforum, $radminsuper) = sql_fetch_row($result, $dbi);
+$result = sql_query("select radminforum, radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radminforum, $radminsuper) = mysqli_fetch_row($result);
 if (($radminforum==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -64,9 +64,9 @@ function ForumAdmin() {
         <td bgcolor=\"$bgcolor2\"><font color=\"$textcolor2\"><center><b>"._BBAFUNC."</b></td></tr>";
 
     $result = mysql_query("select cat_id, cat_order, cat_title from ".$prefix."_catagories order by cat_order");
-    while(list($cat_id, $cat_order, $cat_title) = mysql_fetch_row($result)) {
+    while(list($cat_id, $cat_order, $cat_title) = mymysqli_fetch_row($result)) {
     $gets = mysql_query("select count(*) as total from ".$prefix."_forums where cat_id=$cat_id");
-        $numbers= mysql_fetch_array($gets);
+        $numbers= mymysqli_fetch_array($gets);
         $cat_title = stripslashes($cat_title);
     echo "
         <td align=\"center\">$cat_order</td>
@@ -116,7 +116,7 @@ if($changes=="up") {
                 if(!$r  = mysql_query($sql)) {
                         die("Error quering the database");
                            }
-                 list($last_number) = mysql_fetch_array($r);
+                 list($last_number) = mymysqli_fetch_array($r);
                  if($last_number != $cat_order) {
                     $order = $cat_order + 1;
                     $sql = "UPDATE ".$prefix."_catagories SET cat_order = $cat_order WHERE cat_order = $order";
@@ -154,7 +154,7 @@ function ForumGo($cat_id,$ctg) {
         <td bgcolor=\"$bgcolor2\"><font color=\"$textcolor2\"><center><b>"._BBAFUNC."</b></td></tr>";
 
     $result = mysql_query("select forum_id, forum_name, forum_desc, forum_access, forum_moderator, forum_type from ".$prefix."_forums where cat_id='$cat_id'");
-    while(list($forum_id, $forum_name, $forum_desc, $forum_access, $forum_moderator, $forum_type) = mysql_fetch_row($result)) {
+    while(list($forum_id, $forum_name, $forum_desc, $forum_access, $forum_moderator, $forum_type) = mymysqli_fetch_row($result)) {
 
         echo "<tr>
         <td align=\"center\">$forum_name</td>
@@ -164,7 +164,7 @@ function ForumGo($cat_id,$ctg) {
 # Multi Moderator
 $count = 0;
         $sql = mysql_query ("SELECT u.uid, u.uname FROM ".$user_prefix."_users u, ".$prefix."_forum_mods f WHERE f.forum_id = '$forum_id' and f.user_id = u.uid");
-        while(list($mod_id, $xmod_names) = mysql_fetch_array($sql)) {
+        while(list($mod_id, $xmod_names) = mymysqli_fetch_array($sql)) {
                 if($count > 0)
                         echo ", ";
                          echo "<a href=\"modules.php?name=Your_Account&amp;op=userinfo&uname=".trim($xmod_names)."\">".trim($xmod_names)."</a>";
@@ -233,7 +233,7 @@ function ForumGoEdit($forum_id) {
     GraphicAdmin();
     title(""._FORUMSADMIN."");
     $result = mysql_query("select forum_id, forum_name, forum_desc, forum_access, cat_id, forum_type from ".$prefix."_forums where forum_id='$forum_id'");
-    list($forum_id, $forum_name, $forum_desc, $forum_access, $cat_id_1, $forum_type) = mysql_fetch_row($result);
+    list($forum_id, $forum_name, $forum_desc, $forum_access, $cat_id_1, $forum_type) = mymysqli_fetch_row($result);
     $forum_name = stripslashes($forum_name);
     $forum_desc = stripslashes($forum_desc);
     OpenTable();
@@ -250,11 +250,11 @@ function ForumGoEdit($forum_id) {
     if(!$r = mysql_query($sql)) {
 	die("Error connecting to the database.");
     }
-    if($row = mysql_fetch_array($r)) {
+    if($row = mymysqli_fetch_array($r)) {
 	do {
     	    echo "$row[uname] (<input type=\"checkbox\" name=\"rem_mods[]\" value=\"$row[uid]\"> "._BBAREMOVE.")<BR>";
             $current_mods[] = $row[uid];
-        } while($row = mysql_fetch_array($r));
+        } while($row = mymysqli_fetch_array($r));
     } else {
 	echo ""._BBANOMOD."\n";
     }
@@ -281,7 +281,7 @@ function ForumGoEdit($forum_id) {
     <tr><td>"._BBACHGCAT.": </td>
     <td><SELECT NAME=\"cat_id\">";
     $result = mysql_query("select cat_id, cat_title from ".$prefix."_catagories");
-    while(list($cat_id, $cat_title) = mysql_fetch_row($result)) {
+    while(list($cat_id, $cat_title) = mymysqli_fetch_row($result)) {
         if ($cat_id == $cat_id_1) {
     echo "<OPTION VALUE=\"$cat_id\" selected>$cat_title</OPTION>";
     } else {
@@ -317,7 +317,7 @@ function ForumCatEdit($cat_id) {
     GraphicAdmin();
     title(""._FORUMSADMIN."");
     $result = mysql_query("select cat_id, cat_title from ".$prefix."_catagories where cat_id='$cat_id'");
-    list($cat_id, $cat_title) = mysql_fetch_row($result);
+    list($cat_id, $cat_title) = mymysqli_fetch_row($result);
     OpenTable();
     echo "
     <center><font size=\"4\"><b>"._BBAEDITCAT."</b></font></center>
@@ -346,7 +346,7 @@ function ForumGoSave($forum_id, $forum_name, $forum_desc, $forum_access, $modera
     $forum_name = addslashes($forum_name);
     $forum_desc = addslashes($forum_desc);
     $result = mysql_query("select uid from ".$user_prefix."_users where uname='$moderator'");
-    list($uid) = mysql_fetch_row($result);
+    list($uid) = mymysqli_fetch_row($result);
     if ($uid == '') {
 	include("header.php");
         GraphicAdmin();
@@ -364,14 +364,14 @@ function ForumGoSave($forum_id, $forum_name, $forum_desc, $forum_access, $modera
     $count = 0;
     if(isset($moderator)) {
 	$result = mysql_query("SELECT uid FROM ".$user_prefix."_users WHERE uname='$moderator'");
-	list($uid) = mysql_fetch_row($result);
+	list($uid) = mymysqli_fetch_row($result);
 	$result = mysql_query("UPDATE ".$user_prefix."_users SET user_level = 2 WHERE uid='$uid'");
 	$result = mysql_query("INSERT INTO ".$prefix."_forum_mods (forum_id, user_id) VALUES ('$forum_id', '$uid')");
     }
     if(!isset($moderator)) {
 	$current_mods = "SELECT count(*) AS total FROM ".$prefix."_forum_mods WHERE forum_id = '$forum_id'";
         $r = @mysql_query($current_mods);
-        list($total) = mysql_fetch_array($r);
+        list($total) = mymysqli_fetch_array($r);
     } else {
 	$total = count($moderator) + 1;
     }
@@ -393,7 +393,7 @@ function ForumGoSave($forum_id, $forum_name, $forum_desc, $forum_access, $modera
 function ForumCatAdd($catagories) {
     global $prefix, $dbi;
     $result = mysql_query("SELECT max(cat_order) AS highest FROM ".$prefix."_catagories");
-    list($highest) = mysql_fetch_array($result);
+    list($highest) = mymysqli_fetch_array($result);
     if (!$highest) {
 	$highest=1;
     } else {
@@ -411,7 +411,7 @@ function ForumGoAdd($forum_name, $forum_desc, $forum_access, $moderator, $cat_id
 	die("You did not fill out all the parts of the form.<br>Did you assign at least one moderator? Please go back and correct the form.");
     }
     $result = mysql_query("select uid from ".$user_prefix."_users where uname='$moderator'");
-    list($uid) = mysql_fetch_row($result);
+    list($uid) = mymysqli_fetch_row($result);
     if ($uid == '') {
 	include("header.php");
         GraphicAdmin();
@@ -431,7 +431,7 @@ function ForumGoAdd($forum_name, $forum_desc, $forum_access, $moderator, $cat_id
     }
     $forum = mysql_insert_id();
     $result = mysql_query("SELECT uid FROM ".$user_prefix."_users WHERE uname='$moderator'");
-    list($uid) = mysql_fetch_row($result);
+    list($uid) = mymysqli_fetch_row($result);
     $result = mysql_query("UPDATE ".$user_prefix."_users SET user_level = 2 WHERE uid='$uid'");
     $result = mysql_query("INSERT INTO ".$prefix."_forum_mods (forum_id, user_id) VALUES ('$forum', '$uid')");
     Header("Location: admin.php?op=ForumGo&cat_id=$cat_id");
@@ -441,7 +441,7 @@ function ForumCatDel($cat_id, $ok=0) {
         global $prefix, $dbi;
     if($ok==1) {
         $result = mysql_query("select forum_id from ".$prefix."_forums where cat_id='$cat_id'");
-        while(list($forum_id) = mysql_fetch_row($result)) {
+        while(list($forum_id) = mymysqli_fetch_row($result)) {
         mysql_query("delete from ".$prefix."_forumtopics where forum_id=$forum_id");
         }
         mysql_query("delete from ".$prefix."_forums where cat_id=$cat_id");
@@ -471,7 +471,7 @@ function ForumGoDel($forum_id, $ok=0) {
                         if ($r[post_id]) {
                          $sql = "DELETE FROM ".$prefix."_posts_text WHERE ";
                          $looped = FALSE;
-                         while($ids = mysql_fetch_array($r))
+                         while($ids = mymysqli_fetch_array($r))
                          {
                                  if($looped == TRUE)
                                  {
@@ -531,7 +531,7 @@ function PrivForumUser($forum_id) {
                 die("Couldn't find forum.\n");
         }
         $forum_name = "";
-        if ($row = mysql_fetch_array($result)) {
+        if ($row = mymysqli_fetch_array($result)) {
                 $forum_name = $row[forum_name];
         }
 ?>
@@ -563,7 +563,7 @@ function PrivForumUser($forum_id) {
 
                         $current_users = Array();
 
-                        while ($row = mysql_fetch_array($result))
+                        while ($row = mymysqli_fetch_array($result))
                         {
                                 $current_users[] = $row[uid];
                         }
@@ -579,7 +579,7 @@ function PrivForumUser($forum_id) {
               {
                       die("Error getting user list from db.".mysql_error()." $sql\n");
               }
-              while ($row = mysql_fetch_array($result))
+              while ($row = mymysqli_fetch_array($result))
               {
 ?>
              <OPTION VALUE="<?php echo $row[uid] ?>"> <?php echo $row[uname] ?> </OPTION>
@@ -608,7 +608,7 @@ function PrivForumUser($forum_id) {
 <TABLE BORDER="0" CELLPADDING="10" CELLSPACING="0">
 
 <?php
-                        while ($row = mysql_fetch_array($result))
+                        while ($row = mymysqli_fetch_array($result))
                         {
                                 $post_text = ($row[can_post]) ? "can" : "can't";
                                 $post_text .= " post";
@@ -719,7 +719,7 @@ function ForumBanAdmin() {
         <td bgcolor=\"$bgcolor2\"><font color=\"$textcolor2\"><center><b>"._BBADURATION."</b></td>
         <td bgcolor=\"$bgcolor2\"><font color=\"$textcolor2\"><center><b>"._BBAFUNC."</b></td></tr>";
     $result = mysql_query("SELECT ban_id, ban_ip, ban_start, ban_end, ban_time_type FROM ".$prefix."_banlist WHERE ban_ip");
-    while(list($ban_id, $ban_ip, $ban_start, $ban_end, $ban_time_type) = mysql_fetch_row($result)) {
+    while(list($ban_id, $ban_ip, $ban_start, $ban_end, $ban_time_type) = mymysqli_fetch_row($result)) {
       if($ban_end == 0) {
               $dur = "Parmanent";
       }
@@ -762,9 +762,9 @@ function ForumBanAdmin() {
         <td bgcolor=\"$bgcolor2\"><font color=\"$textcolor2\"><center><b>"._BBADURATION."</b></td>
         <td bgcolor=\"$bgcolor2\"><font color=\"$textcolor2\"><center><b>"._BBAFUNC."</b></td></tr>";
     $result = mysql_query("SELECT ban_id, ban_userid, ban_start, ban_end, ban_time_type FROM ".$prefix."_banlist WHERE ban_userid");
-    while(list($ban_id, $ban_userid, $ban_start, $ban_end, $ban_time_type) = mysql_fetch_row($result)) {
+    while(list($ban_id, $ban_userid, $ban_start, $ban_end, $ban_time_type) = mymysqli_fetch_row($result)) {
             $result = mysql_query("SELECT uname FROM ".$user_prefix."_users WHERE uid='$ban_userid'");
-            list($uname) = mysql_fetch_row($result);
+            list($uname) = mymysqli_fetch_row($result);
       if($ban_end == 0) {
               $dur = "Parmanent";
       }
@@ -862,7 +862,7 @@ function BanAdd($ipusername, $banby, $duration, $durtype) {
       Header("Location: admin.php?op=ForumBanAdmin");
      } else {
                 $result = mysql_query("SELECT uid FROM ".$user_prefix."_users WHERE uname='$ipusername'");
-                list($uid) = mysql_fetch_array($result);
+                list($uid) = mymysqli_fetch_array($result);
                         if($uid) {
                             $sql = "INSERT INTO ".$prefix."_banlist (ban_userid, ban_start, ban_end, ban_time_type) VALUES ('$uid', '$starttime', '$endtime', '$durtype')";
                                     if(!$r = mysql_query($sql)) {
@@ -882,12 +882,12 @@ function BanEdit($ban_id,$banby) {
     title(""._FORUMSADMIN."");
     if ($banby=="2") {
             $result = mysql_query("SELECT ban_id, ban_userid, ban_start, ban_end, ban_time_type FROM ".$prefix."_banlist WHERE ban_id='$ban_id'");
-            list($ban_id, $ban_userid, $ban_start, $ban_end, $ban_time_type) = mysql_fetch_row($result);
+            list($ban_id, $ban_userid, $ban_start, $ban_end, $ban_time_type) = mymysqli_fetch_row($result);
             $result = mysql_query("SELECT uname FROM ".$user_prefix."_users WHERE uid='$ban_userid'");
-            list($uname) = mysql_fetch_row($result);
+            list($uname) = mymysqli_fetch_row($result);
         } else {
             $result = mysql_query("SELECT ban_id, ban_ip, ban_start, ban_end, ban_time_type FROM ".$prefix."_banlist WHERE ban_id='$ban_id'");
-            list($ban_id, $ban_userid, $ban_start, $ban_end, $ban_time_type) = mysql_fetch_row($result);
+            list($ban_id, $ban_userid, $ban_start, $ban_end, $ban_time_type) = mymysqli_fetch_row($result);
         }
     if($ban_end == 0) {
               $timetext = "Permanent";
@@ -999,7 +999,7 @@ function BanSave($ban_id, $ipusername, $durtype, $duration, $banby) {
       Header("Location: admin.php?op=ForumBanAdmin");
      } else {
                 $result = mysql_query("SELECT uid FROM ".$user_prefix."_users WHERE uname='$ipusername'");
-                list($uid) = mysql_fetch_array($result);
+                list($uid) = mymysqli_fetch_array($result);
                         if($uid) {
                                 $sql = "UPDATE ".$prefix."_banlist SET ban_userid='$ipusername', ban_start='$starttime', ban_end='$end_time', ban_time_type='$durtype' WHERE ban_id='$ban_id'";
                                     if(!$r = mysql_query($sql)) {
@@ -1047,7 +1047,7 @@ function ForumCensorAdmin() {
 	<td bgcolor=\"$bgcolor2\"><center>"._BBAREPLACEMENT."</td>
 	<td bgcolor=\"$bgcolor2\"><center>"._BBAFUNC."</td></tr>";
     $result = mysql_query("SELECT word_id, word, replacement from ".$prefix."_words order by word_id");
-    while(list($word_id, $word, $replacement) = mysql_fetch_row($result)) {
+    while(list($word_id, $word, $replacement) = mymysqli_fetch_row($result)) {
 	$word = stripslashes($word);
 	$replacement = stripslashes($replacement);
     	echo "
@@ -1085,7 +1085,7 @@ function WordForumEdit($word_id) {
     GraphicAdmin();
     title(""._FORUMSADMIN."");
     $result = mysql_query("SELECT word_id, word, replacement FROM ".$prefix."_words WHERE word_id='$word_id'");
-    list($word_id, $word, $replacement) = mysql_fetch_row($result);
+    list($word_id, $word, $replacement) = mymysqli_fetch_row($result);
 	$word=stripslashes($word);
 	$replacement=stripslashes($replacement);
     OpenTable();
@@ -1137,7 +1137,7 @@ function ForumConfigAdmin() {
     title(""._FORUMSADMIN."");
     OpenTable();
     $result = mysql_query("select allow_html, allow_bbcode, allow_sig, posts_per_page, hot_threshold, topics_per_page, email_sig, email_from from ".$prefix."_config");
-    list($allow_html,$allow_bbcode,$allow_sig,$posts_per_page,$hot_threshold,$topics_per_page,$email_sig,$email_from) = mysql_fetch_row($result);
+    list($allow_html,$allow_bbcode,$allow_sig,$posts_per_page,$hot_threshold,$topics_per_page,$email_sig,$email_from) = mymysqli_fetch_row($result);
                    $email_from = stripslashes($email_from);
                    $email_sig = stripslashes($email_sig);
     echo "
@@ -1235,7 +1235,7 @@ function ForumManagerAdmin() {
         <td bgcolor=\"$bgcolor2\"><font color=\"$textcolor2\"><center><b>"._BBAACTIVE."</b></font></td>
         <td bgcolor=\"$bgcolor2\"><font color=\"$textcolor2\"><center><b>"._BBAFUNC."</b></font></td></tr>";
     $result = mysql_query("SELECT id,code,smile_url,emotion,active FROM ".$prefix."_smiles");
-    while(list($id,$code,$smile_url,$emotion,$active) = mysql_fetch_row($result)) {
+    while(list($id,$code,$smile_url,$emotion,$active) = mymysqli_fetch_row($result)) {
         $emotion = stripslashes($emotion);
     echo "
         <td align=\"center\">$code</td>
@@ -1289,7 +1289,7 @@ function ForumSmiliesEdit($id) {
     GraphicAdmin();
     title(""._FORUMSADMIN."");
     $result = mysql_query("SELECT id,code,smile_url,emotion,active FROM ".$prefix."_smiles WHERE id='$id'");
-    list($id,$code,$smile_url,$emotion,$active) = mysql_fetch_row($result);
+    list($id,$code,$smile_url,$emotion,$active) = mymysqli_fetch_row($result);
         $emotion = stripslashes($emotion);
     OpenTable();
     echo "
@@ -1400,7 +1400,7 @@ function RankForumAdmin() {
         <td bgcolor=\"$bgcolor2\"><center>"._BBRANKIMM."</td>
         <td>&nbsp</td></tr>";
     $result = mysql_query("select rank_id, rank_title, rank_min, rank_max, rank_special, rank_image from ".$prefix."_ranks order by rank_id");
-    while(list($rank_id, $rank_title, $rank_min, $rank_max, $rank_special, $rank_image) = mysql_fetch_row($result)) {
+    while(list($rank_id, $rank_title, $rank_min, $rank_max, $rank_special, $rank_image) = mymysqli_fetch_row($result)) {
         $rank_title = stripslashes($rank_title);
             echo "
         <td align=\"center\">$rank_title</td>
@@ -1474,7 +1474,7 @@ function RankForumEdit($rank_id) {
     GraphicAdmin();
     title(""._FORUMSADMIN."");
     $result = mysql_query("select rank_title, rank_min, rank_max, rank_special, rank_image from ".$prefix."_ranks where rank_id='$rank_id'");
-    list($rank_title, $rank_min, $rank_max, $rank_special, $rank_image) = mysql_fetch_row($result);
+    list($rank_title, $rank_min, $rank_max, $rank_special, $rank_image) = mymysqli_fetch_row($result);
     OpenTable();
 JavaAvatar();
     echo "

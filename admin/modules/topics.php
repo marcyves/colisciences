@@ -15,7 +15,7 @@
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 
 $result = sql_query("select radmintopic, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radmintopic, $radminsuper) = sql_fetch_row($result, $dbi);
+list($radmintopic, $radminsuper) = mysqli_fetch_row($result, $dbi);
 if (($radmintopic==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -35,7 +35,7 @@ function topicsmanager() {
 	."<table border=\"0\" width=\"100%\" align=\"center\" cellpadding=\"2\">";
     $count = 0;
     $result = sql_query("select topicid, topicname, topicimage, topictext from ".$prefix."_topics order by topicname", $dbi);
-    while(list($topicid, $topicname, $topicimage, $topictext) = sql_fetch_array($result, $dbi)) {
+    while(list($topicid, $topicname, $topicimage, $topictext) = mysqli_fetch_array($result, $dbi)) {
 	echo "<td align=\"center\">"
 	    ."<a href=\"admin.php?op=topicedit&amp;topicid=$topicid\"><img src=\"images/topics/$topicimage\" border=\"0\" alt=\"\"></a><br>"
 	    ."<font class=\"content\"><b>$topictext</td>";
@@ -93,7 +93,7 @@ function topicedit($topicid) {
     echo "<br>";
     OpenTable();
     $result = sql_query("select topicid, topicname, topicimage, topictext from ".$prefix."_topics where topicid=$topicid", $dbi);
-    list($topicid, $topicname, $topicimage, $topictext) = sql_fetch_array($result, $dbi);
+    list($topicid, $topicname, $topicimage, $topictext) = mysqli_fetch_array($result, $dbi);
     echo "<img src=\"images/topics/$topicimage\" border=\"0\" align=\"right\" alt=\"$topictext\">"
 	."<font class=\"option\"><b>"._EDITTOPIC.": $topictext</b></font>"
 	."<br><br>"
@@ -138,7 +138,7 @@ function topicedit($topicid) {
     if ($num == 0) {
 	echo "<tr><td><font class=\"tiny\">"._NORELATED."</font></td></tr>";
     }
-    while(list($rid, $name, $url) = sql_fetch_row($res, $dbi)) {
+    while(list($rid, $name, $url) = mysqli_fetch_row($res, $dbi)) {
         echo "<tr><td align=\"left\"><font class=\"content\"><strong><big>&middot;</big></strong>&nbsp;&nbsp;<a href=\"$url\">$name</a></td>"
     	    ."<td align=\"center\"><font class=\"content\"><a href=\"$url\">$url</a></td><td align=\"right\"><font class=\"content\">[ <a href=\"admin.php?op=relatededit&amp;tid=$topicid&amp;rid=$rid\">"._EDIT."</a> | <a href=\"admin.php?op=relateddelete&amp;tid=$topicid&amp;rid=$rid\">"._DELETE."</a> ]</td></tr>";
     }
@@ -160,9 +160,9 @@ function relatededit($tid, $rid) {
     CloseTable();
     echo "<br>";
     $result=sql_query("select name, url from ".$prefix."_related where rid=$rid", $dbi);
-    list($name, $url) = sql_fetch_row($result, $dbi);
+    list($name, $url) = mysqli_fetch_row($result, $dbi);
     $result2=sql_query("select topictext, topicimage from ".$prefix."_topics where topicid=$tid", $dbi);
-    list($topictext, $topicimage) = sql_fetch_row($result2, $dbi);
+    list($topictext, $topicimage) = mysqli_fetch_row($result2, $dbi);
     OpenTable();    
     echo "<center>"
 	."<img src=\"images/topics/$topicimage\" border=\"0\" alt=\"$topictext\" align=\"right\">"
@@ -220,12 +220,12 @@ function topicdelete($topicid, $ok=0) {
     global $prefix, $dbi;
     if ($ok==1) {
 	$result=sql_query("select sid from ".$prefix."_stories where topic='$topicid'", $dbi);
-	list($sid) = sql_fetch_row($result, $dbi);
+	list($sid) = mysqli_fetch_row($result, $dbi);
 	sql_query("delete from ".$prefix."_stories where topic='$topicid'", $dbi);
 	sql_query("delete from ".$prefix."_topics where topicid='$topicid'", $dbi);
 	sql_query("delete from ".$prefix."_related where tid='$topicid'", $dbi);
 	$result = sql_query("select sid from ".$prefix."_comments where sid='$sid'", $dbi);
-	list($sid) = sql_fetch_row($result, $dbi);
+	list($sid) = mysqli_fetch_row($result, $dbi);
 	sql_query("delete from ".$prefix."_comments where sid='$sid'", $dbi);
 	Header("Location: admin.php?op=topicsmanager");
     } else {
@@ -237,7 +237,7 @@ function topicdelete($topicid, $ok=0) {
 	CloseTable();
 	echo "<br>";
 	$result2=sql_query("select topicimage, topictext from ".$prefix."_topics where topicid='$topicid'", $dbi);
-	list($topicimage, $topictext) = sql_fetch_row($result2, $dbi);
+	list($topicimage, $topictext) = mysqli_fetch_row($result2, $dbi);
 	OpenTable();
 	echo "<center><img src=\"images/topics/$topicimage\" border=\"0\" alt=\"$topictext\"><br><br>"
 	    ."<b>"._DELETETOPIC." $topictext</b><br><br>"

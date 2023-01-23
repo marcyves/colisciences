@@ -20,8 +20,8 @@
 /******************************************************************************/
 
 require_once "class.inc";
-require_once "fonctions.xml.inc";
-require_once "fonctions.affichage.inc";
+require_once "fonctions.xml.inc.php";
+require_once "fonctions.affichage.inc.php";
 ob_start();
 $debut_execution = debut_calcultemps();
 
@@ -66,19 +66,19 @@ if(!isset($memoire)) {
         $memoire = new analyse;
 }
 //echo $tmpMSG;
-// Valeur par d�fault permettant d'assurer un fonctionnement "minimal"
+// Valeur par défault permettant d'assurer un fonctionnement "minimal"
 
 	if (($ouvrage=="")&&($newouvrage=="")) {
-	// La variable ouvrage non renseign�e indique que nous avons appel� le moteur deuis l'onglet "Notions"
+	// La variable ouvrage non renseignée indique que nous avons appelé le moteur deuis l'onglet "Notions"
 	// de l'accueil Corpus.
 	// Nous allons donc lancer le moteur dans une recherche transcorpus en partant du premier paragraphe 
 	// du premier ouvrage
 		$ouvrage = 1;
 //		$valeur = 1; l'indication du paragraphe par lequel on commence provient de la BDD 
 		$transCorpus = true;
-		$titre = "Recherche de notions � travers le corpus";
+		$titre = "Recherche de notions à travers le corpus";
 	    $sql = mysqli_query($dbi, "select titre, debut, nom, prenom, nombre_noeuds,texteActif,notionActif,facActif,nombre_pages  from cb_ouvrages, cb_auteurs where aid=auteur and pid=$ouvrage");
-   		list( $titreOuvrage, $valeur, $nom, $prenom, $nombre_noeuds,$texteActif,$notionActif,$facActif,$nombre_pages ) = mysqli_fetch_row($sql, $dbi);
+   		list( $titreOuvrage, $valeur, $nom, $prenom, $nombre_noeuds,$texteActif,$notionActif,$facActif,$nombre_pages ) = mysqli_fetch_row($sql);
 		$newouvrage = 1;
 	} else {
 		$transCorpus = false;
@@ -87,7 +87,7 @@ if(!isset($memoire)) {
 			$ouvrage = $newouvrage;
 		}
 	    $sql = mysqli_query($dbi, "select aid, titre, debut,nom, prenom, nombre_noeuds,texteActif,notionActif,facActif,nombre_pages  from cb_ouvrages, cb_auteurs where aid=auteur and pid=$ouvrage");
- 		list($aid, $titre, $debut, $nom, $prenom, $nombre_noeuds,$texteActif,$notionActif,$facActif,$nombre_pages ) = mysqli_fetch_row($sql, $dbi);
+ 		list($aid, $titre, $debut, $nom, $prenom, $nombre_noeuds,$texteActif,$notionActif,$facActif,$nombre_pages ) = mysqli_fetch_row($sql);
 		$auteur = $prenom." ".$nom;
 	    if (@$valeur == "" ) {
 			$valeur = $debut;
@@ -106,7 +106,7 @@ if(!isset($memoire)) {
 	$titre = stripslashes($titre);
 
 // --------------------------------------------------------------------------------//	
-// Pr�parations de l'Affichage de l'aide en ligne
+// Préparations de l'Affichage de l'aide en ligne
 // --------------------------------------------------------------------------------//	
 	$texteAide = "";
 	if ($transCorpus){
@@ -133,7 +133,7 @@ if(!isset($memoire)) {
 		$tmp = "";
 
 	    $sql = mysqli_query($dbi, "select title from cb_disciplines,".$prefix."_encyclopedia_text  where did='$ouvrage'and eid='"._DISCIPLINE."' and tid=discipline order by title");
-		while(list($title) = mysqli_fetch_row($sql, $dbi)) {
+		while(list($title) = mysqli_fetch_row($sql)) {
 			$tmp .= "<li>$title";
    		}
 
@@ -144,7 +144,7 @@ if(!isset($memoire)) {
 // 		Les domaines
 		$tmp = "";
 	    $sql = mysqli_query($dbi, "select title from cb_domaines, ".$prefix."_encyclopedia_text  where did='$ouvrage'and eid='"._DOMAINE."' and tid=domaine order by title");
-		while(list($title) = mysqli_fetch_row($sql, $dbi)) {
+		while(list($title) = mysqli_fetch_row($sql)) {
 			$tmp .= "<li>$title";
    		}
 		if ($tmp!=""){
@@ -157,7 +157,7 @@ if(!isset($memoire)) {
 	// Aide sur la fonction, le parcours
 	if (@$fp=fopen($webroot."aide/".$parcours.".html","r"))
 	{
-		$titreHLP .= fgets($fp,4096);		// la premi�re ligne du c=fichier est le titre
+		$titreHLP .= fgets($fp,4096);		// la premiére ligne du c=fichier est le titre
 		$txtHLP = "";
 		while (!feof($fp)) 					// la suite est le contenu de l'aide
 		{ 
@@ -171,7 +171,7 @@ if(!isset($memoire)) {
 
 
 // --------------------------------------------------------------------------------//	
-// On envoie l'en-t�te de la page
+// On envoie l'en-tête de la page
 // --------------------------------------------------------------------------------//	
 	include("header.php");
 	
@@ -187,8 +187,8 @@ if(!isset($memoire)) {
 // --------------------------------------------------------------------------------//	
 	OpenTable();
 
-// D�but du traitement
-// on peut va afficher un noeud en fonction de la mani�re dont il a �t� appel�:
+// Début du traitement
+// on peut va afficher un noeud en fonction de la manière dont il a été appelé:
 // ouvrage      dans quel ouvrage se situe ce noeud
 // parcours
 // notion
@@ -206,13 +206,21 @@ $notion0 = $notion;
 
 
 do {
-//debug	 echo "<p>parcours = $parcours<br>notion = $notion<br>type = $type<br>type2 = $type2<br>valeur = $valeur<br>nombre noeuds = $nombre_noeuds<br>";
-	$module = "moteurCB.".$nextStep.".inc";
+//debug	 
+echo "<p>parcours = $parcours<br>
+notion = $notion<br>
+type = $type<br>
+type2 = $type2<br>
+valeur = $valeur<br>
+module = $nextStep<br>
+nombre noeuds = $nombre_noeuds<br>";
+	$module = "moteurCB.".$nextStep.".inc.php";
 	$nextStep = "";
 	include($module);
-//	echo "<p>retour du module $module<br>valeur : $valeur<br>nextStep : $nextStep";
+//debug	
+echo "<p>retour du module $module<br>valeur : $valeur<br>nextStep : $nextStep";
 	if ($flagParcours) {
-		// Enregistrement de cette �tape du parcours
+		// Enregistrement de cette étape du parcours
 		$etape = $memoire->nombre();
 		if ($etape > 0){
 			$source = $memoire->precedent();
@@ -226,10 +234,10 @@ do {
 
 		if ($admin) {echo "<br>Avant parcours : ".ecrire_temps($debut_execution, "4");}
 
-		//Pr�pare les statistiques de lecture
+		//Prépare les statistiques de lecture
 		$tmp = enregistreLeParcours($userColis, $ouvrage, $source, $time, $etape, $parcours, $cible, $type, $notion0);
 
-		if ($admin) {echo "<br>Apr�s parcours : ".ecrire_temps($debut_execution, "4");}
+		if ($admin) {echo "<br>Aprés parcours : ".ecrire_temps($debut_execution, "4");}
 
 		if ($admin){
 			//Affiche les statistiques de lecture pour les administrateurs
@@ -243,9 +251,9 @@ do {
 } while ($nextStep != "");
 //
 //
-//Affichage du temps pass� dans la boucle
+//Affichage du temps passé dans la boucle
 if ($cnt > 0) {
-	echo "<p><b>$cnt paragraphes affich�s</b>";
+	echo "<p><b>$cnt paragraphes affichés</b>";
 	if ($nombre_noeuds!=0) {
 		$prcnt = ($cnt/$nombre_noeuds)*100;
 		echo " ($prcnt%)";
@@ -283,7 +291,7 @@ function ecrire_temps($temps_debut,$precision) {
 $partie_temps = explode(' ',microtime() );
 $fin_temps = $partie_temps[1].substr($partie_temps[0],1);
 $chrono = number_format($fin_temps - $temps_debut, 4);
-if($precision > strlen($chrono)) {                      //si la precision demand�e est plus grande que la longueur de la chaine
+if($precision > strlen($chrono)) {                      //si la precision demandée est plus grande que la longueur de la chaine
 $chrono = substr($chrono, 0, strlen($chrono));          //on donne la precision maximale
 } else {
 $chrono = substr($chrono, 0, $precision);

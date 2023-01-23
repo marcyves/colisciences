@@ -12,8 +12,8 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-$result = sql_query("select radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radminsuper) = mysqli_fetch_row($result);
 if ($radminsuper==1) {
 
 /*********************************************************/
@@ -25,23 +25,23 @@ if ($radminsuper==1) {
 
 function removeSubComments($tid) {
     global $prefix, $dbi;
-    $result = sql_query("select tid from ".$prefix."_comments where pid='$tid'", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select tid from ".$prefix."_comments where pid='$tid'");
+    $numrows = $result->num_rows;
     if($numrows>0) {
-	while(list($stid) = sql_fetch_row($result, $dbi)) {
+	while(list($stid) = mysqli_fetch_row($result)) {
             removeSubComments($stid);
-            sql_query("delete from ".$prefix."_comments where tid=$stid", $dbi);
+            mysqli_query($dbi, "delete from ".$prefix."_comments where tid=$stid");
         }
     }
-    sql_query("delete from ".$prefix."_comments where tid=$tid", $dbi);
+    mysqli_query($dbi, "delete from ".$prefix."_comments where tid=$tid");
 }
 
 function removeComment ($tid, $sid, $ok=0) {
     global $ultramode, $prefix, $dbi;
     if($ok) {
-	$result = sql_query("select date from ".$prefix."_comments where pid=$tid", $dbi);
-	$numresults = sql_num_rows($result, $dbi);
-        sql_query("update ".$prefix."_stories set comments=comments-1-'$numresults' where sid='$sid'", $dbi);
+	$result = mysqli_query($dbi, "select date from ".$prefix."_comments where pid=$tid");
+	$numresults = $result->num_rows;
+        mysqli_query($dbi, "update ".$prefix."_stories set comments=comments-1-'$numresults' where sid='$sid'");
     /* Call recursive delete function to delete the comment and all its childs */
         removeSubComments($tid);
         if ($ultramode) {
@@ -65,15 +65,15 @@ function removeComment ($tid, $sid, $ok=0) {
 
 function removePollSubComments($tid) {
     global $prefix, $dbi;
-    $result = sql_query("select tid from ".$prefix."_pollcomments where pid='$tid'", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select tid from ".$prefix."_pollcomments where pid='$tid'");
+    $numrows = $result->num_rows;
     if($numrows>0) {
-	while(list($stid) = sql_fetch_row($result, $dbi)) {
+	while(list($stid) = mysqli_fetch_row($result)) {
             removePollSubComments($stid);
-            sql_query("delete from ".$prefix."_pollcomments where tid=$stid", $dbi);
+            mysqli_query($dbi, "delete from ".$prefix."_pollcomments where tid=$stid");
         }
     }
-    sql_query("delete from ".$prefix."_pollcomments where tid=$tid", $dbi);
+    mysqli_query($dbi, "delete from ".$prefix."_pollcomments where tid=$tid");
 }
 
 function RemovePollComment ($tid, $pollID, $ok=0) {

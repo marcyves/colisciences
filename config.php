@@ -29,8 +29,8 @@
 #               Be sure to write it exactly as above, case SeNsItIvE!
 ######################################################################
 
-$webroot =  "/Applications/MAMP/htdocs/";
-$colisroot = "/Applications/MAMP/htdocs/Colis/";
+$webroot =  "/Applications/MAMP/htdocs/colisciences/";
+$colisroot = $webroot."Colis/";
 
 /*
 
@@ -39,7 +39,7 @@ $colisroot = "/www/htdocs/Colis/";
 */
 //if ($theme=="") $theme = "Clean";
 $Default_Theme = "Clean";
-//D�finition des encyclop�dies pour r�f�rence
+//Définition des encyclopédies pour référence
 
 define("_NOTION",1);
 //define("_BIBLIOGRAPHIE",4);
@@ -293,6 +293,6 @@ $CensorReplace = "*****";
 # Do not touch the following options!
 ######################################################################
 
-$Version_Num = "5.5 hautement modifi�e";
+$Version_Num = "5.5 hautement modifiée";
 
 ?>

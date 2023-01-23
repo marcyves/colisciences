@@ -25,8 +25,8 @@ if ($multilingual == 1) {
     $querylang = "WHERE artid='0'";
 }
 
-$result = sql_query("SELECT pollID FROM ".$prefix."_poll_desc $querylang ORDER BY pollID DESC LIMIT 1", $dbi);
-$pollID = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "SELECT pollID FROM ".$prefix."_poll_desc $querylang ORDER BY pollID DESC LIMIT 1");
+$pollID = mysqli_fetch_row($result);
 $pollID = $pollID[0];
 if ($pollID == 0 || $pollID == "") {
     $content = "";
@@ -36,14 +36,14 @@ if ($pollID == 0 || $pollID == "") {
     $content .= "<form action=\"modules.php?name=Surveys\" method=\"post\">";
     $content .= "<input type=\"hidden\" name=\"pollID\" value=\"".$pollID."\">";
     $content .= "<input type=\"hidden\" name=\"forwarder\" value=\"".$url."\">";
-    $result = sql_query("SELECT pollTitle, voters FROM ".$prefix."_poll_desc WHERE pollID=$pollID", $dbi);
-    list($pollTitle, $voters) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "SELECT pollTitle, voters FROM ".$prefix."_poll_desc WHERE pollID=$pollID");
+    list($pollTitle, $voters) = mysqli_fetch_row($result);
     $boxTitle = _SURVEY;
     $content .= "<font class=\"content\"><b>$pollTitle</b></font><br><br>\n";
     $content .= "<table border=\"0\" width=\"100%\">";
     for($i = 1; $i <= 12; $i++) {
-	$result = sql_query("SELECT pollID, optionText, optionCount, voteID FROM ".$prefix."_poll_data WHERE (pollID=$pollID) AND (voteID=$i)", $dbi);
-	$object = sql_fetch_object($result, $dbi);
+	$result = mysqli_query($dbi, "SELECT pollID, optionText, optionCount, voteID FROM ".$prefix."_poll_data WHERE (pollID=$pollID) AND (voteID=$i)");
+	$object = mysqli_fetch_object($result);
 	if(is_object($object)) {
 	    $optionText = $object->optionText;
 	    if($optionText != "") {
@@ -56,15 +56,15 @@ if ($pollID == 0 || $pollID == "") {
 	cookiedecode($user);
     }
     for($i = 0; $i < 12; $i++) {
-	$result = sql_query("SELECT optionCount FROM ".$prefix."_poll_data WHERE (pollID=$pollID) AND (voteID=$i)", $dbi);
-	$object = sql_fetch_object($result, $dbi);
+	$result = mysqli_query($dbi, "SELECT optionCount FROM ".$prefix."_poll_data WHERE (pollID=$pollID) AND (voteID=$i)");
+	$object = mysqli_fetch_object($result);
 	$optionCount = $object->optionCount;
 	$sum = (int)$sum+$optionCount;
     }
     $content .= "<br><font class=\"content\"><a href=\"modules.php?name=Surveys&amp;op=results&amp;pollID=$pollID&amp;mode=$cookie[4]&amp;order=$cookie[5]&amp;thold=$cookie[6]\"><b>"._RESULTS."</b></a><br><a href=\"modules.php?name=Surveys\"><b>"._POLLS."</b></a><br>";
 
     if ($pollcomm) {
-	list($numcom) = sql_fetch_row(sql_query("select count(*) from ".$prefix."_pollcomments where pollID=$pollID", $dbi), $dbi);
+	list($numcom) = mysqli_fetch_row(mysqli_query($dbi, "select count(*) from ".$prefix."_pollcomments where pollID=$pollID"));
 	$content .= "<br>"._VOTES.": <b>$sum</b> <br> "._PCOMMENTS." <b>$numcom</b>\n\n";
     } else {
 	$content .= "<br>"._VOTES." <b>$sum</b>\n\n";

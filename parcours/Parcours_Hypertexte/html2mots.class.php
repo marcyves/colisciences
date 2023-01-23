@@ -84,7 +84,7 @@
 			for($i=0;$i<strlen($contents);$i++)
 			{
 				$char=ord($contents[$i]);
-				if( ($char>=97 && $char<=122) || ($char>=65 && $char<=90) || ($char>=48 && $char<=57) || $char==32 || chr($char)=='$' || chr($char)=='.' ||chr($char)=="é"||chr($char)=="è"||chr($char)=="ù"||chr($char)=="à"||chr($char)=="ê"||chr($char)=="î"||chr($char)=="ô")
+				if( ($char>=97 && $char<=122) || ($char>=65 && $char<=90) || ($char>=48 && $char<=57) || $char==32 || chr($char)=='$' || chr($char)=='.' ||chr($char)=="Ã©"||chr($char)=="Ã©"||chr($char)=="Ã©"||chr($char)=="Ã©"||chr($char)=="Ã©"||chr($char)=="Ã©"||chr($char)=="Ã©")
 				{	
 					$this->str.=chr($char);
 				}
@@ -122,8 +122,8 @@
 					if ($mix!=''){
 //debug						echo "<br>recherche $mix";
 						$mix = lemme($mix);
-					    $sql = sql_query("select swid from cb_occurences_stopwords where stop = '$mix'", $dbi);
-						if (sql_num_rows($sql, $dbi)==0) {
+					    $sql = mysqli_query($dbi, "select swid from cb_occurences_stopwords where stop = '$mix'");
+						if ($sql->num_rows==0) {
 							while(($word[$i]==$word[$i+1]))
 							{
 								$i++;
@@ -182,16 +182,16 @@
 	{
 		global $dbi;
 		
-	    $sql = sql_query("select motId, count from cb_occurences_cumul where mot ='$mot'", $dbi);
-		if (@list($motId, $cumul) = sql_fetch_row($sql, $dbi)){
+	    $sql = mysqli_query($dbi, "select motId, count from cb_occurences_cumul where mot ='$mot'");
+		if (@list($motId, $cumul) = mysqli_fetch_row($sql)){
 			$cumul = $cumul + $count;
-		    sql_query("update cb_occurences_cumul set count = '$cumul' where motId = '$motId'", $dbi);
+		    mysqli_query($dbi, "update cb_occurences_cumul set count = '$cumul' where motId = '$motId'");
 		}else{
-	    	sql_query("insert into cb_occurences_cumul values (NULL, '$mot', '$count')", $dbi);
-	    	$sql = sql_query("select motId from cb_occurences_cumul where mot ='$mot'", $dbi);
-			list($motId) = sql_fetch_row($sql, $dbi);
+	    	mysqli_query($dbi, "insert into cb_occurences_cumul values (NULL, '$mot', '$count')");
+	    	$sql = mysqli_query($dbi, "select motId from cb_occurences_cumul where mot ='$mot'");
+			list($motId) = mysqli_fetch_row($sql);
 		}
-    	sql_query("insert into cb_occurences values (NULL, '$motId', '$ouvrage', '$paragraphe', '$count')", $dbi);
+    	mysqli_query($dbi, "insert into cb_occurences values (NULL, '$motId', '$ouvrage', '$paragraphe', '$count')");
 	}
 	
 	function lemme($mot){
@@ -208,15 +208,15 @@
 	$mot = str_replace("s>",">",$mot);
 //formes du verbe avoir
 	$mot = str_replace("av*","avoir",$mot);
-//formes du verbe être
-	$mot = str_replace("ét*","être",$mot);
-	$mot = str_replace("ser*","être",$mot);
+//formes du verbe Ã©tre
+	$mot = str_replace("Ã©t*","Ã©tre",$mot);
+	$mot = str_replace("ser*","Ã©tre",$mot);
 
 	$mot = str_replace("<","",$mot);
 	$mot = str_replace(">","",$mot);
 */
-	    $sql = sql_query("select lemme from cb_dictionnaire where mot ='$mot'", $dbi);
-		if (@list($lemme) = sql_fetch_row($sql, $dbi)){
+	    $sql = mysqli_query($dbi, "select lemme from cb_dictionnaire where mot ='$mot'");
+		if (@list($lemme) = mysqli_fetch_row($sql)){
 			$mot = strtolower(trim($lemme));
 		}
 	

@@ -10,85 +10,85 @@
 N'effacez pas ce message 
 ---------------------------------------------------
 
-Cette page est destinée à configurer votre moteur de recherche. 
-Elle sert à définir la couleur du texte correspondant au résultat dans le résumé des pages et de définir les dossiers à scanner sur votre site.
+Cette page est destinÃ©e Ã© configurer votre moteur de recherche. 
+Elle sert Ã© dÃ©finir la couleur du texte correspondant au rÃ©sultat dans le rÃ©sumÃ© des pages et de dÃ©finir les dossiers Ã© scanner sur votre site.
 
 
 Comment ajouter un dossier a scanner ? 
 ---------------------------------------------------
 
-Il suffit d'ajouter pour chaque dossier à scanner le code suivant à l'endroit signalé plus bas dans la page :
+Il suffit d'ajouter pour chaque dossier Ã© scanner le code suivant Ã© l'endroit signalÃ© plus bas dans la page :
 
-"la description de votre dossier"=>"le chemin d'accès au dossier",
+"la description de votre dossier"=>"le chemin d'accÃ©s au dossier",
 
-Le chemin d'accès au dossier pour scanner les fichiers au même endroit que le moteur de recherche (si vous le placez a la base de votre ftp par exemple) est un simple point comme ceci . Pour remonter en arrière d'un dossier il faut mettre un double point comme ceci ..
+Le chemin d'accÃ©s au dossier pour scanner les fichiers au mÃ©me endroit que le moteur de recherche (si vous le placez a la base de votre ftp par exemple) est un simple point comme ceci . Pour remonter en arriÃ©re d'un dossier il faut mettre un double point comme ceci ..
 
 Voici quelques exemples d'ajout :
 
-- Pour scanner le dossier ou est placé le moteur de recherche : 
-"le dossier ou est placé le moteur de recherche"=>".",
+- Pour scanner le dossier ou est placÃ© le moteur de recherche : 
+"le dossier ou est placÃ© le moteur de recherche"=>".",
 
 - Pour scanner le dossier parent de celui du moteur de recherche :
-"le dossier parent de celui ou est situé le moteur de recherche"=>"..",
+"le dossier parent de celui ou est situÃ© le moteur de recherche"=>"..",
 
-- Pour scanner un dossier situé au même niveau que celui du moteur :
-"un dossier au même niveau que celui du moteur"=>"../ledossier",
+- Pour scanner un dossier situÃ© au mÃ©me niveau que celui du moteur :
+"un dossier au mÃ©me niveau que celui du moteur"=>"../ledossier",
 
 etc...
 
 
-Comment changer la couleur du texte recherché ? 
+Comment changer la couleur du texte recherchÃ© ? 
 ---------------------------------------------------
 
-Par défaut la couleur du texte recherché est affiché en rouge dans le résumé et dans les différentes indications de la page. Par exemple si vous cherchez le mot "php", le mot php sera mis en rouge a chaque fois qu'il est trouvé dans le résumé des résultats, et dans les indications diverses comme l'affichage du mot recherché. Pour changer cette couleur, il suffit d'indiquer le code hexadécimal de la couleur que vous souhaitez afficher à l'endroit signalé plus bas dans la page, entre les guillemets. 
+Par dÃ©faut la couleur du texte recherchÃ© est affichÃ© en rouge dans le rÃ©sumÃ© et dans les diffÃ©rentes indications de la page. Par exemple si vous cherchez le mot "php", le mot php sera mis en rouge a chaque fois qu'il est trouvÃ© dans le rÃ©sumÃ© des rÃ©sultats, et dans les indications diverses comme l'affichage du mot recherchÃ©. Pour changer cette couleur, il suffit d'indiquer le code hexadÃ©cimal de la couleur que vous souhaitez afficher Ã© l'endroit signalÃ© plus bas dans la page, entre les guillemets. 
 
-Si vous ne connaissez pas les codes des couleurs en hexadécimal, pas de panique ! Je vous ai inclus dans les fichiers de l'archive le fichier couleurs.html qui vous aidera à trouver la couleur que vous souhaitez.
+Si vous ne connaissez pas les codes des couleurs en hexadÃ©cimal, pas de panique ! Je vous ai inclus dans les fichiers de l'archive le fichier couleurs.html qui vous aidera Ã© trouver la couleur que vous souhaitez.
 
 
-Comment changer la longueur du résumé affiché pour chaque résultat ? 
+Comment changer la longueur du rÃ©sumÃ© affichÃ© pour chaque rÃ©sultat ? 
 ---------------------------------------------------
 
-Par défaut le résumé est de 20 mots. Vous pouvez changer cette longueur en entrant un nombre de mots maximum à afficher à l'endroit signalé plus bas dans la page. Sachez toutefois que plus le résumé est long, plus le script prendra plus de temps à s'éxécuter et plus la navigation dans les résultats sera fastidieuse.
+Par dÃ©faut le rÃ©sumÃ© est de 20 mots. Vous pouvez changer cette longueur en entrant un nombre de mots maximum Ã© afficher Ã© l'endroit signalÃ© plus bas dans la page. Sachez toutefois que plus le rÃ©sumÃ© est long, plus le script prendra plus de temps Ã© s'Ã©xÃ©cuter et plus la navigation dans les rÃ©sultats sera fastidieuse.
 
 
-Comment changer le nombre de résultats affichés par page ? 
+Comment changer le nombre de rÃ©sultats affichÃ©s par page ? 
 ---------------------------------------------------
 
-Par défaut ce nombre est fixé à 20 résultats maximum par page, mais vous pouvez l'adapter en fonction de la taille de votre site. Il suffit d'indiquer le nombre de fichiers dans l'endroit signalé plus bas dans la page. Vous devez mettre un nombre entier supérieur à 0, pas de chiffres a virgule ou de fractions et autres formules mathématiques bien sur sinon vous provoquez une erreur... 
+Par dÃ©faut ce nombre est fixÃ© Ã© 20 rÃ©sultats maximum par page, mais vous pouvez l'adapter en fonction de la taille de votre site. Il suffit d'indiquer le nombre de fichiers dans l'endroit signalÃ© plus bas dans la page. Vous devez mettre un nombre entier supÃ©rieur Ã© 0, pas de chiffres a virgule ou de fractions et autres formules mathÃ©matiques bien sur sinon vous provoquez une erreur... 
 
 
-Comment gérer les pseudo frames ? 
+Comment gÃ©rer les pseudo frames ? 
 ---------------------------------------------------
 
-Par défaut le script fait comme si vous n'utilisiez pas de script de pseudo frames (script php qui permet d'avoir une page par défaut utilisée partout). Si vous n'utilisez pas les pseudos frames inutile donc de toucher à quoi que ce soit. Si votre site utilise un script de pseudo frames il faut pour cela indiquer à l'endroit signalé plus bas dans la page l'url type de votre pseudo frame et si l'extension du fichier doit être affichée dans l'url ou non. 
+Par dÃ©faut le script fait comme si vous n'utilisiez pas de script de pseudo frames (script php qui permet d'avoir une page par dÃ©faut utilisÃ©e partout). Si vous n'utilisez pas les pseudos frames inutile donc de toucher Ã© quoi que ce soit. Si votre site utilise un script de pseudo frames il faut pour cela indiquer Ã© l'endroit signalÃ© plus bas dans la page l'url type de votre pseudo frame et si l'extension du fichier doit Ã©tre affichÃ©e dans l'url ou non. 
 
-Dans votre url type vous aurez à remplacer le nom du fichier et le nom du dossier par [fichier] et [dossier]. Voici quelques exemples de pseudo frames les plus courants avec la configuration à adopter :
+Dans votre url type vous aurez Ã© remplacer le nom du fichier et le nom du dossier par [fichier] et [dossier]. Voici quelques exemples de pseudo frames les plus courants avec la configuration Ã© adopter :
 
 monsite.com/mapage.php?page=mondossier/la_page_a_afficher.html
-Laissez activé l'extension du fichier. 
+Laissez activÃ© l'extension du fichier. 
 Pour votre url type mettez : mapage.php?page=[dossier]/[fichier]
 
 monsite.com/mapage.php?page=mondossier/la_page_a_afficher
-Désactivez l'extension du fichier. 
+DÃ©sactivez l'extension du fichier. 
 Pour votre url type mettez : mapage.php?page=[dossier]/[fichier]
 
 monsite.com/mapage.php?rub=mondossier&page=la_page_a_afficher.html
-Laissez activé l'extension du fichier.
+Laissez activÃ© l'extension du fichier.
 Pour votre url type mettez : mapage.php?rub=[dossier]&page=[fichier]
 
 monsite.com/mapage.php?rub=mondossier&page=la_page_a_afficher
-Désactivez l'extension du fichier.
+DÃ©sactivez l'extension du fichier.
 Pour votre url type mettez : mapage.php?rub=[dossier]&page=[fichier]
 
 
-Comment gérer les fichiers à exclure de la recherche ? 
+Comment gÃ©rer les fichiers Ã© exclure de la recherche ? 
 ---------------------------------------------------
 
-Pour éviter qu'un fichier puisse être scanné et affiché dans les résultats, indiquez dans la liste à l'endroit signalé plus bas dans la page le nom complet du fichier avec son extension et entre guillemets, suivi d'une virgule. Par défaut les fichiers du script sont exclus de la recherche. Si vous voulez en rajouter rajoutez ceci :
+Pour Ã©viter qu'un fichier puisse Ã©tre scannÃ© et affichÃ© dans les rÃ©sultats, indiquez dans la liste Ã© l'endroit signalÃ© plus bas dans la page le nom complet du fichier avec son extension et entre guillemets, suivi d'une virgule. Par dÃ©faut les fichiers du script sont exclus de la recherche. Si vous voulez en rajouter rajoutez ceci :
 
 "monfichier.html",
 
-pour chaque fichier à exclure. Si vous voulez en exclure plusieurs cela donnera donc :
+pour chaque fichier Ã© exclure. Si vous voulez en exclure plusieurs cela donnera donc :
 
 "monfichier1.html",
 "monfichier2.html", 
@@ -98,22 +98,22 @@ et ainsi de suite.
 
 
 
-// 1- Personnalisation de la longueur du résumé 
+// 1- Personnalisation de la longueur du rÃ©sumÃ© 
 // Placez entre les guillemets sur la ligne ci dessous
-// le nombre de mots maximum à afficher 
-// dans la description de chaque résultat  
+// le nombre de mots maximum Ã© afficher 
+// dans la description de chaque rÃ©sultat  
 
 $maxmots="20";
 
-// Fin de la personnalisation de la longueur du résumé
+// Fin de la personnalisation de la longueur du rÃ©sumÃ©
 
 
 
 
 // 2- Personnalisation des couleurs
 // Placez entre les guillemets sur la ligne ci dessous
-// le code hexadécimal
-// de la couleur du texte recherché à afficher 
+// le code hexadÃ©cimal
+// de la couleur du texte recherchÃ© Ã© afficher 
 
 $color="#00aabb";
 
@@ -122,11 +122,11 @@ $color="#00aabb";
 
 
 
-// 3- Personnalisation des dossiers à scanner 
+// 3- Personnalisation des dossiers Ã© scanner 
 //para rapport aux ouvrages actifs
-	    $sql = sql_query("select pid,titre, debut, auteur, date_titre, type_book from cb_ouvrages where active='1' order by date_titre, titre",$dbi);
+	    $sql = mysqli_query($dbi, "select pid,titre, debut, auteur, date_titre, type_book from cb_ouvrages where active='1' order by date_titre, titre");
 		echo "<h2>Les ouvrages sur lesquels se fait la recherche</h2>";
-    	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = sql_fetch_row($sql, $dbi)) {
+    	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = mysqli_fetch_row($sql)) {
  	    	echo "<table><tr><td valign=\"top\"><img width=\"30\" height=\"12\"  src=\"themes/$theme/img/plot.gif\"></td><td>".creeLienOuvrage($pid,$titre,$debut,$date_titre,$type_book) ."</td></tr></table>";
 			$dossier[$titre]= $pid ;
     	}
@@ -135,9 +135,9 @@ $color="#00aabb";
 
 /*$dossier=array( 
 // Placez en dessous de cette ligne
-// Le code des différents dossiers à scanner
-// Ne mettez pas de / à la fin du chemin d'accès au dossier
-// Car il est rajouté automatiquement 
+// Le code des diffÃ©rents dossiers Ã© scanner
+// Ne mettez pas de / Ã© la fin du chemin d'accÃ©s au dossier
+// Car il est rajoutÃ© automatiquement 
 
 "1"=>"1",
 "2"=>"3",
@@ -159,27 +159,27 @@ $color="#00aabb";
 "18"=>"30",
 "19"=>"31"
 
-// Ne mettez plus de dossiers à scanner en dessous de cette ligne. 
-); // Fin de la personnalisation des dossiers à scanner 
+// Ne mettez plus de dossiers Ã© scanner en dessous de cette ligne. 
+); // Fin de la personnalisation des dossiers Ã© scanner 
 */
 
-// 4- Personnalisation du nombre de résultats affichés par page
-// Indiquez à la ligne ci dessous entre les guillemets
-// Le nombre de résultats maximum à afficher par page
+// 4- Personnalisation du nombre de rÃ©sultats affichÃ©s par page
+// Indiquez Ã© la ligne ci dessous entre les guillemets
+// Le nombre de rÃ©sultats maximum Ã© afficher par page
 
 $maxipage="20";
 
-// Fin de la personnalisation du nombre de résultats affichés par page
+// Fin de la personnalisation du nombre de rÃ©sultats affichÃ©s par page
 
 // 5- Gestion des pseudo frames
-// Indiquez à la ligne ci dessous entre les guillemets on ou off :
+// Indiquez Ã© la ligne ci dessous entre les guillemets on ou off :
 // on      pour afficher l'extension des fichiers
-// off     pour désactiver l'affichage de l'extension des fichiers
+// off     pour dÃ©sactiver l'affichage de l'extension des fichiers
 
 $montre_ext="on"; 
 
-// Indiquez à la ligne ci dessous entre les guillemets 
-// l'url type à utiliser dans le moteur 
+// Indiquez Ã© la ligne ci dessous entre les guillemets 
+// l'url type Ã© utiliser dans le moteur 
 // si vous n'utilisez pas les pseudos frames ne modifiez pas cette url type
 // utilisez [dossier] pour indiquer le dossier
 // et [fichier] pour indiquer le fichier 
@@ -188,20 +188,20 @@ $go2url="parcours.php?name=Parcours_Hypertexte&file=moteurCB&parcours=paragraphe
 
 // Fin de la gestion des pseudo frames 
 
-// 6- Personnalisation des fichiers à exclure de la recherche 
+// 6- Personnalisation des fichiers Ã© exclure de la recherche 
 // Indiquez dans la liste ci dessous 
-// Les fichiers à exclure de la recherche 
+// Les fichiers Ã© exclure de la recherche 
 // entre guillemets et suivis d'une virgule
 // Pensez bien a mettre le nom complet du fichier
 // avec son extension
 // par exemple : "fichier.html",
 // vous pouvez aussi indiquer des fichiers images de type gif, jpg, ou png.
-// Ne mettez pas le chemin d'accès au fichier mais seulement son nom. 
+// Ne mettez pas le chemin d'accÃ©s au fichier mais seulement son nom. 
 
 $exclu=array(
 "sommaire.html"
 
-// Ne mettez plus de fichiers à exclure en dessous de cette ligne. 
-); // Fin de la personnalisation des dossiers à scanner 
-// La configuration du script s'arrête ici. 
+// Ne mettez plus de fichiers Ã© exclure en dessous de cette ligne. 
+); // Fin de la personnalisation des dossiers Ã© scanner 
+// La configuration du script s'arrÃ©te ici. 
 ?>

@@ -17,8 +17,8 @@ require_once("mainfile.php");
 if ((isset($aid)) && (isset($pwd)) && ($op == "login")) {
     if($aid!="" AND $pwd!="") {
 	$pwd = md5($pwd);
-	$result=sql_query("select pwd, admlanguage from ".$prefix."_authors where aid='$aid'", $dbi);
-	list($pass, $admlanguage)=sql_fetch_row($result, $dbi);
+	$result=mysqli_query($dbi, "select pwd, admlanguage from ".$prefix."_authors where aid='$aid'");
+	list($pass, $admlanguage)=mysqli_fetch_row($result);
 	if($pass == $pwd) {
 	    $admin = base64_encode("$aid:$pwd:$admlanguage");
 	    setcookie("admin","$admin",time()+2592000);
@@ -46,12 +46,12 @@ if(isset($admin)) {
     echo "</html>\n";
     exit;
   }
-  $result=sql_query("select pwd from ".$prefix."_authors where aid='$aid'", $dbi);
+  $result=mysqli_query($dbi, "select pwd from ".$prefix."_authors where aid='$aid'");
   if(!$result) {
         echo "Selection from database failed!";
         exit;
   } else {
-    list($pass)=sql_fetch_row($result, $dbi);
+    list($pass)=mysqli_fetch_row($result);
     if($pass == $pwd && $pass != "") {
         $admintest = 1;
     }

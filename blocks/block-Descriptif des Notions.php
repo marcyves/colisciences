@@ -19,8 +19,8 @@ if (eregi("block-Descriptif des Notions.php", $PHP_SELF)) {
 
 global $prefix, $dbi;
 
-$result = sql_query("SELECT pid, title FROM ".$prefix."_pages WHERE active='1'", $dbi);
-while(list($pid, $title) = sql_fetch_row($result, $dbi)) {
+$result = mysqli_query($dbi, "SELECT pid, title FROM ".$prefix."_pages WHERE active='1'");
+while(list($pid, $title) = mysqli_fetch_row($result)) {
     $content .= "<strong><big>&middot;</big></strong>&nbsp;<a href=\"modules.php?name=Content&amp;pa=showpage&amp;pid=$pid\">$title</a><br>";
 }
 

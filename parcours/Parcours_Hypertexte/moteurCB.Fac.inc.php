@@ -24,7 +24,7 @@
 	if (!isset($numPage)) {
 		$numPage = $paragraphe['page'];
 		if ($numPage <= 0) {
-			echo "<p><br>Désolé, je ne peux pas déterminer quelle page contient le paragraphe $valeur.<br><br><br>Le numéro de page est: ($numPage).<br><br>";
+			echo "<p><br>DÃ©solÃ©, je ne peux pas dÃ©terminer quelle page contient le paragraphe $valeur.<br><br><br>Le numÃ©ro de page est: ($numPage).<br><br>";
 			$flagAffiche = false;
 		} else {
 			echo "<p>Le paragraphe $valeur se trouve sur la page: $numPage";
@@ -32,12 +32,12 @@
 	}else{
 //		echo "<p>Recherche de la page $numPage sur le paragraphe $valeur de la page ".$paragraphe['page'];
 		if ($numPage == $paragraphe['page']){
-//			echo "<p>Trouvé le paragraphe $valeur se trouve sur la page: ";
+//			echo "<p>TrouvÃ© le paragraphe $valeur se trouve sur la page: ";
 		}else if($numPage > $paragraphe['page']){
 			if ($flagDirection=='down'){
 				echo "<p>La page $numPage est blanche";
 			}else{
-				//préparation pour le paragraphe suivant
+				//prÃ©paration pour le paragraphe suivant
 				$valeur = $valeur + 1;	
 				$nextStep = $parcours;
 				$flagAffiche = false;
@@ -47,7 +47,7 @@
 			if ($flagDirection=='up'){
 				echo "<p>La page $numPage est blanche";
 			}else{
-			//préparation pour le paragraphe suivant
+			//prÃ©paration pour le paragraphe suivant
 				$valeur = $valeur - 1;	
 				$nextStep = $parcours;
 				$flagAffiche = false;

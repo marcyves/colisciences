@@ -8,9 +8,9 @@ $index = 1;
 			Script du moteur 
 			zulios@blork.net
 
-Pour les gens qui veulent modifier le moteur � leur go�t, je vous ai 
-mis des commentaires au cours du script qui vous aideront � vous 
-rep�rer. Je ne vous demande qu'une chose : ne supprimez pas l'image 
+Pour les gens qui veulent modifier le moteur é leur goét, je vous ai 
+mis des commentaires au cours du script qui vous aideront é vous 
+repérer. Je ne vous demande qu'une chose : ne supprimez pas l'image 
 avec le lien vers mon forum, ne serait-ce que par respect pour mon 
 travail. Merci.
 
@@ -22,7 +22,7 @@ travail. Merci.
     include("blork_engine_config.php"); 
     $version="version 0.2";
 
-// Variables par d�faut 
+// Variables par défaut 
 
 if($color==""){ $color="#ff0000"; } 
 if($maxmots==""){ $maxmots="20"; } 
@@ -41,7 +41,7 @@ if($action=="go") {
 	if($blork==""){
 	   echo("Merci de bien vouloir remplir le champ de recherche.");
 	}else{ 
-       // R�sultats � 0 
+       // Résultats é 0 
        $compteresultats = 0; 
 
        foreach($dossier as $nomdos=>$d){
@@ -50,15 +50,15 @@ if($action=="go") {
           $fp=@opendir($dossier_ouvrages);
 		  $flagDossier = TRUE;
 		  if ($fp){
-          while($file = readdir($fp)){  		// D�but de la boucle 
-              if($file!='.' || $file!='..'){ 		// On �vite la balade 
-                  $ext=strrchr($file,'.'); 		// On r�cup�re l'extension 
+          while($file = readdir($fp)){  		// Début de la boucle 
+              if($file!='.' || $file!='..'){ 		// On évite la balade 
+                  $ext=strrchr($file,'.'); 		// On récupére l'extension 
 
-                  // S�lection des extensions
+                  // Sélection des extensions
                   if($ext==".xml"){ 
 				    // On ne scanne pas les fichiers exclus 
                       if(!in_array($file, $exclu)) { 
-						// On incr�mente le nb de fichier scann�s 
+						// On incrémente le nb de fichier scannés 
 						$zetotal++; 
 						// Passage en minuscules de la recherche
 						$blork=strtolower($blork); 
@@ -69,7 +69,7 @@ if($action=="go") {
 						// Si on trouve la recherche
 						$pos = strpos($tout,$blork);
 						if($pos>0){
-							// R�sultats +1 
+							// Résultats +1 
 							$compteresultats++;
 							$pos1 = $pos - 40;
 							if ($pos1<0) {$pos1 = 0;}
@@ -82,29 +82,29 @@ if($action=="go") {
 							  similar_text($blork, $titre, $p2);
 							  $p=intval($p1+$p2);
 							  if($p>100){ $p="100"; }
-							  // On v�rifie qu'il y a deux chiffres
+							  // On vérifie qu'il y a deux chiffres
 							  if (strlen($p)<2){
 							     $temp=str_repeat("0",2-strlen($p)).$p;
 								 $p=$temp;
 							  }
 							  $end=intval($start+$maxipage);
-							  // URL par d�faut
+							  // URL par défaut
 							  if($go2url==""){ $go_2_url="$dossier_ouvrages/$file"; }
 							  else{
 							    $go_2_url = $go2url;
 								$go_2_url=str_replace("[dossier]",$d,$go_2_url);
-								$num = str_replace(".xml","",$file); 		// On r�cup�re le num�ro de page
+								$num = str_replace(".xml","",$file); 		// On récupére le numéro de page
 								$go_2_url=str_replace("[fichier]",$num,$go_2_url); 
 							  }
   							  $go2new="<A href='$go_2_url' target=_blank>";
-							  // Source du r�sultat 
+							  // Source du résultat 
 							if ($flagDossier){
 								$flagDossier = FALSE;
-    $sql = sql_query("select titre from cb_ouvrages where pid=$d",$dbi);
-    list($titreO) = sql_fetch_row($sql, $dbi);
+    $sql = mysqli_query($dbi, "select titre from cb_ouvrages where pid=$d");
+    list($titreO) = mysqli_fetch_row($sql);
 								$src = "<p><b><u>$titreO</u></b>";
 							}
-							  $src .= "<br>$go2new<img src=images/blork_engine_new_window.gif border=0 width=17 height=14 alt='ouvrir dans une nouvelle fen�tre'></A><A href='$go_2_url'>$titre... </A>"; 
+							  $src .= "<br>$go2new<img src=images/blork_engine_new_window.gif border=0 width=17 height=14 alt='ouvrir dans une nouvelle fenétre'></A><A href='$go_2_url'>$titre... </A>"; 
 							  // On enregistre 
 							  $zeresults["$p,$compteresultats"] = $src;
 							  $src = "";
@@ -128,7 +128,7 @@ $pourvoir=intval($start+$maxipage);
 if($pourvoir>$compteresultats){
 	$pourvoir=$compteresultats;
 } 
-echo("R�sultats de votre recherche pour <font color=$color><b>$blork2</b></font><br> $compteresultats trouv�s sur $zetotal paragraphes. - Affichage des r�sultats $start � $pourvoir<p>");  
+echo("Résultats de votre recherche pour <font color=$color><b>$blork2</b></font><br> $compteresultats trouvés sur $zetotal paragraphes. - Affichage des résultats $start é $pourvoir<p>");  
 $end=intval($start+$maxipage); 
 if($compteresultats>0){ 
 	foreach($vrai as $key=>$value){ 
@@ -145,10 +145,10 @@ if($compteresultats>$maxipage){
 	$nextbarre=intval($start+$maxipage); 
 	$nb_barre="1"; 
 	if($start!="0"){ 
-		echo("<A href='parcours.php?name=Recherche&blork=$blork&action=go'><< D�but</A> "); }
-	else{ echo("<< D�but "); }
-	if($start!="0"){ echo(" <A href='parcours.php?name=Recherche&blork=$blork&action=go&start=$prevbarre'>< Page pr�c�dente</A> ("); } 
-	else{ echo(" < Page pr�c�dente ("); } 
+		echo("<A href='parcours.php?name=Recherche&blork=$blork&action=go'><< Début</A> "); }
+	else{ echo("<< Début "); }
+	if($start!="0"){ echo(" <A href='parcours.php?name=Recherche&blork=$blork&action=go&start=$prevbarre'>< Page précédente</A> ("); } 
+	else{ echo(" < Page précédente ("); } 
 	for($barre=0;$barre<$compteresultats;){ 
 		$finbarre=intval($compteresultats-$barre); 
 		echo(" <A href='parcours.php?name=Recherche&blork=$blork&action=go&start=$barre'>$nb_barre</A> "); 
@@ -164,11 +164,11 @@ if($compteresultats>$maxipage){
 } 
 
 if($compteresultats=="0"){ 
-	echo("<br> Votre recherche sur le terme <font color=$color><b>$blork2</b></font> n'a donn� aucun r�sultat. Essayez d'�largir votre recherche en y mettant moins de mots ou v�rifiez son orthographe.");
+	echo("<br> Votre recherche sur le terme <font color=$color><b>$blork2</b></font> n'a donné aucun résultat. Essayez d'élargir votre recherche en y mettant moins de mots ou vérifiez son orthographe.");
 } elseif($compteresultats=="1"){ 
-	echo("<center><br> $compteresultats r�sultat trouv� sur $zetotal paragraphes.</center>");
+	echo("<center><br> $compteresultats résultat trouvé sur $zetotal paragraphes.</center>");
 } else{ 
-	echo("<center><br> $compteresultats r�sultats trouv�s sur $zetotal paragraphes.</center>");
+	echo("<center><br> $compteresultats résultats trouvés sur $zetotal paragraphes.</center>");
 }
 
 }

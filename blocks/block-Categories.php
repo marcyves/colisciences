@@ -12,11 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("block-Categories.php", $PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
-
 global $cat, $language, $prefix, $multilingual, $currentlang, $dbi;
 
     if ($multilingual == 1) {
@@ -24,18 +19,18 @@ global $cat, $language, $prefix, $multilingual, $currentlang, $dbi;
     } else {
 	    $querylang = "";
     }
-    $result = sql_query("select catid, title from ".$prefix."_stories_cat order by title", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select catid, title from ".$prefix."_stories_cat order by title");
+    $numrows = sql_num_rows($result);
     if ($numrows == 0) {
 	return;
     } else {
 	$boxstuff = "<font class=\"content\">";
-	while(list($catid, $title) = sql_fetch_row($result, $dbi)) {
-	    $result2 = sql_query("select * from ".$prefix."_stories where catid='$catid' $querylang", $dbi);
-	    $numrows = sql_num_rows($result2, $dbi);
+	while(list($catid, $title) = mysqli_fetch_row($result)) {
+	    $result2 = mysqli_query($dbi, "select * from ".$prefix."_stories where catid='$catid' $querylang");
+	    $numrows = sql_num_rows($result2);
 	    if ($numrows > 0) {
-		$res = sql_query("select time from ".$prefix."_stories where catid='$catid' $querylang order by sid DESC limit 0,1", $dbi);
-		list($time) = sql_fetch_row($res, $dbi);
+		$res = mysqli_query($dbi, "select time from ".$prefix."_stories where catid='$catid' $querylang order by sid DESC limit 0,1");
+		list($time) = mysqli_fetch_row($res);
 		ereg ("([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $time, $dat);
 		if ($cat == 0 AND !$a) {
 		    $boxstuff .= "<strong><big>&middot;</big></strong>&nbsp;<b>"._ALLCATEGORIES."</b><br>";

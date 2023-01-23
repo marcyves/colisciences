@@ -15,7 +15,7 @@
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 
 $result = sql_query("select radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminsuper) = sql_fetch_row($result, $dbi);
+list($radminsuper) = mysqli_fetch_row($result, $dbi);
 if ($radminsuper==1) {
 
 /*********************************************************/
@@ -34,7 +34,7 @@ function hreferer() {
     echo "<center><b>"._WHOLINKS."</b></center><br><br>"
 	."<table border=\"0\" width=\"100%\">";
     $hresult = sql_query("select rid, url from ".$prefix."_referer", $dbi);
-    while(list($rid, $url) = sql_fetch_row($hresult, $dbi)) {
+    while(list($rid, $url) = mysqli_fetch_row($hresult, $dbi)) {
 	echo "<tr><td bgcolor=\"$bgcolor2\"><font class=\"content\">$rid</td>"
 	    ."<td bgcolor=\"$bgcolor2\"><font class=\"content\"><a target=\"_blank\" href=\"$url\">$url</a></td></tr>";
     }

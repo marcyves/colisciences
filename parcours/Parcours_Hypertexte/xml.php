@@ -1284,13 +1284,13 @@ class XML
                     $axis["node-test"] = $step;
                 }
             }
-            elseif ( eregi("^@", $step) )
+            elseif ( ereg("^@", $step) )
             {
                 // Use the attribute axis and select the attribute.
                 $axis["axis"]      = "attribute";
                 $axis["node-test"] = substr($step, 1);
             }
-            elseif ( eregi("\]$", $step) )
+            elseif ( ereg("\]$", $step) )
             {
                 // Use the child axis and select a position.
                 $axis["axis"]      = "child";
@@ -1501,7 +1501,8 @@ class XML
             
                 // Perform an axis action.
 //                $contexts = call_user_method($method, &$this, $axis, $context);
-                $contexts = call_user_method($method, $this, $axis, $context);
+//                $contexts = call_user_method($method, $this, $axis, $context);
+                $contexts = $this->$method($axis, $context);
             
                 // Check whether there are predicates.
                 if ( count($axis["predicate"]) > 0 )
@@ -1568,7 +1569,8 @@ class XML
         
         // Return the result of the function.
 //        return call_user_method($method, &$this, $node, $arguments);
-        return call_user_method($method, $this, $node, $arguments);
+//        return call_user_method($method, $this, $node, $arguments);
+        return $contexts = $this->$method($node, $arguments);
     }
     
     /**
@@ -3233,7 +3235,7 @@ class XML
                 if ( !empty($this->nodes[$node]["attributes"]["xml:lang"]) )
                 {
                     // Check whether it's the language, the user asks for.
-                    if ( eregi("^".$arguments, $this->nodes[$node]
+                    if ( ereg("^".$arguments, $this->nodes[$node]
                         ["attributes"]["xml:lang"]) )
                     {
                         // Return true.
@@ -3253,7 +3255,7 @@ class XML
         else
         {
             // Check whether it's the language, the user asks for.
-            if ( eregi("^".$arguments, $this->nodes[$node]["attributes"]
+            if ( ereg("^".$arguments, $this->nodes[$node]["attributes"]
                 ["xml:lang"]) )
             {
                 // Return true.
@@ -3514,26 +3516,19 @@ class XML
 			// Read all arguments.
 			$arguments = func_get_args();
 			
-			// Create a new string for the inserting command.
-			$command = "\$message = sprintf(\$message, ";
-			
 			// Run through the array of arguments.
 			for ( $i = 1; $i < sizeof($arguments); $i++ )
 			{
 				// Add the number of the argument to the command.
-				$command .= "\$arguments[".$i."], ";
+				$message .= " : " . $arguments[$i];
 			}
-			
-			// Replace the last separator.
-			$command = eregi_replace(", $", ");", $command);
-			
 			// Execute the command.
-			eval($command);
+			echo($message);
 		}
 		
         // Display the error message.
-		echo "<font class=\"title3\">Cet ouvrage n'est pas encore prêt pour sa publication dans CoLiSciences.</font>";
-//      echo "<h3>Désolé</h3>Le site est en construction et la page que vous voulez afficher n'est pas prête.<p><b>phpXML error:</b> ".$message;
+		echo "<font class=\"title3\">Cet ouvrage n'est pas encore prÃ©t pour sa publication dans CoLiSciences.</font>";
+//      echo "<h3>DÃ©solÃ©</h3>Le site est en construction et la page que vous voulez afficher n'est pas prÃ©te.<p><b>phpXML error:</b> ".$message;
         
         // End the execution of this script.
 //        exit;

@@ -18,26 +18,26 @@ get_lang($module_name);
 include("header.php");
 
 if (isset($query) AND (isset($eid)) AND ($query != "")) {
-    $result = sql_query("select tid, title from ".$prefix."_encyclopedia_text where eid='$eid' AND title LIKE '%$query%'", $dbi);
-    $result2 = sql_query("select title from ".$prefix."_encyclopedia where eid='$eid'", $dbi);
-    list($ency_title) = sql_fetch_row($result2, $dbi);
+    $result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text where eid='$eid' AND title LIKE '%$query%'");
+    $result2 = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia where eid='$eid'");
+    list($ency_title) = mysqli_fetch_row($result2);
     title("$ency_title: "._SEARCHRESULTS."");
     OpenTable();
     echo "<center><b>"._SEARCHRESULTSFOR." <i>$query</i></b></center><br><br><br>"
 	."<i><b>"._RESULTSINTERMTITLE."</b></i><br><br>";
-    if (sql_num_rows($result, $dbi) == 0) {
+    if (sql_num_rows($result) == 0) {
         echo _NORESULTSTITLE;
     } else {
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 	    echo "<strong><big>&middot</big></strong>&nbsp;&nbsp;<a href=\"parcours.php?name=$module_name&op=content&tid=$tid\">$title</a><br>";
 	}
     }
-    $result = sql_query("select tid, title from ".$prefix."_encyclopedia_text where eid='$eid' AND text LIKE '%$query%'", $dbi);
+    $result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text where eid='$eid' AND text LIKE '%$query%'");
     echo "<br><br><i><b>"._RESULTSINTERMTEXT."</b></i><br><br>";
-    if (sql_num_rows($result, $dbi) == 0) {
+    if (sql_num_rows($result) == 0) {
         echo _NORESULTSTEXT;
     } else {
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 	    echo "<strong><big>&middot</big></strong>&nbsp;&nbsp;<a href=\"parcours.php?name=$module_name&op=content&tid=$tid&query=$query\">$title</a><br>";
 	}
     }

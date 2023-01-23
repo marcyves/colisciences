@@ -13,8 +13,8 @@
 /************************************************************************/
 
 
-$result = sql_query("select radminency, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminency, $radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radminency, radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radminency, $radminsuper) = mysqli_fetch_row($result);
 if (($radminency==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -29,7 +29,7 @@ function alpha($eid) {
     echo "<center>[ ";
     $counter = 0;
     while (list(, $ltr) = each($alphabet)) {
-	$result = sql_query("select * from ".$prefix."_encyclopedia_text where eid='$eid' AND UPPER(title) LIKE '$ltr%'", $dbi);
+	$result = mysqli_query($dbi, "select * from ".$prefix."_encyclopedia_text where eid='$eid' AND UPPER(title) LIKE '$ltr%'");
 	if (sql_num_rows($result) > 0) {
 	    echo "<a href=\"admin.php?op=encyclopedia_terms&eid=$eid&ltr=$ltr\">$ltr</a>";
 	} else {
@@ -53,9 +53,9 @@ function encyclopedia() {
     OpenTable();
     echo "<table border=\"0\" width=\"100%\"><tr>"
 	."<td bgcolor=\"$bgcolor2\"><b>"._TITLE."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._TERMS."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._CURRENTSTATUS."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._FUNCTIONS."</b></td></tr>";
-    $result = sql_query("select * from ".$prefix."_encyclopedia order by eid", $dbi);
-    while($ency = sql_fetch_array($result, $dbi)) {
-	$num = sql_num_rows(sql_query("select * from ".$prefix."_encyclopedia_text WHERE eid='$ency[eid]'", $dbi), $dbi);
+    $result = mysqli_query($dbi, "select * from ".$prefix."_encyclopedia order by eid");
+    while($ency = mysqli_fetch_array($result)) {
+	$num = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_encyclopedia_text WHERE eid='$ency[eid]'"));
 	if ($ency[active] == 1) {
 	    $status = _ACTIVE;
 	    $status_chng = _DEACTIVATE;
@@ -70,8 +70,8 @@ function encyclopedia() {
     echo "</table>";
     CloseTable();
 
-    $result = sql_query("select eid, title from ".$prefix."_encyclopedia", $dbi);
-    if (sql_num_rows($result, $dbi) > 0) {
+    $result = mysqli_query($dbi, "select eid, title from ".$prefix."_encyclopedia");
+    if (sql_num_rows($result) > 0) {
 	echo "<br>";
 	OpenTable();
 	echo "<center><b>"._ADDNEWENCYTERM."</b></center><br><br>"
@@ -105,7 +105,7 @@ function encyclopedia() {
 	    echo "<input type=\"hidden\" name=\"elanguage\" value=\"$language\">";
 	}
 	echo "<b>"._ENCYCLOPEDIA.":</b><br><select name=\"eid\">";
-	while(list($eid, $title) = sql_fetch_row($result, $dbi)) {
+	while(list($eid, $title) = mysqli_fetch_row($result)) {
 	    echo "<option value=\"$eid\" name=\"eid\">$title</option>";
 	}
 	echo "</select><br><br>"
@@ -154,19 +154,19 @@ function encyclopedia() {
     CloseTable();
 
     }
-    $result = sql_query("select eid, title from ".$prefix."_encyclopedia", $dbi);
-    $result2 = sql_query("select eid, title from ".$prefix."_encyclopedia", $dbi);
-    if (sql_num_rows($result, $dbi) > 1) {
+    $result = mysqli_query($dbi, "select eid, title from ".$prefix."_encyclopedia");
+    $result2 = mysqli_query($dbi, "select eid, title from ".$prefix."_encyclopedia");
+    if (sql_num_rows($result) > 1) {
 	echo "<br>";
 	OpenTable();
 	echo "<center><b>"._MOVETERMS."</b><br><br>"
 	    ."<form action=\"admin.php\" method=\"post\">"
 	    .""._MOVEALLTERMSFROM.": <select name=\"eid\">";
-	while(list($eid, $title) = sql_fetch_row($result, $dbi)) {
+	while(list($eid, $title) = mysqli_fetch_row($result)) {
 	    echo "<option name=\"eid\" value=\"$eid\">$title";
 	}
 	echo "</select> "._TO.": <select name=\"new_eid\">";
-	while(list($eid, $title) = sql_fetch_row($result2, $dbi)) {
+	while(list($eid, $title) = mysqli_fetch_row($result2)) {
 	    echo "<option name=\"new_eid\" value=\"$eid\">$title";
 	}    
 	echo "</select>&nbsp;&nbsp;"
@@ -183,8 +183,8 @@ function encyclopedia_edit($eid) {
     include("header.php");
     GraphicAdmin();
     title(""._ENCYCLOPEDIAMANAGER."");
-    $result = sql_query("select * from ".$prefix."_encyclopedia WHERE eid='$eid'", $dbi);
-    $ency = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "select * from ".$prefix."_encyclopedia WHERE eid='$eid'");
+    $ency = mysqli_fetch_array($result);
 	if ($ency[active] == 1) {
 	    $sel1 = "checked";
 	    $sel2 = "";
@@ -243,17 +243,17 @@ function encyclopedia_terms($eid, $ltr) {
     include("header.php");
     GraphicAdmin();
     title(""._ENCYCLOPEDIAMANAGER."");
-    $result = sql_query("select title from ".$prefix."_encyclopedia where eid='$eid' AND UPPER(title) LIKE '%$ltr%' order by title", $dbi);
-    list($title) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia where eid='$eid' AND UPPER(title) LIKE '%$ltr%' order by title");
+    list($title) = mysqli_fetch_row($result);
     title("$title");
     OpenTable();
 	echo "<center>"._SELECTONETERM."</center><br><br>"
 	    ."<table border=\"0\" align=\"center\">";
-	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE UPPER(title) LIKE '$ltr%' AND eid='$eid' order by title", $dbi);
-	if (sql_num_rows($result, $dbi) == 0) {
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE UPPER(title) LIKE '$ltr%' AND eid='$eid' order by title");
+	if (sql_num_rows($result) == 0) {
 	    echo "<center><i>"._NOCONTENTFORLETTER." $ltr.</i></center>";
 	}
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 	    echo "<tr><td><a href=\"admin.php?op=encyclopedia_text_edit&tid=$tid\">$title</a></td></tr>";
 	}
 	echo "</table><br><br>";
@@ -268,8 +268,8 @@ function encyclopedia_text_edit($tid) {
     include("header.php");
     GraphicAdmin();
     title(""._ENCYCLOPEDIAMANAGER."");
-    $result = sql_query("select * from ".$prefix."_encyclopedia_text WHERE tid='$tid'", $dbi);
-    $ency = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "select * from ".$prefix."_encyclopedia_text WHERE tid='$tid'");
+    $ency = mysqli_fetch_array($result);
     OpenTable();
     echo "<center><b>"._ENCYTERMSEDIT."</b></center><br><br>"
 	."<form action=\"admin.php\" method=\"post\">"
@@ -279,8 +279,8 @@ function encyclopedia_text_edit($tid) {
 	."<textarea name=\"text\" cols=\"60\" rows=\"20\">$ency[text]</textarea><br><br>"
 	."<b>"._CHANGETOENCY.":</b><br>"
 	."<select name=\"eid\">";
-    $result = sql_query("select eid, title from ".$prefix."_encyclopedia", $dbi);
-    while(list($eid, $title) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select eid, title from ".$prefix."_encyclopedia");
+    while(list($eid, $title) = mysqli_fetch_row($result)) {
 	if ($eid == $ency[eid]) {
 	    $sel = "selected";
 	} else {
@@ -299,25 +299,25 @@ function encyclopedia_text_edit($tid) {
 
 function encyclopedia_save($title, $description, $elanguage, $active) {
     global $prefix, $dbi;
-    sql_query("insert into ".$prefix."_encyclopedia values(NULL, '$title', '$description', '$elanguage', '$active')", $dbi);
+    mysqli_query($dbi, "insert into ".$prefix."_encyclopedia values(NULL, '$title', '$description', '$elanguage', '$active')");
     Header("Location: admin.php?op=encyclopedia");
 }
 
 function encyclopedia_text_save($eid, $title, $text) {
     global $prefix, $dbi;
-    sql_query("insert into ".$prefix."_encyclopedia_text values(NULL, '$eid', '$title', '$text', '0')", $dbi);
+    mysqli_query($dbi, "insert into ".$prefix."_encyclopedia_text values(NULL, '$eid', '$title', '$text', '0')");
     Header("Location: admin.php?op=encyclopedia");
 }
 
 function encyclopedia_save_edit($eid, $title, $description, $elanguage, $active) {
     global $prefix, $dbi;
-    sql_query("update ".$prefix."_encyclopedia set title='$title', description='$description', elanguage='$elanguage', active='$active' where eid='$eid'", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_encyclopedia set title='$title', description='$description', elanguage='$elanguage', active='$active' where eid='$eid'");
     Header("Location: admin.php?op=encyclopedia");
 }
 
 function encyclopedia_text_save_edit($tid, $eid, $title, $text) {
     global $prefix, $dbi;
-    sql_query("update ".$prefix."_encyclopedia_text set eid='$eid', title='$title', text='$text' WHERE tid='$tid'", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_encyclopedia_text set eid='$eid', title='$title', text='$text' WHERE tid='$tid'");
     Header("Location: admin.php?op=encyclopedia");
 }
 function encyclopedia_change_status($eid, $active) {
@@ -327,22 +327,22 @@ function encyclopedia_change_status($eid, $active) {
     } elseif ($active == 0) {
 	$new_active = 1;
     }
-    sql_query("update ".$prefix."_encyclopedia set active='$new_active' WHERE eid='$eid'", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_encyclopedia set active='$new_active' WHERE eid='$eid'");
     Header("Location: admin.php?op=encyclopedia");
 }
 
 function encyclopedia_delete($eid, $ok=0) {
     global $prefix, $dbi;
     if ($ok==1) {
-        sql_query("delete from ".$prefix."_encyclopedia where eid='$eid'", $dbi);
-	sql_query("delete from ".$prefix."_encyclopedia_text where eid='$eid'", $dbi);
+        mysqli_query($dbi, "delete from ".$prefix."_encyclopedia where eid='$eid'");
+	mysqli_query($dbi, "delete from ".$prefix."_encyclopedia_text where eid='$eid'");
         Header("Location: admin.php?op=encyclopedia");
     } else {
         include("header.php");
         GraphicAdmin();
 	title(""._ENCYCLOPEDIAMANAGER."");
-	$result = sql_query("select title from ".$prefix."_encyclopedia where eid='$eid'", $dbi);
-	list($title) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia where eid='$eid'");
+	list($title) = mysqli_fetch_row($result);
 	OpenTable();
 	echo "<center><b>"._DELENCYCLOPEDIA.": $title</b><br><br>"
 	    .""._DELENCYCONTWARNING."<br><br>"
@@ -355,14 +355,14 @@ function encyclopedia_delete($eid, $ok=0) {
 function encyclopedia_text_delete($tid, $ok=0) {
     global $prefix, $dbi;
     if ($ok==1) {
-        sql_query("delete from ".$prefix."_encyclopedia_text where tid='$tid'", $dbi);
+        mysqli_query($dbi, "delete from ".$prefix."_encyclopedia_text where tid='$tid'");
         Header("Location: admin.php?op=encyclopedia");
     } else {
         include("header.php");
         GraphicAdmin();
 	title(""._ENCYCLOPEDIAMANAGER."");
-	$result = sql_query("select title from ".$prefix."_encyclopedia_text where tid='$tid'", $dbi);
-	list($title) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia_text where tid='$tid'");
+	list($title) = mysqli_fetch_row($result);
 	OpenTable();
 	echo "<center><b>"._DELENCYCLOPEDIATEXT.": $title</b><br><br>"
 	    .""._DELENCYTEXTWARNING."<br><br>"
@@ -374,9 +374,9 @@ function encyclopedia_text_delete($tid, $ok=0) {
 
 function move_terms($eid, $new_eid) {
     global $prefix, $dbi;
-    $result = sql_query("select tid from ".$prefix."_encyclopedia_text WHERE eid='$eid'", $dbi);
-    while(list($tid) = sql_fetch_row($result, $dbi)) {
-	sql_query("update ".$prefix."_encyclopedia_text set eid='$new_eid' WHERE tid='$tid'", $dbi);
+    $result = mysqli_query($dbi, "select tid from ".$prefix."_encyclopedia_text WHERE eid='$eid'");
+    while(list($tid) = mysqli_fetch_row($result)) {
+	mysqli_query($dbi, "update ".$prefix."_encyclopedia_text set eid='$new_eid' WHERE tid='$tid'");
     }
     Header("Location: admin.php?op=encyclopedia");
 }

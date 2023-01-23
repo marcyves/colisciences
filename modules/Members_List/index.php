@@ -88,21 +88,21 @@ if (!isset($page)) { $page = 1; }
 /* All of the code from here to around line 125 will be optimized a little later */
 /* This is the header section that displays the last registered and who's logged in and whatnot */
 
-$result = sql_query("select uname from ".$user_prefix."_users order by uid DESC limit 0,1", $dbi);
-list($lastuser) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select uname from ".$user_prefix."_users order by uid DESC limit 0,1");
+list($lastuser) = mysqli_fetch_row($result);
 echo "\n\n<!-- MEMBERS LIST -->\n\n";
 	OpenTable();
         echo "<center><b>"._WELCOMETO." $sitename "._MEMBERSLIST."</b><br><br>\n";
         echo ""._GREETINGS." <A HREF=\"modules.php?name=Your_Account&amp;op=userinfo&amp;uname=$lastuser\">$lastuser</a>\n</center>\n<br>\n";
 
-        $numrows = sql_num_rows(sql_query("select uid from ".$user_prefix."_users", $dbi), $dbi);
+        $numrows = sql_num_rows(mysqli_query($dbi, "select uid from ".$user_prefix."_users"));
 
         if (is_user($user)) {
-            $result2 = sql_query("SELECT username,guest FROM ".$prefix."_session where guest=0", $dbi);
-            $member_online_num = sql_num_rows($result2, $dbi);
+            $result2 = mysqli_query($dbi, "SELECT username,guest FROM ".$prefix."_session where guest=0");
+            $member_online_num = sql_num_rows($result2);
 	    $who_online = "<b>"._ONLINEREG." </b><br><br>";
             $i = 1;
-            while ($session = sql_fetch_array($result2, $dbi)) {
+            while ($session = mysqli_fetch_array($result2)) {
                 if (isset($session["guest"]) and $session["guest"] == 0) {
                     $who_online .= "<A HREF=\"modules.php?name=Your_Account&amp;op=userinfo&amp;uname=$session[username]\">$session[username]</a>\n";
                     $who_online .= ($i != $member_online_num ? " - " : "");
@@ -153,11 +153,11 @@ echo "\n\n<!-- MEMBERS LIST -->\n\n";
         $limit = " ASC LIMIT ".$min.", ".$max; // we only want rows $min  to $max
         /* due to how this works, i need the total number of users per 
         letter group, then we can hack of the ones we want to view */
-        $count_result = sql_query($count.$where, $dbi);
+        $count_result = mysqli_query($dbi, $count.$where);
         $num_rows_per_order = mysql_result($count_result,0,0);
         
         /* This is where we get our limit'd result set. */
-        $result = sql_query($select.$where.$sort.$limit, $dbi) or die(); // Now lets do it !!
+        $result = mysqli_query($dbi, $select.$where.$sort.$limit) or die(); // Now lets do it !!
 
 /* Crap code ends here */
 
@@ -179,9 +179,9 @@ echo "\n\n<!-- MEMBERS LIST -->\n\n";
             $dcolor_B = "$bgcolor1";
 
 
-            $num_users = sql_num_rows($result, $dbi); //number of users per sorted and limit query
+            $num_users = sql_num_rows($result); //number of users per sorted and limit query
             if ( $num_rows_per_order > 0  ) {
-                while($user = sql_fetch_array($result, $dbi)) {
+                while($user = mysqli_fetch_array($result)) {
                     $dcolor = ($a == 0 ? $dcolor_A : $dcolor_B);
                     echo "<tr><td bgcolor=\"$dcolor\"><A HREF=\"modules.php?name=Your_Account&amp;op=userinfo&amp;uname=$user[uname]\"><font color=\"$textcolor1\">$user[uname]</font></a>&nbsp;</td>\n";
                     echo "<td bgcolor=\"$dcolor\"><font color=\"$textcolor1\">$user[name]</font>&nbsp;</td>\n";

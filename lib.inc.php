@@ -404,12 +404,12 @@ function sess_read($sess_id)
 
     $result = mysql_query("SELECT data FROM " . $TablePrefix . "_sessions WHERE id = '$sess_id'") or die(mysql_error());
 
-    if(mysql_num_rows($result) == 0)
+    if($result->num_rows == 0)
     {
         return '';
     } else {
-        $row = mysql_fetch_array($result);
-        mysql_free_result($result);
+        $row = mysqli_fetch_array($result);
+        mysqli_free_result($result);
         return $row["data"];
     }
 
@@ -475,7 +475,7 @@ function validateSession()
         db_connect();
         $result = mysql_query("UPDATE $TablePrefix" . "_user SET online='$user_time' WHERE user_name='$user_name' AND user_pass='$user_pass'");
         $result = mysql_query("SELECT user_id, name, admin, hp, hp_max, mp, mp_max, stm, stm_max, exp, gp, map_name, map_xpos, map_ypos, avatar FROM $TablePrefix" . "_user WHERE user_name='$user_name' AND user_pass='$user_pass'");
-        $char = mysql_fetch_array($result);
+        $char = mymysqli_fetch_array($result);
     }
 
 }

@@ -15,7 +15,7 @@ if(file_exists("language/user-$language.php")) { include("language/user-$languag
 //End Customization Comments
 
 $result = sql_query("select radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminsuper) = sql_fetch_row($result, $dbi);
+list($radminsuper) = mysqli_fetch_row($result, $dbi);
 if ($radminsuper==1) {
 
 /*********************************************************/

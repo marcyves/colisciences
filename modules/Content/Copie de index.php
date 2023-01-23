@@ -24,12 +24,12 @@ function showpage($pid, $page=0) {
     global $prefix, $dbi, $sitename, $admin, $module_name;
     include("header.php");
     opentable();
-    $result = sql_query("SELECT * from ".$prefix."_pages where pid='$pid'", $dbi);
-    $mypage = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "SELECT * from ".$prefix."_pages where pid='$pid'");
+    $mypage = mysqli_fetch_array($result);
     if (($mypage[active] == 0) AND (!is_admin($admin))) {
         echo "Sorry... This page doesn't exist.";
     } else {
-        sql_query("update ".$prefix."_pages set counter=counter+1 where pid='$pid'", $dbi);
+        mysqli_query($dbi, "update ".$prefix."_pages set counter=counter+1 where pid='$pid'");
         $date = explode(" ", $mypage[date]);
         echo "<font class=\"title\">$mypage[title]</font><br>"
             ."<font class=\"content\">$mypage[subtitle]<br>
@@ -90,8 +90,8 @@ function list_pages() {
 	$droite = "";
 
 
-    $result = sql_query("SELECT * from ".$prefix."_pages where title='Annonce'", $dbi);
-    $mypage = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "SELECT * from ".$prefix."_pages where title='Annonce'");
+    $mypage = mysqli_fetch_array($result);
     if (($mypage[active] == 0) AND (is_admin($admin))) {
 	    opentable();
         echo "Pas de page d'annonce.";
@@ -99,7 +99,7 @@ function list_pages() {
 		echo "<br>";
     } else if ($mypage[active] != 0){
 	    opentable();
-        sql_query("update ".$prefix."_pages set counter=counter+1 where pid='$pid'", $dbi);
+        mysqli_query($dbi, "update ".$prefix."_pages set counter=counter+1 where pid='$pid'");
         $date = explode(" ", $mypage[date]);
         echo "<font class=\"content\"><b>$mypage[subtitle]</b><br>";
         echo "<p align=\"justify\">".nl2br($mypage[page_header])."</p>";
@@ -112,12 +112,12 @@ function list_pages() {
 
 /* fin modif page annonce */
     opentable();
-    $result = sql_query("select * from ".$prefix."_pages_categories", $dbi);
+    $result = mysqli_query($dbi, "select * from ".$prefix."_pages_categories");
 
-    if (sql_num_rows($result, $dbi)> 0 AND sql_num_rows(sql_query("select * from ".$prefix."_pages WHERE cid!='0'", $dbi),$dbi)> 0) {
+    if (sql_num_rows($result)> 0 AND sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_pages WHERE cid!='0'"))> 0) {
 
-        while(list($cid, $title, $description) = sql_fetch_row($result, $dbi)) {
-            if (sql_num_rows(sql_query("select * from ".$prefix."_pages WHERE cid='$cid'", $dbi),$dbi)> 0) {
+        while(list($cid, $title, $description) = mysqli_fetch_row($result)) {
+            if (sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_pages WHERE cid='$cid'"))> 0) {
                 switch ($description) {
 				case "gauche":
                   $gauche .= "<p><a class=\"navigation\" href=\"modules.php?name=Content&amp;pa=list_pages_categories&amp;cid=$cid\">$title</a>";
@@ -134,12 +134,12 @@ function list_pages() {
 		
 		$tmp = '<select name=newouvrage>';
 
-        $sql = sql_query("select pid,titre,auteur from cb_ouvrages where active='1' order by auteur,titre",$dbi);
+        $sql = mysqli_query($dbi, "select pid,titre,auteur from cb_ouvrages where active='1' order by auteur,titre");
 
-        while (list($pid, $titre, $auteur) = sql_fetch_row($sql, $dbi)) {
+        while (list($pid, $titre, $auteur) = mysqli_fetch_row($sql)) {
            $tmp .= '<option value="'.$pid.'">'.$auteur.' - '.$titre.'</option>';
         }
-		$tmp .= '</select><p align="center"><input class="navigation" type="submit" value="Accès au corpus"></form>';
+		$tmp .= '</select><p align="center"><input class="navigation" type="submit" value="AccÃ©s au corpus"></form>';
 		
 		$milieu .= themeindexboxclose("","3");
 
@@ -174,15 +174,15 @@ function list_pages() {
                 <p>&nbsp;</p>
                 <p>&nbsp;</p></td>
               <TD>
-<P class=\"content\">Le site a évolué. De nouveaux ouvrages du corpus sont disponibles, 
-        de nouveaux titres sont annoncés. De même, certaines fonctions ont été 
-        activées et des paratextes supplémentaires permettent de mieux aborder 
-        les différentes parties de Colisciences ou d'affiner la présentation des 
-        auteurs du corpus: notamment, les bibliographies, un mode d'emploi détaillé, 
+<P class=\"content\">Le site a Ã©voluÃ©. De nouveaux ouvrages du corpus sont disponibles, 
+        de nouveaux titres sont annoncÃ©s. De mÃ©me, certaines fonctions ont Ã©tÃ© 
+        activÃ©es et des paratextes supplÃ©mentaires permettent de mieux aborder 
+        les diffÃ©rentes parties de Colisciences ou d'affiner la prÃ©sentation des 
+        auteurs du corpus: notamment, les bibliographies, un mode d'emploi dÃ©taillÃ©, 
         l'explicitation du projet Colisciences, etc. Bref, un site de plus en 
-        plus adapté à sa vocation, avant les nouvelles modifications de la rentrée 
+        plus adaptÃ© Ã© sa vocation, avant les nouvelles modifications de la rentrÃ©e 
         2003.<br>
-        <span class=\"tiny\"> Publié le: 2003-05-05</span> </P>
+        <span class=\"tiny\"> PubliÃ© le: 2003-05-05</span> </P>
             </TD>
             </TR>
         </TABLE>";
@@ -195,9 +195,9 @@ function list_pages() {
    <td class=\"img2\" valign=\"bottom\">
 <form id=\"transparent\" method=\"post\" action=\"parcours.php?name=Parcours_Hypertexte&amp;file=moteurCB&amp;valeur=1\">
 <p align=\"left\"><br><b>
-<FONT COLOR=#00007F>A</FONT><FONT COLOR=#00008F>c</FONT><FONT COLOR=#00009F>c</FONT><FONT COLOR=#0000AF>è</FONT><FONT COLOR=#0000BF>s</FONT><FONT COLOR=#0000CF> </FONT><FONT COLOR=#0000DF>a</FONT><FONT COLOR=#0000EF>u</FONT><FONT COLOR=#0000FF> </FONT><FONT COLOR=#0000FF>c</FONT><FONT COLOR=#001FFF>o</FONT><FONT COLOR=#003EFF>r</FONT><FONT COLOR=#005DFF>p</FONT><FONT COLOR=#007CFF>u</FONT><FONT COLOR=#009BFF>s</FONT><FONT COLOR=#00BAFF> </FONT><FONT COLOR=#00D9FF>h</FONT><FONT COLOR=#00F8FF>y</FONT><FONT COLOR=#00FFFF>p</FONT><FONT COLOR=#00E3FF>e</FONT><FONT COLOR=#00C7FF>r</FONT><FONT COLOR=#00ABFF>t</FONT><FONT COLOR=#008FFF>e</FONT><FONT COLOR=#0073FF>x</FONT><FONT COLOR=#0057FF>t</FONT><FONT COLOR=#003BFF>u</FONT><FONT COLOR=#001FFF>e</FONT><FONT COLOR=#0003FF>l</FONT>
+<FONT COLOR=#00007F>A</FONT><FONT COLOR=#00008F>c</FONT><FONT COLOR=#00009F>c</FONT><FONT COLOR=#0000AF>Ã©</FONT><FONT COLOR=#0000BF>s</FONT><FONT COLOR=#0000CF> </FONT><FONT COLOR=#0000DF>a</FONT><FONT COLOR=#0000EF>u</FONT><FONT COLOR=#0000FF> </FONT><FONT COLOR=#0000FF>c</FONT><FONT COLOR=#001FFF>o</FONT><FONT COLOR=#003EFF>r</FONT><FONT COLOR=#005DFF>p</FONT><FONT COLOR=#007CFF>u</FONT><FONT COLOR=#009BFF>s</FONT><FONT COLOR=#00BAFF> </FONT><FONT COLOR=#00D9FF>h</FONT><FONT COLOR=#00F8FF>y</FONT><FONT COLOR=#00FFFF>p</FONT><FONT COLOR=#00E3FF>e</FONT><FONT COLOR=#00C7FF>r</FONT><FONT COLOR=#00ABFF>t</FONT><FONT COLOR=#008FFF>e</FONT><FONT COLOR=#0073FF>x</FONT><FONT COLOR=#0057FF>t</FONT><FONT COLOR=#003BFF>u</FONT><FONT COLOR=#001FFF>e</FONT><FONT COLOR=#0003FF>l</FONT>
 </b>
-<p>Textes, Fac similé, Notions & Relations
+<p>Textes, Fac similÃ©, Notions & Relations
 <p>
 $tmp
 	</td>
@@ -216,16 +216,16 @@ function list_pages_categories($cid) {
 	$titre = "$sitename: "._PAGESLIST;
     include("header.php");
 
-    $result = sql_query("select title from ".$prefix."_pages_categories where cid ='$cid'", $dbi);
-	list($title) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select title from ".$prefix."_pages_categories where cid ='$cid'");
+	list($title) = mysqli_fetch_row($result);
     title($title);
 	
     opentable();
 //    echo "<center><font class=\"content\">"._LISTOFCONTENT." $sitename:</center><br><br>";
-    $result = sql_query("SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='1' AND cid='$cid' order by date", $dbi);
+    $result = mysqli_query($dbi, "SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='1' AND cid='$cid' order by date");
     echo "<blockquote>";
 
-    while(list($pid, $title, $subtitle, $clanguage) = sql_fetch_row($result, $dbi)) {
+    while(list($pid, $title, $subtitle, $clanguage) = mysqli_fetch_row($result)) {
         if ($multilingual == 1) {
             $the_lang = "<img src=\"images/language/flag-$clanguage.png\" hspace=\"3\" border=\"0\" height=\"10\" width=\"20\">";
         } else {
@@ -244,11 +244,11 @@ function list_pages_categories($cid) {
     }
     echo "</blockquote>";
     if (is_admin($admin)) {
-        $result = sql_query("SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='0' and cid='$cid' order by date", $dbi);
+        $result = mysqli_query($dbi, "SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='0' and cid='$cid' order by date");
         echo "<br><br><center><b>"._YOURADMINLIST."</b></center><br><br>";
         echo "<blockquote>";
 
-        while(list($pid, $title, $subtitle, $clanguage) = sql_fetch_row($result, $dbi)) {
+        while(list($pid, $title, $subtitle, $clanguage) = mysqli_fetch_row($result)) {
             if ($multilingual == 1) {
                 $the_lang = "<img src=\"images/language/flag-$clanguage.png\" hspace=\"3\" border=\"0\" height=\"10\" width=\"20\">";
             } else {

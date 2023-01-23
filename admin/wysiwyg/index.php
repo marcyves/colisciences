@@ -48,7 +48,7 @@ function defaultDisplay() {
         ."<b>"._TOPIC.":</b> <select name=\"topic\">";
     $toplist = sql_query("select topicid, topictext from $prefix"._topics." order by topictext", $dbi);
     echo "<option value=\"\">"._SELECTTOPIC."</option>\n";
-    while(list($topicid, $topics) = sql_fetch_row($toplist, $dbi)) {
+    while(list($topicid, $topics) = mysqli_fetch_row($toplist, $dbi)) {
         if ($topicid==$topic) {
 	    $sel = "selected ";
 	}
@@ -144,7 +144,7 @@ function PreviewStory($name, $address, $subject, $story, $storyext, $topic, $ala
     } else {
         $warning = "";
         $result = sql_query("select topicimage from $prefix"._topics." where topicid='$topic'", $dbi);
-        list($topicimage) = sql_fetch_row($result, $dbi);
+        list($topicimage) = mysqli_fetch_row($result, $dbi);
     }
     echo "<img src=\"images/topics/$topicimage\" border=\"0\" align=\"right\">";
     themepreview($subject, $story2);
@@ -167,7 +167,7 @@ function PreviewStory($name, $address, $subject, $story, $storyext, $topic, $ala
 	."<br><br><b>"._TOPIC.": </b><select name=\"topic\">";
     $toplist = sql_query("select topicid, topictext from $prefix"._topics." order by topictext", $dbi);
     echo "<OPTION VALUE=\"\">"._SELECTTOPIC."</option>\n";
-    while(list($topicid, $topics) = sql_fetch_row($toplist, $dbi)) {
+    while(list($topicid, $topics) = mysqli_fetch_row($toplist, $dbi)) {
         if ($topicid==$topic) { $sel = "selected "; }
 	    echo "<option $sel value=\"$topicid\">$topics</option>\n";
 	    $sel = "";

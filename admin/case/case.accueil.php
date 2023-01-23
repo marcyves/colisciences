@@ -15,7 +15,7 @@
 switch($op) {
 //wysiwyg
     case "wysiwygeditor":
-    case "Pr�visualisation":
+    case "Prévisualisation":
     case "Ok !":
 //standard ones
     case "accueil":

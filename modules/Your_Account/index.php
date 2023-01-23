@@ -62,8 +62,8 @@ function delete($uname) {
     if ($allowuserdelete==1) {
         cookiedecode($user);
         $check = $cookie[1];
-        $result = sql_query("SELECT uid, uname, pass FROM $user_prefix"._users." WHERE uname='$check'", $dbi);
-        list($uid, $uname, $pass) = sql_fetch_row($result, $dbi);
+        $result = mysqli_query($dbi, "SELECT uid, uname, pass FROM $user_prefix"._users." WHERE uname='$check'");
+        list($uid, $uname, $pass) = mysqli_fetch_row($result);
         include("header.php");
         OpenTable();
         echo "<center><font class=\"option\">"._SUREDELETE."<br><a href=\"modules.php?name=Your_Account&amp;op=delconfirm&amp;uid=$uid&amp;code=$pass\"><b>"._YES."</b></a> "._OR." <a href=\"modules.php?name=Your_Account\"><b>"._NO."</b></a></font></center>";
@@ -83,8 +83,8 @@ function delconfirm($uid, $code) {
     global $senddeletemail, $adminmail, $user_prefix, $prefix, $uid, $dbi, $sitename, $allowuserdelete;
     if ($allowuserdelete==1) {
         setcookie("user");
-        $result = sql_query("SELECT email, uname, pass FROM $user_prefix"._users." WHERE uid='$uid'", $dbi);
-        list($email, $uname, $pass) = sql_fetch_row($result, $dbi);
+        $result = mysqli_query($dbi, "SELECT email, uname, pass FROM $user_prefix"._users." WHERE uid='$uid'");
+        list($email, $uname, $pass) = mysqli_fetch_row($result);
         if ($code == $pass) {
             if ($senddeletemail == 1) {
                 $to = $adminmail;
@@ -96,7 +96,7 @@ function delconfirm($uid, $code) {
                 Do not reply to this message!!";
                 mail($to,$subject,$message, "From: $from\nX-Mailer: PHP/" . phpversion());
             }
-            sql_query("DELETE FROM $user_prefix"._users." WHERE uid='$uid'", $dbi);
+            mysqli_query($dbi, "DELETE FROM $user_prefix"._users." WHERE uid='$uid'");
             include("header.php");
             Opentable();
             echo "<center><font class=\"option\"><b>"._ACCTDELETED."</b></font></center>";
@@ -125,18 +125,18 @@ function userCheck($uname, $email) {
     if (strrpos($email,' ') > 0) $stop = "<center>"._ERROREMAILSPACES."</center>";
     if ((!$uname) || ($uname=="") || (ereg("[^a-zA-Z0-9_-]",$uname))) $stop = "<center>"._ERRORINVNICK."</center><br>";
     if (strlen($uname) > 25) $stop = "<center>"._NICK2LONG."</center>";
-    if (eregi("^((root)|(adm)|(linux)|(webmaster)|(admin)|(god)|(administrator)|(administrador)|(nobody)|(anonymous)|(anonimo)|(anónimo)|(operator))$",$uname)) $stop = "<center>"._NAMERESERVED."";
+    if (eregi("^((root)|(adm)|(linux)|(webmaster)|(admin)|(god)|(administrator)|(administrador)|(nobody)|(anonymous)|(anonimo)|(anï¿½nimo)|(operator))$",$uname)) $stop = "<center>"._NAMERESERVED."";
 
     /* This line allows you to block the use of a username containing one of the string values in this array */
     if ( eregi("(nuke)|(admin)|(staff)", $uname) ) $stop = "<center>"._ACCTNAMERESERVED."</center><br>";
 
     if (strrpos($uname,' ') > 0) $stop = "<center>"._NICKNOSPACES."</center>";
-    if (sql_num_rows(sql_query("select uname from ".$user_prefix."_users where uname='$uname'", $dbi), $dbi) > 0) $stop = "<center>"._NICKTAKEN."</center><br>";
-    if (sql_num_rows(sql_query("select email from ".$user_prefix."_users where email='$email'", $dbi), $dbi) > 0) $stop = "<center>"._EMAILREGISTERED."</center><br>";
+    if (sql_num_rows(mysqli_query($dbi, "select uname from ".$user_prefix."_users where uname='$uname'")) > 0) $stop = "<center>"._NICKTAKEN."</center><br>";
+    if (sql_num_rows(mysqli_query($dbi, "select email from ".$user_prefix."_users where email='$email'")) > 0) $stop = "<center>"._EMAILREGISTERED."</center><br>";
 
     /* These lines checks your users_pending table for usernames already taken and emails already used */
-    if (sql_num_rows(sql_query("select uname from ".$user_prefix."_users_pending where uname='$uname'", $dbi), $dbi) > 0) $stop = "<center>"._NICKTAKEN."</center><br>";
-    if (sql_num_rows(sql_query("select email from ".$user_prefix."_users_pending where email='$email'", $dbi), $dbi) > 0) $stop = "<center>"._EMAILREGISTERED."</center><br>";
+    if (sql_num_rows(mysqli_query($dbi, "select uname from ".$user_prefix."_users_pending where uname='$uname'")) > 0) $stop = "<center>"._NICKTAKEN."</center><br>";
+    if (sql_num_rows(mysqli_query($dbi, "select email from ".$user_prefix."_users_pending where email='$email'")) > 0) $stop = "<center>"._EMAILREGISTERED."</center><br>";
 
     return($stop);
 }
@@ -224,16 +224,16 @@ function finishNewUser($uname, $email, $user_avatar, $user_occ, $user_from, $use
                 $makepass=makePass();
                 $cryptpass = md5($makepass);
                 /* Start code provided by Scorpion2001*/
-                $tempto = sql_query("SELECT max(uid) AS latest_uid FROM $user_prefix"._users."", $dbi);
-                list($latest_uid) = sql_fetch_array($tempto, $dbi);
+                $tempto = mysqli_query($dbi, "SELECT max(uid) AS latest_uid FROM $user_prefix"._users."");
+                list($latest_uid) = mysqli_fetch_array($tempto);
                 if ($latest_uid == "-1") {
                     $latest_uid = 1;
                 } else {
                     $latest_uid = $latest_uid+1;
                 }
-                $result = sql_query("insert into $user_prefix"._users." values ('$latest_uid','','$uname','$email','','$user_avatar','$user_regdate','$user_occ','$user_from','$user_intrest','$user_sig','$user_viewemail','','$cryptpass',10,'',0,0,0,'',0,'','','$commentlimit',0,'$newsletter',0,0,0,1)", $dbi);
+                $result = mysqli_query($dbi, "insert into $user_prefix"._users." values ('$latest_uid','','$uname','$email','','$user_avatar','$user_regdate','$user_occ','$user_from','$user_intrest','$user_sig','$user_viewemail','','$cryptpass',10,'',0,0,0,'',0,'','','$commentlimit',0,'$newsletter',0,0,0,1)");
                 /* End code provided by Scorpion2001*/
-                /*$result = sql_query("insert into ".$user_prefix."_users values (NULL,'','$uname','$email','','$url','$user_avatar','$user_regdate','$user_icq','$user_occ','$user_from','$user_intrest','$user_sig','$user_viewemail','','$user_aim','$user_yim','$user_msnm','$cryptpass','10','','0','0','0','','0','','$Default_Theme','$commentlimit','0','$newsletter','0','0','0','1')", $dbi);*/
+                /*$result = mysqli_query($dbi, "insert into ".$user_prefix."_users values (NULL,'','$uname','$email','','$url','$user_avatar','$user_regdate','$user_icq','$user_occ','$user_from','$user_intrest','$user_sig','$user_viewemail','','$user_aim','$user_yim','$user_msnm','$cryptpass','10','','0','0','0','','0','','$Default_Theme','$commentlimit','0','$newsletter','0','0','0','1')");*/
                 if (!$result) {
                     echo ""._ERROR."<br>";
                 } else {
@@ -259,16 +259,16 @@ function finishNewUser($uname, $email, $user_avatar, $user_occ, $user_from, $use
                 }
             } else {
                 /* Start code provided by Scorpion2001*/
-                $tempto = sql_query("SELECT max(upid) AS latest_upid FROM $user_prefix"._users_pending."", $dbi);
-                list($latest_upid) = sql_fetch_array($tempto, $dbi);
+                $tempto = mysqli_query($dbi, "SELECT max(upid) AS latest_upid FROM $user_prefix"._users_pending."");
+                list($latest_upid) = mysqli_fetch_array($tempto);
                 if ($latest_upid == "-1") {
                     $latest_upid = 1;
                 } else {
                     $latest_upid = $latest_upid+1;
                 }
-                $result = sql_query("insert into $user_prefix"._users_pending." values ('$latest_upid','','$uname','$email','','$user_avatar','$user_regdate','$user_occ','$user_from','$user_intrest','$user_sig','$user_viewemail','','',10,'',0,0,0,'',0,'','','$commentlimit',0,'$newsletter',0,0,0,1)", $dbi);
+                $result = mysqli_query($dbi, "insert into $user_prefix"._users_pending." values ('$latest_upid','','$uname','$email','','$user_avatar','$user_regdate','$user_occ','$user_from','$user_intrest','$user_sig','$user_viewemail','','',10,'',0,0,0,'',0,'','','$commentlimit',0,'$newsletter',0,0,0,1)");
                 /* End code provided by Scorpion2001*/
-                /*$result = sql_query("insert into ".$user_prefix."_users_pending values (NULL,'','$uname','$email','','$url','$user_avatar','$user_regdate','$user_icq','$user_occ','$user_from','$user_intrest','$user_sig','$user_viewemail','','$user_aim','$user_yim','$user_msnm','','10','','0','0','0','','0','','$Default_Theme','$commentlimit','0','$newsletter','0','0','0','1')", $dbi);*/
+                /*$result = mysqli_query($dbi, "insert into ".$user_prefix."_users_pending values (NULL,'','$uname','$email','','$url','$user_avatar','$user_regdate','$user_icq','$user_occ','$user_from','$user_intrest','$user_sig','$user_viewemail','','$user_aim','$user_yim','$user_msnm','','10','','0','0','0','','0','','$Default_Theme','$commentlimit','0','$newsletter','0','0','0','1')");*/
                 if (!$result) {
                     echo ""._ERROR."<br>";
                 } else {
@@ -313,8 +313,8 @@ function finishNewUser($uname, $email, $user_avatar, $user_occ, $user_from, $use
 
 function userinfo($uname, $bypass=0) {
     global $user, $cookie, $sitename, $prefix, $user_prefix, $dbi, $admin;
-    $result = sql_query("select uid, femail, bio, user_avatar, user_from, user_occ, user_intrest, user_sig, pass, newsletter from ".$user_prefix."_users where uname='$uname'", $dbi);
-    $userinfo = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "select uid, femail, bio, user_avatar, user_from, user_occ, user_intrest, user_sig, pass, newsletter from ".$user_prefix."_users where uname='$uname'");
+    $userinfo = mysqli_fetch_array($result);
     if(!$bypass) cookiedecode($user);
     include("header.php");
     OpenTable();
@@ -326,7 +326,7 @@ function userinfo($uname, $bypass=0) {
     } else {
         echo "<font class=\"title\">"._PERSONALINFO.": $uname</font></center><br><br>";
     }
-    if((sql_num_rows($result, $dbi)==1) && ($userinfo[url] || $userinfo[femail] || $userinfo[bio] || $userinfo[user_avatar] || $userinfo[user_location] || $userinfo[user_occ] || $userinfo[user_intrest] || $userinfo[user_sig])) {
+    if((sql_num_rows($result)==1) && ($userinfo[url] || $userinfo[femail] || $userinfo[bio] || $userinfo[user_avatar] || $userinfo[user_location] || $userinfo[user_occ] || $userinfo[user_intrest] || $userinfo[user_sig])) {
         echo "<center><font class=\"content\">";
         if ($userinfo[user_avatar]) echo "<img src=\"images/forum/avatar/$userinfo[user_avatar]\" alt=\"\"><br>\n";
         if ($userinfo[femail]) { echo ""._MYEMAIL." <a href=\"mailto:$userinfo[femail]\">$userinfo[femail]</a><br>\n"; }
@@ -336,8 +336,8 @@ function userinfo($uname, $bypass=0) {
         $userinfo[user_sig] = nl2br($userinfo[user_sig]);
         if ($userinfo[user_sig]) echo "<br><b>"._SIGNATURE.":</b><br>$userinfo[user_sig]<br>\n";
         if ($userinfo[bio]) { echo "<br><b>"._EXTRAINFO.":</b><br>$userinfo[bio]<br>\n"; }
-        $result = sql_query("select username from ".$prefix."_session where username='$uname'", $dbi);
-        list($username) = sql_fetch_row($result, $dbi);
+        $result = mysqli_query($dbi, "select username from ".$prefix."_session where username='$uname'");
+        list($username) = mysqli_fetch_row($result);
         if ($username == "") {
             $online = _OFFLINE;
         } else {
@@ -534,20 +534,20 @@ function logout() {
     OpenTable();
     echo "<center><font class=\"option\"><b>"._YOUARELOGGEDOUT."</b></font></center>";
     CloseTable();
-    $result = sql_query("delete from ".$prefix."_session where username='$r_uname'", $dbi);
+    $result = mysqli_query($dbi, "delete from ".$prefix."_session where username='$r_uname'");
     include("footer.php");
 }
 
 function mail_password($uname, $code) {
     global $sitename, $adminmail, $nukeurl, $user_prefix, $dbi;
-    $result = sql_query("select email, pass from ".$user_prefix."_users where (uname='$uname')", $dbi);
+    $result = mysqli_query($dbi, "select email, pass from ".$user_prefix."_users where (uname='$uname')");
     if(!$result) {
         OpenTable();
         echo "<center>"._SORRYNOUSERINFO."</center>";
         CloseTable();
     } else {
         $host_name = getenv("REMOTE_ADDR");
-        list($email, $pass) = sql_fetch_row($result, $dbi);
+        list($email, $pass) = mysqli_fetch_row($result);
         $areyou = substr($pass, 0, 10);
         if ($areyou==$code) {
             $newpass=makePass();
@@ -557,7 +557,7 @@ function mail_password($uname, $code) {
             /* Next step: add the new password to the database */
             $cryptpass = md5($newpass);
             $query="update ".$user_prefix."_users set pass='$cryptpass' where uname='$uname'";
-            if(!sql_query($query, $dbi)) {
+            if(!mysqli_query($dbi, $query)) {
                     echo ""._UPDATEFAILED."";
             }
             include("header.php");
@@ -567,12 +567,12 @@ function mail_password($uname, $code) {
             include("footer.php");
         /* If no Code, send it */
         } else {
-            $result = sql_query("select email, pass from ".$user_prefix."_users where (uname='$uname')", $dbi);
+            $result = mysqli_query($dbi, "select email, pass from ".$user_prefix."_users where (uname='$uname')");
             if(!$result) {
                 echo "<center>"._SORRYNOUSERINFO."</center>";
             } else {
                 $host_name = getenv("REMOTE_ADDR");
-                list($email, $pass) = sql_fetch_row($result, $dbi);
+                list($email, $pass) = mysqli_fetch_row($result);
                 $areyou = substr($pass, 0, 10);
                     $message = ""._USERACCOUNT." '$uname' "._AT." $sitename "._HASTHISEMAIL." "._AWEBUSERFROM." $host_name "._CODEREQUESTED."\n\n"._YOURCODEIS." $areyou \n\n"._WITHTHISCODE." $nukeurl/modules.php?name=Your_Account&op=pass_lost\n"._IFYOUDIDNOTASK2."";
                 $subject=""._CODEFOR." $uname";
@@ -592,17 +592,17 @@ function docookie($setuid, $setuname, $setpass, $setstorynum, $setumode, $setuor
 
 function login($uname, $pass) {
     global $setinfo, $user_prefix, $dbi;
-    $result = sql_query("select pass, uid, storynum, umode, uorder, thold, noscore, ublockon, theme, commentmax from ".$user_prefix."_users where uname='$uname'", $dbi);
-    $setinfo = sql_fetch_array($result, $dbi);
-    if ((sql_num_rows($result, $dbi)==1) AND ($setinfo[uid] != 1) AND ($setinfo[pass] != "")) {
+    $result = mysqli_query($dbi, "select pass, uid, storynum, umode, uorder, thold, noscore, ublockon, theme, commentmax from ".$user_prefix."_users where uname='$uname'");
+    $setinfo = mysqli_fetch_array($result);
+    if ((sql_num_rows($result)==1) AND ($setinfo[uid] != 1) AND ($setinfo[pass] != "")) {
         $dbpass=$setinfo[pass];
         $non_crypt_pass = $pass;
           $old_crypt_pass = crypt($pass,substr($dbpass,0,2));
         $new_pass = md5($pass);
         if (($dbpass == $non_crypt_pass) OR ($dbpass == $old_crypt_pass)) {
-            sql_query("update ".$user_prefix."_users set pass='$new_pass' WHERE uname='$uname'", $dbi);
-            $result = sql_query("select pass from ".$user_prefix."_users where uname='$uname'", $dbi);
-            list($dbpass) = sql_fetch_row($result, $dbi);
+            mysqli_query($dbi, "update ".$user_prefix."_users set pass='$new_pass' WHERE uname='$uname'");
+            $result = mysqli_query($dbi, "select pass from ".$user_prefix."_users where uname='$uname'");
+            list($dbpass) = mysqli_fetch_row($result);
         }
         if ($dbpass != $new_pass) {
             Header("Location: modules.php?name=Your_Account&stop=1");
@@ -698,8 +698,8 @@ function saveuser($uid, $realname, $uname, $email, $femail, $pass, $vpass, $bio,
     cookiedecode($user);
     $check = $cookie[1];
     $check2 = $cookie[2];
-    $result = sql_query("select uid, pass from ".$user_prefix."_users where uname='$check'", $dbi);
-    list($vuid, $ccpass) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select uid, pass from ".$user_prefix."_users where uname='$check'");
+    list($vuid, $ccpass) = mysqli_fetch_row($result);
     if (($uid == $vuid) AND ($check2 == $ccpass)) {
         if ((isset($pass)) && ("$pass" != "$vpass")) {
             echo "<center>"._PASSDIFFERENT."</center>";
@@ -709,19 +709,19 @@ function saveuser($uid, $realname, $uname, $email, $femail, $pass, $vpass, $bio,
             if ($bio) { filter_text($bio); $bio = $EditedMessage; $bio = FixQuotes($bio); }
             if ($pass != "") {
                 cookiedecode($user);
-                sql_query("LOCK TABLES ".$user_prefix."_users WRITE", $dbi);
+                mysqli_query($dbi, "LOCK TABLES ".$user_prefix."_users WRITE");
                 $pass = md5($pass);
-                sql_query("update ".$user_prefix."_users set name='$realname', email='$email', femail='$femail', pass='$pass', bio='$bio' , user_avatar='$user_avatar', user_occ='$user_occ', user_from='$user_from', user_intrest='$user_intrest', user_sig='$user_sig', newsletter='$newsletter' where uid='$uid'", $dbi);
-                $result = sql_query("select uid, uname, pass, storynum, umode, uorder, thold, noscore, ublockon, theme from ".$user_prefix."_users where uname='$uname' and pass='$pass'", $dbi);
-                if(sql_num_rows($result, $dbi)==1) {
-                    $userinfo = sql_fetch_array($result, $dbi);
+                mysqli_query($dbi, "update ".$user_prefix."_users set name='$realname', email='$email', femail='$femail', pass='$pass', bio='$bio' , user_avatar='$user_avatar', user_occ='$user_occ', user_from='$user_from', user_intrest='$user_intrest', user_sig='$user_sig', newsletter='$newsletter' where uid='$uid'");
+                $result = mysqli_query($dbi, "select uid, uname, pass, storynum, umode, uorder, thold, noscore, ublockon, theme from ".$user_prefix."_users where uname='$uname' and pass='$pass'");
+                if(sql_num_rows($result)==1) {
+                    $userinfo = mysqli_fetch_array($result);
                     docookie($userinfo[uid],$userinfo[uname],$userinfo[pass],$userinfo[storynum],$userinfo[umode],$userinfo[uorder],$userinfo[thold],$userinfo[noscore],$userinfo[ublockon],$userinfo[theme],$userinfo[commentmax]);
                 } else {
                     echo "<center>"._SOMETHINGWRONG."</center><br>";
                 }
-                sql_query("UNLOCK TABLES", $dbi);
+                mysqli_query($dbi, "UNLOCK TABLES");
             } else {
-                sql_query("update ".$user_prefix."_users set name='$realname', email='$email', femail='$femail', bio='$bio', user_avatar='$user_avatar', user_occ='$user_occ', user_from='$user_from', user_intrest='$user_intrest', user_sig='$user_sig', newsletter='$newsletter' where uid='$uid'", $dbi);
+                mysqli_query($dbi, "update ".$user_prefix."_users set name='$realname', email='$email', femail='$femail', bio='$bio', user_avatar='$user_avatar', user_occ='$user_occ', user_from='$user_from', user_intrest='$user_intrest', user_sig='$user_sig', newsletter='$newsletter' where uid='$uid'");
             if ($attach) {
                 $a = 1;
             } else {
@@ -839,12 +839,12 @@ function savehome($uid, $uname, $storynum, $ublockon, $ublock) {
     cookiedecode($user);
     $check = $cookie[1];
     $check2 = $cookie[2];
-    $result = sql_query("select uid, pass from ".$user_prefix."_users where uname='$check'", $dbi);
-    list($vuid, $ccpass) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select uid, pass from ".$user_prefix."_users where uname='$check'");
+    list($vuid, $ccpass) = mysqli_fetch_row($result);
     if (($uid == $vuid) AND ($check2 == $ccpass)) {
         if(isset($ublockon)) $ublockon=1; else $ublockon=0;
         $ublock = FixQuotes($ublock);
-        sql_query("update ".$user_prefix."_users set storynum='$storynum', ublockon='$ublockon', ublock='$ublock' where uid=$uid", $dbi);
+        mysqli_query($dbi, "update ".$user_prefix."_users set storynum='$storynum', ublockon='$ublockon', ublock='$ublock' where uid=$uid");
         getusrinfo($user);
         docookie($userinfo[uid],$userinfo[uname],$userinfo[pass],$userinfo[storynum],$userinfo[umode],$userinfo[uorder],$userinfo[thold],$userinfo[noscore],$userinfo[ublockon],$userinfo[theme],$userinfo[commentmax]);
         Header("Location: modules.php?name=Your_Account");
@@ -857,10 +857,10 @@ function savetheme($uid, $theme) {
     cookiedecode($user);
     $check = $cookie[1];
     $check2 = $cookie[2];
-    $result = sql_query("select uid, pass from ".$user_prefix."_users where uname='$check'", $dbi);
-    list($vuid, $ccpass) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select uid, pass from ".$user_prefix."_users where uname='$check'");
+    list($vuid, $ccpass) = mysqli_fetch_row($result);
     if (($uid == $vuid) AND ($check2 == $ccpass)) {
-        sql_query("update ".$user_prefix."_users set theme='$theme' where uid=$uid", $dbi);
+        mysqli_query($dbi, "update ".$user_prefix."_users set theme='$theme' where uid=$uid");
         getusrinfo($user);
         docookie($userinfo[uid],$userinfo[uname],$userinfo[pass],$userinfo[storynum],$userinfo[umode],$userinfo[uorder],$userinfo[thold],$userinfo[noscore],$userinfo[ublockon],$userinfo[theme],$userinfo[commentmax]);
         Header("Location: modules.php?name=Your_Account&theme=$theme");
@@ -943,11 +943,11 @@ function savecomm($uid, $uname, $umode, $uorder, $thold, $noscore, $commentmax) 
     cookiedecode($user);
     $check = $cookie[1];
     $check2 = $cookie[2];
-    $result = sql_query("select uid, pass from ".$user_prefix."_users where uname='$check'", $dbi);
-    list($vuid, $ccpass) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select uid, pass from ".$user_prefix."_users where uname='$check'");
+    list($vuid, $ccpass) = mysqli_fetch_row($result);
     if (($uid == $vuid) AND ($check2 == $ccpass)) {
         if(isset($noscore)) $noscore=1; else $noscore=0;
-        sql_query("update ".$user_prefix."_users set umode='$umode', uorder='$uorder', thold='$thold', noscore='$noscore', commentmax='$commentmax' where uid=$uid", $dbi);
+        mysqli_query($dbi, "update ".$user_prefix."_users set umode='$umode', uorder='$uorder', thold='$thold', noscore='$noscore', commentmax='$commentmax' where uid=$uid");
         getusrinfo($user);
         docookie($userinfo[uid],$userinfo[uname],$userinfo[pass],$userinfo[storynum],$userinfo[umode],$userinfo[uorder],$userinfo[thold],$userinfo[noscore],$userinfo[ublockon],$userinfo[theme],$userinfo[commentmax]);
         Header("Location: modules.php?name=Your_Account");

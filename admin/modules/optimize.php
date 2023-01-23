@@ -14,9 +14,8 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
-$result = sql_query("select name, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($name, $radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select name, radminsuper from ".$prefix."_authors where aid='$aid'");
+list($name, $radminsuper) = mysqli_fetch_row($result);
 
 include("header.php");
 GraphicAdmin();
@@ -32,9 +31,9 @@ if ($radminsuper==1) {
     $tot_idx = 0;
     $tot_all = 0;
     $local_query = 'SHOW TABLE STATUS FROM '.$dbname;
-    $result = @sql_query($local_query, $dbi);
-    if (@sql_num_rows($result, $dbi)) {
-	while ($row = sql_fetch_array($result, $dbi)) {
+    $result = @mysqli_query($dbi, $local_query);
+    if (@sql_num_rows($result)) {
+	while ($row = mysqli_fetch_array($result)) {
     	    $tot_data = $row['Data_length'];
             $tot_idx  = $row['Index_length'];
             $total = $tot_data + $tot_idx;
@@ -45,7 +44,7 @@ if ($radminsuper==1) {
             $total_gain += $gain;
             $gain = round ($gain,3);   
             $local_query = 'OPTIMIZE TABLE '.$row[0];
-	    $resultat  = sql_query($local_query, $dbi);
+	    $resultat  = mysqli_query($dbi, $local_query);
        	    if ($gain == 0) {
        		echo "<tr><td>"."$row[0]"."</td>"."<td>"."$total"." Kb"."</td>"."<td>"._ALREADYOPTIMIZED."</td><td>0 Kb</td></tr>";
        	    } else {
@@ -63,14 +62,14 @@ if ($radminsuper==1) {
 	.""._TOTALSPACESAVED." "."$total_gain"." Kb<br>";
     
     $sql_query = "CREATE TABLE IF NOT EXISTS ".$prefix."_optimize_gain(gain decimal(10,3))";  
-    $result = @sql_query($sql_query, $dbi);
+    $result = @mysqli_query($dbi, $sql_query);
        
     $sql_query = "INSERT INTO ".$prefix."_optimize_gain (gain) VALUES ('$total_gain')";
-    $result = @sql_query($sql_query, $dbi);
+    $result = @mysqli_query($dbi, $sql_query);
        
     $sql_query = "SELECT * FROM ".$prefix."_optimize_gain";
-    $result = sql_query ($sql_query, $dbi);
-    while ($row = sql_fetch_row($result, $dbi)) {
+    $result = sql_query ($sql_query);
+    while ($row = mysqli_fetch_row($result)) {
 	$histo += $row[0];
 	$cpt += 1;
     }

@@ -21,18 +21,18 @@
 
 function supprimer($mot){
 	global $dbi;
-// Ajouter à la liste des stopwords
-   	sql_query("insert into cb_occurences_stopwords values (NULL, '$mot')", $dbi);
-	echo "<p>$mot a été ajouté à la liste des mots ignorés par le comptage.";
-//Effacer les entrées existantes
-   	$sql = sql_query("select motId from cb_occurences_cumul where mot ='$mot'", $dbi);
-	list($motId) = sql_fetch_row($sql, $dbi);
-   	sql_query("delete from cb_occurences where mot='$motId'", $dbi);
-   	sql_query("delete from cb_occurences_cumul where mot='$mot'", $dbi);
-	echo "<p>Les données sur $mot ont été effacées.";
+// Ajouter Ã© la liste des stopwords
+   	mysqli_query($dbi, "insert into cb_occurences_stopwords values (NULL, '$mot')");
+	echo "<p>$mot a Ã©tÃ© ajoutÃ© Ã© la liste des mots ignorÃ©s par le comptage.";
+//Effacer les entrÃ©es existantes
+   	$sql = mysqli_query($dbi, "select motId from cb_occurences_cumul where mot ='$mot'");
+	list($motId) = mysqli_fetch_row($sql);
+   	mysqli_query($dbi, "delete from cb_occurences where mot='$motId'");
+   	mysqli_query($dbi, "delete from cb_occurences_cumul where mot='$mot'");
+	echo "<p>Les donnÃ©es sur $mot ont Ã©tÃ© effacÃ©es.";
 
-   	$sql = sql_query("select distinct mot from cb_occurences", $dbi);
-	$motNB = sql_num_rows($sql, $dbi);
+   	$sql = mysqli_query($dbi, "select distinct mot from cb_occurences");
+	$motNB = $sql->num_rows;
 	afficheListe(0,$motNB);
 }
 
@@ -58,7 +58,7 @@ function creation(){
 		$f->store($ouvrage,$valeur);
 		$valeur++;
 	} while ($valeur < $nombre_noeuds);
-	echo "<p>Construction terminée.";
+	echo "<p>Construction terminÃ©e.";
 }
 
 function recherche($query){
@@ -71,15 +71,15 @@ function recherche($query){
 	
 	$maxCount = 0;
 
-    $sql = sql_query("select distinct ouvrage_id, paragraphe, o.count from cb_occurences o, cb_occurences_cumul c where c.mot = '$query' and o.mot=motId order by ouvrage_id, paragraphe", $dbi);
+    $sql = mysqli_query($dbi, "select distinct ouvrage_id, paragraphe, o.count from cb_occurences o, cb_occurences_cumul c where c.mot = '$query' and o.mot=motId order by ouvrage_id, paragraphe");
 //	echo "select ouvrage_id, paragraphe, count from cb_occurences o, cb_occurences_cumul c where c.mot = '$query' and o.mot=motId order by ouvrage_id";
 	$save_ouvrage = 0;
 
-	while (list($ouvrage_id, $paragraphe, $count) = sql_fetch_row($sql, $dbi)){
+	while (list($ouvrage_id, $paragraphe, $count) = mysqli_fetch_row($sql)){
 		if ($save_ouvrage!=$ouvrage_id){
 			$save_ouvrage = $ouvrage_id;
-			$sql2 = sql_query("select titre,nombre_noeuds,date_titre,type_book from cb_ouvrages where pid='$ouvrage_id'",$dbi);
-			list($titre,$nb_noeuds, $date_titre,$type_book)=sql_fetch_row($sql2, $dbi);
+			$sql2 = mysqli_query($dbi, "select titre,nombre_noeuds,date_titre,type_book from cb_ouvrages where pid='$ouvrage_id'");
+			list($titre,$nb_noeuds, $date_titre,$type_book)=mysqli_fetch_row($sql2);
 			echo "<h3>".afficheTitreOuvrage($titre, $date_titre, $type_book)."</h3>";
 		}
 
@@ -111,8 +111,8 @@ function afficheListe($offset, $motNB){
 		  ."<td align=\"left\">";
 
 		if ($previous >= 0){
-//		$navLink .= "<small><a href=\"$PHP_SELF?offset=$previous\">&lt;&lt; 50 précédents</a></small>";
-			$navLink .= boutonSelfCommande("&offset=$previous","&lt;&lt; 50 précédents","_self");
+//		$navLink .= "<small><a href=\"$PHP_SELF?offset=$previous\">&lt;&lt; 50 prÃ©cÃ©dents</a></small>";
+			$navLink .= boutonSelfCommande("&offset=$previous","&lt;&lt; 50 prÃ©cÃ©dents","_self");
 		}
 		$cmd = boutonSelfCommande("&tri=count","Trier par nb+","_self");
 		$cmd .= boutonSelfCommande("&tri=tnuoc","Trier par nb-","_self");
@@ -145,10 +145,10 @@ function afficheListe($offset, $motNB){
 	}else{
 		$order = "count desc";
 	}
-   	$sql = sql_query("select mot, count from cb_occurences_cumul ORDER BY $order LIMIT $offset, $step", $dbi);
+   	$sql = mysqli_query($dbi, "select mot, count from cb_occurences_cumul ORDER BY $order LIMIT $offset, $step");
 
 	echo "<table width=\"80%\" align=\"center\" border=\"0\" bgcolor=\"white\">\n";
-	while (list($mot, $count) = sql_fetch_row($sql, $dbi)){
+	while (list($mot, $count) = mysqli_fetch_row($sql)){
 		echo "<tr><td width=\"20\"><a href=\"parcours.php?name=Parcours_Hypertexte&file=moteurCB&parcours=compte&op=stop&word=$mot\"><img src=\"images/delete.gif\" alt=\"Supprimer\"></a></td><td align=\"left\"><a href=\"parcours.php?name=Parcours_Hypertexte&file=moteurCB&parcours=compte&op=search&query=$mot\">$mot</a></td><td align=\"right\">$count</td></tr>\n";
 	}
 	echo "</table>";
@@ -164,10 +164,10 @@ switch ($op){
 	break;
 	default:
 	//set_time_limit(120);
-    	$sql = sql_query("select distinct mot from cb_occurences where ouvrage_id = '$ouvrage'", $dbi);
-		$motNB = sql_num_rows($sql, $dbi);
+    	$sql = mysqli_query($dbi, "select distinct mot from cb_occurences where ouvrage_id = '$ouvrage'");
+		$motNB = $sql->num_rows;
 		if ( $motNB > 0) {
-			echo "<p>Le comptage a déjà été effectué pour cet ouvrage<br>Voici la liste des $motNB mots enregistrés<br>";
+			echo "<p>Le comptage a dÃ©jÃ© Ã©tÃ© effectuÃ© pour cet ouvrage<br>Voici la liste des $motNB mots enregistrÃ©s<br>";
 			afficheListe($offset, $motNB);
 		} else {
 			creation();

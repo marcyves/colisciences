@@ -24,12 +24,12 @@ include "wysiwygeditor.php";
 function edition($valeur){
     global $ouvrage;
     global $texte, $texteNotion ;
-// variables correspondant aux entit�s de la DTD
+// variables correspondant aux entités de la DTD
     global $titre;
     global $nom, $prenom;
     global $editeur, $ville, $date;
     global $paragraphe;
-// objets de stockage des entit�s de la DTD
+// objets de stockage des entités de la DTD
     global $flag , $notionsParagraphe;
     global $glossaire, $motclef, $note ;
 
@@ -56,7 +56,7 @@ echo "<h3 align=center>Modification du paragraphe $valeur</h3>
     <td width=25%>
 	<table>
 	<tr><td>Nom:</td><td><input type=\"text\" name=\"nom\" value=\"".stripslashes($nom)."\" size=40></td></tr>
-	<tr><td>Pr�nom:</td><td><input type=\"text\" name=\"prenom\" value=\"".stripslashes($prenom)."\" size=40></td></tr>
+	<tr><td>Prénom:</td><td><input type=\"text\" name=\"prenom\" value=\"".stripslashes($prenom)."\" size=40></td></tr>
 	</table>
 	</td>
     <td><table>
@@ -121,20 +121,20 @@ function PreviewStory ($valeur, $titre, $nom,$prenom,$editeur,$ville,$date,$part
 	$souschapitre = stripslashes($souschapitre);
     $texteParagraphe = stripslashes($texte);
 
-    echo "<center><font class=\"title\"><b>Edition : pr�visualisation et sauvegarde</b></font><br>";
+    echo "<center><font class=\"title\"><b>Edition : prévisualisation et sauvegarde</b></font><br>";
     echo "<br>";
     echo "<center><font class=\"title\"><b>Informations non visibles</b></font><br>";
 	echo "<p>Auteur : $prenom $nom<br>
 	Editeur : $editeur, $ville, $date<br>";
     echo "<br>";
     echo "<center><font class=\"title\"><b>Voici comment va apparaitre le paragraphe</b></font><br>";
-//Affichage des titres quand ils apparaissent, sinon vu que html ignore les balises on �conomise les tests.
+//Affichage des titres quand ils apparaissent, sinon vu que html ignore les balises on économise les tests.
 	echo "<h3>$partie</h3><h4>$chapitre</h4><h5>$souschapitre</h5>";
 
 //Affiche le corps du texte
 
     echo "<blockquote>$texteParagraphe</blockquote>";		
-    echo "<center><font class=\"title\"><b>Voici les balises notionnelles pr�serv�es</b></font><br>";
+    echo "<center><font class=\"title\"><b>Voici les balises notionnelles préservées</b></font><br>";
     echo "<blockquote>".htmlspecialchars($texteNotion)."</blockquote>";		
 
     CloseTable();

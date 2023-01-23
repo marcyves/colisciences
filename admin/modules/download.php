@@ -12,8 +12,8 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-$result = sql_query("select radmindownload, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radmindownload, $radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radmindownload, radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radmindownload, $radminsuper) = mysqli_fetch_row($result);
 if (($radmindownload==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -22,8 +22,8 @@ if (($radmindownload==1) OR ($radminsuper==1)) {
 
 function getparent($parentid,$title) {
     global $prefix,$dbi;
-    $result=sql_query("select cid, title, parentid from ".$prefix."_downloads_categories where cid=$parentid", $dbi);
-    list($cid, $ptitle, $pparentid) = sql_fetch_row($result, $dbi);
+    $result=mysqli_query($dbi, "select cid, title, parentid from ".$prefix."_downloads_categories where cid=$parentid");
+    list($cid, $ptitle, $pparentid) = mysqli_fetch_row($result);
     if ($ptitle!="") $title=$ptitle."/".$title;
     if ($pparentid!=0) {
 	$title=getparent($pparentid,$title);
@@ -37,27 +37,27 @@ function downloads() {
     GraphicAdmin();
     OpenTable();
     echo "<center><a href=\"modules.php?name=Downloads\"><img src=\"images/download/down-logo.gif\" border=\"0\" alt=\"\"></a><br><br>";
-    $result=sql_query("select * from ".$prefix."_downloads_downloads", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result=mysqli_query($dbi, "select * from ".$prefix."_downloads_downloads");
+    $numrows = $result->num_rows;
     echo "<font class=\"content\">"._THEREARE." <b>$numrows</b> "._DOWNLOADSINDB."</font></center>";
     CloseTable();
     echo "<br>";
     
 /* Temporarily 'homeless' downloads functions (to be revised in admin.php breakup) */
 
-    $result = sql_query("select * from ".$prefix."_downloads_modrequest where brokendownload=1", $dbi);
-    $totalbrokendownloads = sql_num_rows($result, $dbi);
-    $result2 = sql_query("select * from ".$prefix."_downloads_modrequest where brokendownload=0", $dbi);
-    $totalmodrequests = sql_num_rows($result2, $dbi);
+    $result = mysqli_query($dbi, "select * from ".$prefix."_downloads_modrequest where brokendownload=1");
+    $totalbrokendownloads = $result->num_rows;
+    $result2 = mysqli_query($dbi, "select * from ".$prefix."_downloads_modrequest where brokendownload=0");
+    $totalmodrequests = sql_num_rows($result2);
 
 /* List Downloads waiting for validation */
 
-    $result = sql_query("select lid, cid, sid, title, url, description, name, email, submitter, filesize, version, homepage from ".$prefix."_downloads_newdownload order by lid", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select lid, cid, sid, title, url, description, name, email, submitter, filesize, version, homepage from ".$prefix."_downloads_newdownload order by lid");
+    $numrows = $result->num_rows;
     if ($numrows>0) {
 	OpenTable();
 	echo "<center><font class=\"content\"><b>"._DOWNLOADSWAITINGVAL."</b></font></center><br><br>";
-	while(list($lid, $cid, $sid, $title, $url, $description, $name, $email, $submitter, $filesize, $version, $homepage) = sql_fetch_row($result, $dbi)) {
+	while(list($lid, $cid, $sid, $title, $url, $description, $name, $email, $submitter, $filesize, $version, $homepage) = mysqli_fetch_row($result)) {
 	    if ($submitter == "") {
 		$submitter = _NONE;
 	    }
@@ -78,8 +78,8 @@ function downloads() {
 	    echo "<input type=\"hidden\" name=\"lid\" value=\"$lid\">";
 	    echo "<input type=\"hidden\" name=\"submitter\" value=\"$submitter\">";
 	    echo ""._CATEGORY.": <select name=\"cat\">";
-	$result2=sql_query("select cid, title, parentid from ".$prefix."_downloads_categories order by title", $dbi);
-	while(list($cid2, $ctitle2, $parentid2) = sql_fetch_row($result2, $dbi)) {
+	$result2=mysqli_query($dbi, "select cid, title, parentid from ".$prefix."_downloads_categories order by title");
+	while(list($cid2, $ctitle2, $parentid2) = mysqli_fetch_row($result2)) {
 		if ($cid2==$cid) {
 			$sel = "selected";
 		} else {
@@ -119,16 +119,16 @@ function downloads() {
 
 // Add a New Sub-Category
 
-    $result = sql_query("select * from ".$prefix."_downloads_categories", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select * from ".$prefix."_downloads_categories");
+    $numrows = $result->num_rows;
     if ($numrows>0) {
 	OpenTable();
 	echo "<form method=\"post\" action=\"admin.php\">"
 	    ."<font class=\"content\"><b>"._ADDSUBCATEGORY."</b></font><br><br>"
 	    .""._NAME.": <input type=\"text\" name=\"title\" size=\"30\" maxlength=\"100\">&nbsp;"._IN."&nbsp;";
-	$result2=sql_query("select cid, title, parentid from ".$prefix."_downloads_categories order by parentid,title", $dbi);
+	$result2=mysqli_query($dbi, "select cid, title, parentid from ".$prefix."_downloads_categories order by parentid,title");
 	echo "<select name=\"cid\">";
-	while(list($cid2, $ctitle2, $parentid2) = sql_fetch_row($result2, $dbi)) {
+	while(list($cid2, $ctitle2, $parentid2) = mysqli_fetch_row($result2)) {
 		if ($parentid2!=0) $ctitle2=getparent($parentid2,$ctitle2);
 	    echo "<option value=\"$cid2\">$ctitle2</option>";
 	}
@@ -144,17 +144,17 @@ function downloads() {
 
 // Add a New Download to Database
 
-    $result = sql_query("select cid, title from ".$prefix."_downloads_categories", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select cid, title from ".$prefix."_downloads_categories");
+    $numrows = $result->num_rows;
     if ($numrows>0) {
 	OpenTable();
 	echo "<form method=\"post\" action=\"admin.php\">"
 	    ."<font class=\"content\"><b>"._ADDNEWDOWNLOAD."</b><br><br>"
 	    .""._DOWNLOADNAME.": <input type=\"text\" name=\"title\" size=\"50\" maxlength=\"100\"><br>"
 	    .""._FILEURL.": <input type=\"text\" name=\"url\" size=\"50\" maxlength=\"100\" value=\"http://\"><br>";
-	$result2=sql_query("select cid, title, parentid from ".$prefix."_downloads_categories order by title", $dbi);
+	$result2=mysqli_query($dbi, "select cid, title, parentid from ".$prefix."_downloads_categories order by title");
 	echo ""._CATEGORY.": <select name=\"cat\">";
-	while(list($cid2, $ctitle2, $parentid2) = sql_fetch_row($result2, $dbi)) {
+	while(list($cid2, $ctitle2, $parentid2) = mysqli_fetch_row($result2)) {
 		if ($parentid2!=0) $ctitle2=getparent($parentid2,$ctitle2);
 	    echo "<option value=\"$cid2\">$ctitle2</option>";
 	}
@@ -178,15 +178,15 @@ function downloads() {
 
 // Modify Category
 
-    $result = sql_query("select * from ".$prefix."_downloads_categories", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select * from ".$prefix."_downloads_categories");
+    $numrows = $result->num_rows;
     if ($numrows>0) {
 	OpenTable();
 	echo "<form method=\"post\" action=\"admin.php\">"
 	    ."<font class=\"content\"><b>"._MODCATEGORY."</b></font><br><br>";
-	$result2=sql_query("select cid, title, parentid from ".$prefix."_downloads_categories order by title", $dbi);
+	$result2=mysqli_query($dbi, "select cid, title, parentid from ".$prefix."_downloads_categories order by title");
 	echo ""._CATEGORY.": <select name=\"cat\">";
-	while(list($cid2, $ctitle2, $parentid2) = sql_fetch_row($result2, $dbi)) {
+	while(list($cid2, $ctitle2, $parentid2) = mysqli_fetch_row($result2)) {
 		if ($parentid2!=0) $ctitle2=getparent($parentid2,$ctitle2);
 	    echo "<option value=\"$cid2\">$ctitle2</option>";
 	}
@@ -201,8 +201,8 @@ function downloads() {
 
 // Modify Downloads
 
-    $result = sql_query("select * from ".$prefix."_downloads_downloads", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select * from ".$prefix."_downloads_downloads");
+    $numrows = $result->num_rows;
     if ($numrows>0) {
     OpenTable();
     echo "<form method=\"post\" action=\"admin.php\">"
@@ -218,24 +218,24 @@ function downloads() {
 
 // Transfer Categories
 
-    $result = sql_query("select * from ".$prefix."_downloads_downloads", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select * from ".$prefix."_downloads_downloads");
+    $numrows = $result->num_rows;
     if ($numrows>0) {
     OpenTable();
 	echo "<form method=\"post\" action=\"admin.php\">"
 	    ."<font class=\"option\"><b>"._EZTRANSFERDOWNLOADS."</b></font><br><br>"
 	    .""._CATEGORY.": "
 	    ."<select name=\"cidfrom\">";
-	$result2=sql_query("select cid, title, parentid from ".$prefix."_downloads_categories order by parentid,title", $dbi);
-	while(list($cid2, $ctitle2, $parentid2) = sql_fetch_row($result2, $dbi)) {
+	$result2=mysqli_query($dbi, "select cid, title, parentid from ".$prefix."_downloads_categories order by parentid,title");
+	while(list($cid2, $ctitle2, $parentid2) = mysqli_fetch_row($result2)) {
 		if ($parentid2!=0) $ctitle2=getparent($parentid2,$ctitle2);
 	    echo "<option value=\"$cid2\">$ctitle2</option>";
 	}
 	echo "</select><br>"
 	    .""._IN."&nbsp;"._CATEGORY.": ";
-	$result2=sql_query("select cid, title, parentid from ".$prefix."_downloads_categories order by parentid,title", $dbi);
+	$result2=mysqli_query($dbi, "select cid, title, parentid from ".$prefix."_downloads_categories order by parentid,title");
 	echo "<select name=\"cidto\">";
-	while(list($cid2, $ctitle2, $parentid2) = sql_fetch_row($result2, $dbi)) {
+	while(list($cid2, $ctitle2, $parentid2) = mysqli_fetch_row($result2)) {
 		if ($parentid2!=0) $ctitle2=getparent($parentid2,$ctitle2);
 	    echo "<option value=\"$cid2\">$ctitle2</option>";
 	}
@@ -253,7 +253,7 @@ function downloads() {
 
 function DownloadsTransfer($cidfrom,$cidto) {
     global $prefix, $dbi;
-    sql_query("update ".$prefix."_downloads_downloads set cid=$cidto where cid=$cidfrom", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_downloads_downloads set cid=$cidto where cid=$cidfrom");
     Header("Location: admin.php?op=downloads");
 }
 
@@ -262,14 +262,14 @@ function DownloadsModDownload($lid) {
     include ("header.php");
     GraphicAdmin();
     global $anonymous;
-    $result = sql_query("select cid, sid, title, url, description, name, email, hits, filesize, version, homepage from ".$prefix."_downloads_downloads where lid=$lid", $dbi);
+    $result = mysqli_query($dbi, "select cid, sid, title, url, description, name, email, hits, filesize, version, homepage from ".$prefix."_downloads_downloads where lid=$lid");
     OpenTable();
     echo "<center><font class=\"title\"><b>"._WEBDOWNLOADSADMIN."</b></font></center>";
     CloseTable();
     echo "<br>";
     OpenTable();
     echo "<center><font class=\"content\"><b>"._MODDOWNLOAD."</b></font></center><br><br>";
-    while(list($cid, $sid, $title, $url, $description, $name, $email, $hits, $filesize, $version, $homepage) = sql_fetch_row($result, $dbi)) {
+    while(list($cid, $sid, $title, $url, $description, $name, $email, $hits, $filesize, $version, $homepage) = mysqli_fetch_row($result)) {
     	$title = stripslashes($title); $description = stripslashes($description);
     	echo "<form action=admin.php method=post>"
 	    .""._DOWNLOADID.": <b>$lid</b><br>"
@@ -282,11 +282,11 @@ function DownloadsModDownload($lid) {
 	    .""._VERSION.": <input type=\"text\" name=\"version\" size=\"11\" maxlength=\"10\" value=\"$version\"><br>"
 	    .""._HOMEPAGE.": <input type=\"text\" name=\"homepage\" size=\"50\" maxlength=\"200\" value=\"$homepage\">&nbsp;[ <a href=\"$homepage\">"._VISIT."</a> ]<br>"
 	    .""._HITS.": <input type=\"text\" name=\"hits\" value=\"$hits\" size=\"12\" maxlength=\"11\"><br>";
-	$result2=sql_query("select cid, title from ".$prefix."_downloads_categories order by title", $dbi);
+	$result2=mysqli_query($dbi, "select cid, title from ".$prefix."_downloads_categories order by title");
 	echo "<input type=\"hidden\" name=\"lid\" value=\"$lid\">"
 	    .""._CATEGORY.": <select name=\"cat\">";
-	$result2=sql_query("select cid, title, parentid from ".$prefix."_downloads_categories order by title", $dbi);
-	while(list($cid2, $ctitle2, $parentid2) = sql_fetch_row($result2, $dbi)) {
+	$result2=mysqli_query($dbi, "select cid, title, parentid from ".$prefix."_downloads_categories order by title");
+	while(list($cid2, $ctitle2, $parentid2) = mysqli_fetch_row($result2)) {
 		if ($cid2==$cid) {
 			$sel = "selected";
 		} else {
@@ -303,8 +303,8 @@ function DownloadsModDownload($lid) {
     echo "<br>";    
     /* Modify or Add Editorial */
         
-        $resulted2 = sql_query("select adminid, editorialtimestamp, editorialtext, editorialtitle from ".$prefix."_downloads_editorials where downloadid=$lid", $dbi);
-        $recordexist = sql_num_rows($resulted2, $dbi);
+        $resulted2 = mysqli_query($dbi, "select adminid, editorialtimestamp, editorialtext, editorialtitle from ".$prefix."_downloads_editorials where downloadid=$lid");
+        $recordexist = sql_num_rows($resulted2);
 	OpenTable();
     /* if returns 'bad query' status 0 (add editorial) */
     	if ($recordexist == 0) {
@@ -316,7 +316,7 @@ function DownloadsModDownload($lid) {
         	."</select><input type=\"hidden\" name=\"op\" value=\"DownloadsAddEditorial\"><input type=\"submit\" value=\"Add\">";
         } else {
     /* if returns 'cool' then status 1 (modify editorial) */
-        	while(list($adminid, $editorialtimestamp, $editorialtext, $editorialtitle) = sql_fetch_row($resulted2, $dbi)) {
+        	while(list($adminid, $editorialtimestamp, $editorialtext, $editorialtitle) = mysqli_fetch_row($resulted2)) {
         	$editorialtitle = stripslashes($editorialtitle); $editorialtext = stripslashes($editorialtext);
     		ereg ("([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $editorialtimestamp, $editorialtime);
 		$editorialtime = strftime("%F",mktime($editorialtime[4],$editorialtime[5],$editorialtime[6],$editorialtime[2],$editorialtime[3],$editorialtime[1]));
@@ -337,15 +337,15 @@ function DownloadsModDownload($lid) {
     echo "<br>";
     OpenTable();
     /* Show Comments */
-    $result5=sql_query("SELECT ratingdbid, ratinguser, ratingcomments, ratingtimestamp FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid AND ratingcomments != '' ORDER BY ratingtimestamp DESC", $dbi);
-    $totalcomments = sql_num_rows($result5, $dbi);
+    $result5=mysqli_query($dbi, "SELECT ratingdbid, ratinguser, ratingcomments, ratingtimestamp FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid AND ratingcomments != '' ORDER BY ratingtimestamp DESC");
+    $totalcomments = sql_num_rows($result5);
     echo "<table valign=top width=100%>";
     echo "<tr><td colspan=7><b>Download Comments (total comments: $totalcomments)</b><br><br></td></tr>";    
     echo "<tr><td width=20 colspan=1><b>User  </b></td><td colspan=5><b>Comment  </b></td><td><b><center>Delete</center></b></td><br></tr>";
     if ($totalcomments == 0) echo "<tr><td colspan=7><center><font color=cccccc>No Comments<br></font></center></td></tr>";
     $x=0;
     $colorswitch="dddddd";
-    while(list($ratingdbid, $ratinguser, $ratingcomments, $ratingtimestamp)=sql_fetch_row($result5, $dbi)) {
+    while(list($ratingdbid, $ratinguser, $ratingcomments, $ratingtimestamp)=mysqli_fetch_row($result5)) {
     	$ratingcomments = stripslashes($ratingcomments);
         ereg ("([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $ratingtimestamp, $ratingtime);
     	$ratingtime = strftime("%F",mktime($ratingtime[4],$ratingtime[5],$ratingtime[6],$ratingtime[2],$ratingtime[3],$ratingtime[1]));
@@ -360,14 +360,14 @@ function DownloadsModDownload($lid) {
 
     	    
     // Show Registered Users Votes
-    $result5=sql_query("SELECT ratingdbid, ratinguser, rating, ratinghostname, ratingtimestamp FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid AND ratinguser != 'outside' AND ratinguser != '$anonymous' ORDER BY ratingtimestamp DESC", $dbi);
-    $totalvotes = sql_num_rows($result5, $dbi);
+    $result5=mysqli_query($dbi, "SELECT ratingdbid, ratinguser, rating, ratinghostname, ratingtimestamp FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid AND ratinguser != 'outside' AND ratinguser != '$anonymous' ORDER BY ratingtimestamp DESC");
+    $totalvotes = sql_num_rows($result5);
     echo "<tr><td colspan=7><br><br><b>Registered User Votes (total votes: $totalvotes)</b><br><br></td></tr>";
     echo "<tr><td><b>User  </b></td><td><b>IP Address  </b></td><td><b>Rating  </b></td><td><b>User AVG Rating  </b></td><td><b>Total Ratings  </b></td><td><b>Date  </b></td></font></b><td><b><center>Delete</center></b></td><br></tr>";
     if ($totalvotes == 0) echo "<tr><td colspan=7><center><font color=cccccc>No Registered User Votes<br></font></center></td></tr>";
     $x=0;
     $colorswitch="dddddd";
-    while(list($ratingdbid, $ratinguser, $rating, $ratinghostname, $ratingtimestamp)=sql_fetch_row($result5, $dbi)) {
+    while(list($ratingdbid, $ratinguser, $rating, $ratinghostname, $ratingtimestamp)=mysqli_fetch_row($result5)) {
         ereg ("([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $ratingtimestamp, $ratingtime);
     	$ratingtime = strftime("%F",mktime($ratingtime[4],$ratingtime[5],$ratingtime[6],$ratingtime[2],$ratingtime[3],$ratingtime[1]));
     	$date_array = explode("-", $ratingtime); 
@@ -375,10 +375,10 @@ function DownloadsModDownload($lid) {
             $formatted_date = date("F j, Y", $timestamp); 
     	
     	//Individual user information
-    	$result2=sql_query("SELECT rating FROM ".$prefix."_downloads_votedata WHERE ratinguser = '$ratinguser'", $dbi);
-            $usertotalcomments = sql_num_rows($result2, $dbi);
+    	$result2=mysqli_query($dbi, "SELECT rating FROM ".$prefix."_downloads_votedata WHERE ratinguser = '$ratinguser'");
+            $usertotalcomments = sql_num_rows($result2);
             $useravgrating = 0;
-            while(list($rating2)=sql_fetch_row($result2, $dbi))	$useravgrating = $useravgrating + $rating2;
+            while(list($rating2)=mysqli_fetch_row($result2))	$useravgrating = $useravgrating + $rating2;
             $useravgrating = $useravgrating / $usertotalcomments;
             $useravgrating = number_format($useravgrating, 1);
             echo "<tr><td bgcolor=$colorswitch>$ratinguser</td><td bgcolor=$colorswitch>$ratinghostname</td><td bgcolor=$colorswitch>$rating</td><td bgcolor=$colorswitch>$useravgrating</td><td bgcolor=$colorswitch>$usertotalcomments</td><td bgcolor=$colorswitch>$formatted_date  </font></b></td><td bgcolor=$colorswitch><center><b><a href=admin.php?op=DownloadsDelVote&lid=$lid&rid=$ratingdbid>X</a></b></center></td></tr><br>";
@@ -388,14 +388,14 @@ function DownloadsModDownload($lid) {
         }    
         
     // Show Unregistered Users Votes
-    $result5=sql_query("SELECT ratingdbid, rating, ratinghostname, ratingtimestamp FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid AND ratinguser = '$anonymous' ORDER BY ratingtimestamp DESC", $dbi);
-    $totalvotes = sql_num_rows($result5, $dbi);
+    $result5=mysqli_query($dbi, "SELECT ratingdbid, rating, ratinghostname, ratingtimestamp FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid AND ratinguser = '$anonymous' ORDER BY ratingtimestamp DESC");
+    $totalvotes = sql_num_rows($result5);
     echo "<tr><td colspan=7><b><br><br>Unregistered User Votes (total votes: $totalvotes)</b><br><br></td></tr>";
     echo "<tr><td colspan=2><b>IP Address  </b></td><td colspan=3><b>Rating  </b></td><td><b>Date  </b></font></td><td><b><center>Delete</center></b></td><br></tr>";
     if ($totalvotes == 0) echo "<tr><td colspan=7><center><font color=cccccc>No Unregistered User Votes<br></font></center></td></tr>";
     $x=0;
     $colorswitch="dddddd";
-    while(list($ratingdbid, $rating, $ratinghostname, $ratingtimestamp)=sql_fetch_row($result5, $dbi)) {
+    while(list($ratingdbid, $rating, $ratinghostname, $ratingtimestamp)=mysqli_fetch_row($result5)) {
         ereg ("([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $ratingtimestamp, $ratingtime);
     	$ratingtime = strftime("%F",mktime($ratingtime[4],$ratingtime[5],$ratingtime[6],$ratingtime[2],$ratingtime[3],$ratingtime[1]));
     	$date_array = explode("-", $ratingtime); 
@@ -408,14 +408,14 @@ function DownloadsModDownload($lid) {
         }  
         
     // Show Outside Users Votes
-    $result5=sql_query("SELECT ratingdbid, rating, ratinghostname, ratingtimestamp FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid AND ratinguser = 'outside' ORDER BY ratingtimestamp DESC", $dbi);
-    $totalvotes = sql_num_rows($result5, $dbi);
+    $result5=mysqli_query($dbi, "SELECT ratingdbid, rating, ratinghostname, ratingtimestamp FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid AND ratinguser = 'outside' ORDER BY ratingtimestamp DESC");
+    $totalvotes = sql_num_rows($result5);
     echo "<tr><td colspan=7><b><br><br>Outside User Votes (total votes: $totalvotes)</b><br><br></td></tr>";
     echo "<tr><td colspan=2><b>IP Address  </b></td><td colspan=3><b>Rating  </b></td><td><b>Date  </b></td></font></b><td><b><center>Delete</center></b></td><br></tr>";
     if ($totalvotes == 0) echo "<tr><td colspan=7><center><font color=cccccc>No Votes from Outside $sitename<br></font></center></td></tr>";
     $x=0;
     $colorswitch="dddddd"; 
-    while(list($ratingdbid, $rating, $ratinghostname, $ratingtimestamp)=sql_fetch_row($result5, $dbi)) {
+    while(list($ratingdbid, $rating, $ratinghostname, $ratingtimestamp)=mysqli_fetch_row($result5)) {
         ereg ("([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $ratingtimestamp, $ratingtime);
     	$ratingtime = strftime("%F",mktime($ratingtime[4],$ratingtime[5],$ratingtime[6],$ratingtime[2],$ratingtime[3],$ratingtime[1]));
     	$date_array = explode("-", $ratingtime); 
@@ -439,19 +439,19 @@ function DownloadsModDownload($lid) {
 
 function DownloadsDelComment($lid, $rid) {
     global $prefix, $dbi;
-    sql_query("UPDATE ".$prefix."_downloads_votedata SET ratingcomments='' WHERE ratingdbid = $rid", $dbi);
-    sql_query("UPDATE ".$prefix."_downloads_downloads SET totalcomments = (totalcomments - 1) WHERE lid = $lid", $dbi);
+    mysqli_query($dbi, "UPDATE ".$prefix."_downloads_votedata SET ratingcomments='' WHERE ratingdbid = $rid");
+    mysqli_query($dbi, "UPDATE ".$prefix."_downloads_downloads SET totalcomments = (totalcomments - 1) WHERE lid = $lid");
     Header("Location: admin.php?op=DownloadsModDownload&lid=$lid");
     
 }
 
 function DownloadsDelVote($lid, $rid) {
     global $prefix, $dbi;
-    sql_query("delete from ".$prefix."_downloads_votedata where ratingdbid=$rid", $dbi);
-    $voteresult = sql_query("select rating, ratinguser, ratingcomments FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid", $dbi);
-    $totalvotesDB = sql_num_rows($voteresult, $dbi);
+    mysqli_query($dbi, "delete from ".$prefix."_downloads_votedata where ratingdbid=$rid");
+    $voteresult = mysqli_query($dbi, "select rating, ratinguser, ratingcomments FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid");
+    $totalvotesDB = sql_num_rows($voteresult);
     include ("voteinclude.php");
-    sql_query("UPDATE ".$prefix."_downloads_downloads SET downloadratingsummary=$finalrating,totalvotes=$totalvotesDB,totalcomments=$truecomments WHERE lid = $lid", $dbi);
+    mysqli_query($dbi, "UPDATE ".$prefix."_downloads_downloads SET downloadratingsummary=$finalrating,totalvotes=$totalvotesDB,totalcomments=$truecomments WHERE lid = $lid");
     Header("Location: admin.php?op=DownloadsModDownload&lid=$lid");
 }
 
@@ -464,8 +464,8 @@ function DownloadsListBrokenDownloads() {
     CloseTable();
     echo "<br>";
     OpenTable();
-    $result = sql_query("select requestid, lid, modifysubmitter from ".$prefix."_downloads_modrequest where brokendownload=1 order by requestid", $dbi);
-    $totalbrokendownloads = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select requestid, lid, modifysubmitter from ".$prefix."_downloads_modrequest where brokendownload=1 order by requestid");
+    $totalbrokendownloads = $result->num_rows;
     echo "<center><font class=\"content\"><b>"._DUSERREPBROKEN." ($totalbrokendownloads)</b></font></center><br><br><center>"
 	.""._DIGNOREINFO."<br>"
 	.""._DDELETEINFO."</center><br>"
@@ -482,15 +482,15 @@ function DownloadsListBrokenDownloads() {
             ."<td><b>"._DELETE."</b></td>"
             ."<td><b>"._EDIT."</b></td>"
     	    ."</tr>";
-        while(list($requestid, $lid, $modifysubmitter)=sql_fetch_row($result, $dbi)) {
-	    $result2 = sql_query("select title, url, submitter from ".$prefix."_downloads_downloads where lid=$lid", $dbi);
+        while(list($requestid, $lid, $modifysubmitter)=mysqli_fetch_row($result)) {
+	    $result2 = mysqli_query($dbi, "select title, url, submitter from ".$prefix."_downloads_downloads where lid=$lid");
 	    if ($modifysubmitter != '$anonymous') {
-		$result3 = sql_query("select email from ".$prefix."_users where uname='$modifysubmitter'", $dbi);
-		list($email)=sql_fetch_row($result3, $dbi);
+		$result3 = mysqli_query($dbi, "select email from ".$prefix."_users where uname='$modifysubmitter'");
+		list($email)=mysqli_fetch_row($result3);
 	    }
-    	    list($title, $url, $owner)=sql_fetch_row($result2, $dbi);
-    	    $result4 = sql_query("select email from ".$prefix."_users where uname='$owner'", $dbi);
-    	    list($owneremail)=sql_fetch_row($result4, $dbi);
+    	    list($title, $url, $owner)=mysqli_fetch_row($result2);
+    	    $result4 = mysqli_query($dbi, "select email from ".$prefix."_users where uname='$owner'");
+    	    list($owneremail)=mysqli_fetch_row($result4);
     	    echo "<tr>"
     		."<td bgcolor=\"$colorswitch\"><a href=\"$url\">$title</a>"
     		."</td>";
@@ -527,14 +527,14 @@ function DownloadsListBrokenDownloads() {
 
 function DownloadsDelBrokenDownloads($lid) {
     global $prefix, $dbi;
-    sql_query("delete from ".$prefix."_downloads_modrequest where lid=$lid", $dbi);
-    sql_query("delete from ".$prefix."_downloads_downloads where lid=$lid", $dbi);
+    mysqli_query($dbi, "delete from ".$prefix."_downloads_modrequest where lid=$lid");
+    mysqli_query($dbi, "delete from ".$prefix."_downloads_downloads where lid=$lid");
     Header("Location: admin.php?op=DownloadsListBrokenDownloads");
 }
 
 function DownloadsIgnoreBrokenDownloads($lid) {
     global $prefix, $dbi;
-    sql_query("delete from ".$prefix."_downloads_modrequest where lid=$lid and brokendownload=1", $dbi);
+    mysqli_query($dbi, "delete from ".$prefix."_downloads_modrequest where lid=$lid and brokendownload=1");
     Header("Location: admin.php?op=DownloadsListBrokenDownloads");
 }
 
@@ -547,25 +547,25 @@ function DownloadsListModRequests() {
     CloseTable();
     echo "<br>";
     OpenTable();
-    $result = sql_query("select requestid, lid, cid, sid, title, url, description, modifysubmitter, name, email, filesize, version, homepage from ".$prefix."_downloads_modrequest where brokendownload=0 order by requestid", $dbi);
-    $totalmodrequests = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select requestid, lid, cid, sid, title, url, description, modifysubmitter, name, email, filesize, version, homepage from ".$prefix."_downloads_modrequest where brokendownload=0 order by requestid");
+    $totalmodrequests = $result->num_rows;
     echo "<center><font class=\"content\"><b>"._DUSERMODREQUEST." ($totalmodrequests)</b></font></center><br>";
     echo "<table width=\"95%\"><tr><td>";
-    while(list($requestid, $lid, $cid, $sid, $title, $url, $description, $modifysubmitter, $name, $email, $filesize, $version, $homepage)=sql_fetch_row($result, $dbi)) {
-	$result2 = sql_query("select cid, sid, title, url, description, name, email, submitter, filesize, version, homepage from ".$prefix."_downloads_downloads where lid=$lid", $dbi);
-	list($origcid, $origsid, $origtitle, $origurl, $origdescription, $origname, $origemail, $owner, $origfilesize, $origversion, $orighomepage)=sql_fetch_row($result2, $dbi);
-	$result3 = sql_query("select title from ".$prefix."_downloads_categories where cid=$cid", $dbi);
-	$result4 = sql_query("select title from ".$prefix."_downloads_subcategories where cid=$cid and sid=$sid", $dbi);
-	$result5 = sql_query("select title from ".$prefix."_downloads_categories where cid=$origcid", $dbi);
-	$result6 = sql_query("select title from ".$prefix."_downloads_subcategories where cid=$origcid and sid=$origsid", $dbi);
-	$result7 = sql_query("select email from ".$prefix."_users where uname='$modifysubmitter'", $dbi);
-	$result8 = sql_query("select email from ".$prefix."_users where uname='$owner'", $dbi);
-	list($cidtitle)=sql_fetch_row($result3, $dbi);
-	list($sidtitle)=sql_fetch_row($result4, $dbi);
-	list($origcidtitle)=sql_fetch_row($result5, $dbi);
-	list($origsidtitle)=sql_fetch_row($result6, $dbi);
-	list($modifysubmitteremail)=sql_fetch_row($result7, $dbi);
-	list($owneremail)=sql_fetch_row($result8, $dbi);
+    while(list($requestid, $lid, $cid, $sid, $title, $url, $description, $modifysubmitter, $name, $email, $filesize, $version, $homepage)=mysqli_fetch_row($result)) {
+	$result2 = mysqli_query($dbi, "select cid, sid, title, url, description, name, email, submitter, filesize, version, homepage from ".$prefix."_downloads_downloads where lid=$lid");
+	list($origcid, $origsid, $origtitle, $origurl, $origdescription, $origname, $origemail, $owner, $origfilesize, $origversion, $orighomepage)=mysqli_fetch_row($result2);
+	$result3 = mysqli_query($dbi, "select title from ".$prefix."_downloads_categories where cid=$cid");
+	$result4 = mysqli_query($dbi, "select title from ".$prefix."_downloads_subcategories where cid=$cid and sid=$sid");
+	$result5 = mysqli_query($dbi, "select title from ".$prefix."_downloads_categories where cid=$origcid");
+	$result6 = mysqli_query($dbi, "select title from ".$prefix."_downloads_subcategories where cid=$origcid and sid=$origsid");
+	$result7 = mysqli_query($dbi, "select email from ".$prefix."_users where uname='$modifysubmitter'");
+	$result8 = mysqli_query($dbi, "select email from ".$prefix."_users where uname='$owner'");
+	list($cidtitle)=mysqli_fetch_row($result3);
+	list($sidtitle)=mysqli_fetch_row($result4);
+	list($origcidtitle)=mysqli_fetch_row($result5);
+	list($origsidtitle)=mysqli_fetch_row($result6);
+	list($modifysubmitteremail)=mysqli_fetch_row($result7);
+	list($owneremail)=mysqli_fetch_row($result8);
     	$title = stripslashes($title);
     	$description = stripslashes($description);
     	if ($owner=="") {
@@ -642,30 +642,30 @@ function DownloadsListModRequests() {
 
 function DownloadsChangeModRequests($requestid) {
     global $prefix, $dbi;
-    $result = sql_query("select requestid, lid, cid, sid, title, url, description, name, email, filesize, version, homepage from ".$prefix."_downloads_modrequest where requestid=$requestid", $dbi);
-    while(list($requestid, $lid, $cid, $sid, $title, $url, $description, $name, $email, $filesize, $version, $homepage)=sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select requestid, lid, cid, sid, title, url, description, name, email, filesize, version, homepage from ".$prefix."_downloads_modrequest where requestid=$requestid");
+    while(list($requestid, $lid, $cid, $sid, $title, $url, $description, $name, $email, $filesize, $version, $homepage)=mysqli_fetch_row($result)) {
 	$title = stripslashes($title);
     	$description = stripslashes($description);
-    	sql_query("UPDATE ".$prefix."_downloads_downloads SET cid=$cid, sid=$sid, title='$title', url='$url', description='$description', name='$name', email='$email', filesize='$filesize', version='$version', homepage='$homepage' WHERE lid = $lid", $dbi);
-	sql_query("delete from ".$prefix."_downloads_modrequest where requestid=$requestid", $dbi);
+    	mysqli_query($dbi, "UPDATE ".$prefix."_downloads_downloads SET cid=$cid, sid=$sid, title='$title', url='$url', description='$description', name='$name', email='$email', filesize='$filesize', version='$version', homepage='$homepage' WHERE lid = $lid");
+	mysqli_query($dbi, "delete from ".$prefix."_downloads_modrequest where requestid=$requestid");
     }
     Header("Location: admin.php?op=DownloadsListModRequests");
 }
 
 function DownloadsChangeIgnoreRequests($requestid) {
     global $prefix, $dbi;
-    sql_query("delete from ".$prefix."_downloads_modrequest where requestid=$requestid", $dbi);
+    mysqli_query($dbi, "delete from ".$prefix."_downloads_modrequest where requestid=$requestid");
     Header("Location: admin.php?op=DownloadsListModRequests");
 }
 
 function DownloadsCleanVotes() {
     global $prefix, $dbi;
-    $totalvoteresult = sql_query("select distinct ratinglid FROM ".$prefix."_downloads_votedata", $dbi);
-    while(list($lid)=sql_fetch_row($totalvoteresult, $dbi)) {
-	$voteresult = sql_query("select rating, ratinguser, ratingcomments FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid", $dbi);
-	$totalvotesDB = sql_num_rows($voteresult, $dbi);
+    $totalvoteresult = mysqli_query($dbi, "select distinct ratinglid FROM ".$prefix."_downloads_votedata");
+    while(list($lid)=mysqli_fetch_row($totalvoteresult)) {
+	$voteresult = mysqli_query($dbi, "select rating, ratinguser, ratingcomments FROM ".$prefix."_downloads_votedata WHERE ratinglid = $lid");
+	$totalvotesDB = sql_num_rows($voteresult);
 	include ("voteinclude.php");
-        sql_query("UPDATE ".$prefix."_downloads_downloads SET downloadratingsummary=$finalrating,totalvotes=$totalvotesDB,totalcomments=$truecomments WHERE lid = $lid", $dbi);
+        mysqli_query($dbi, "UPDATE ".$prefix."_downloads_downloads SET downloadratingsummary=$finalrating,totalvotes=$totalvotesDB,totalcomments=$truecomments WHERE lid = $lid");
     }
     Header("Location: admin.php?op=downloads");
 }
@@ -681,13 +681,13 @@ function DownloadsModDownloadS($lid, $title, $url, $description, $name, $email, 
     $description = stripslashes(FixQuotes($description));
     $name = stripslashes(FixQuotes($name));
     $email = stripslashes(FixQuotes($email));
-    sql_query("update ".$prefix."_downloads_downloads set cid='$cat[0]', sid='$cat[1]', title='$title', url='$url', description='$description', name='$name', email='$email', hits='$hits', filesize='$filesize', version='$version', homepage='$homepage' where lid=$lid", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_downloads_downloads set cid='$cat[0]', sid='$cat[1]', title='$title', url='$url', description='$description', name='$name', email='$email', hits='$hits', filesize='$filesize', version='$version', homepage='$homepage' where lid=$lid");
     Header("Location: admin.php?op=downloads");
 }
 
 function DownloadsDelDownload($lid) {
     global $prefix, $dbi;
-    sql_query("delete from ".$prefix."_downloads_downloads where lid=$lid", $dbi);
+    mysqli_query($dbi, "delete from ".$prefix."_downloads_downloads where lid=$lid");
     Header("Location: admin.php?op=downloads");
 }
 
@@ -706,8 +706,8 @@ function DownloadsModCat($cat) {
     OpenTable();
     echo "<center><font class=\"content\"><b>"._MODCATEGORY."</b></font></center><br><br>";
     if ($cat[1]==0) {
-	$result=sql_query("select title, cdescription from ".$prefix."_downloads_categories where cid=$cat[0]", $dbi);
-	list($title,$cdescription) = sql_fetch_row($result, $dbi);
+	$result=mysqli_query($dbi, "select title, cdescription from ".$prefix."_downloads_categories where cid=$cat[0]");
+	list($title,$cdescription) = mysqli_fetch_row($result);
 	$cdescription = stripslashes($cdescription);
 	echo "<form action=\"admin.php\" method=\"get\">"
 	    .""._NAME.": <input type=\"text\" name=\"title\" value=\"$title\" size=\"51\" maxlength=\"50\"><br>"
@@ -723,10 +723,10 @@ function DownloadsModCat($cat) {
 	    ."<input type=\"hidden\" name=\"op\" value=\"DownloadsDelCat\">"
 	    ."<input type=\"submit\" value=\""._DELETE."\"></form></td></tr></table>";
     } else {
-	$result=sql_query("select title from ".$prefix."_downloads_categories where cid=$cat[0]", $dbi);
-	list($ctitle) = sql_fetch_row($result, $dbi);
-	$result2=sql_query("select title from ".$prefix."_downloads_subcategories where sid=$cat[1]", $dbi);
-	list($stitle) = sql_fetch_row($result2, $dbi);
+	$result=mysqli_query($dbi, "select title from ".$prefix."_downloads_categories where cid=$cat[0]");
+	list($ctitle) = mysqli_fetch_row($result);
+	$result2=mysqli_query($dbi, "select title from ".$prefix."_downloads_subcategories where sid=$cat[1]");
+	list($stitle) = mysqli_fetch_row($result2);
 	echo "<form action=\"admin.php\" method=\"get\">"
 	    .""._CATEGORY.": $ctitle<br>"
 	    .""._SUBCATEGORY.": <input type=\"text\" name=\"title\" value=\"$stitle\" size=\"51\" maxlength=\"50\"><br>"
@@ -750,9 +750,9 @@ function DownloadsModCat($cat) {
 function DownloadsModCatS($cid, $sid, $sub, $title, $cdescription) {
     global $prefix, $dbi;
     if ($sub==0) {
-	sql_query("update ".$prefix."_downloads_categories set title='$title', cdescription='$cdescription' where cid=$cid", $dbi);
+	mysqli_query($dbi, "update ".$prefix."_downloads_categories set title='$title', cdescription='$cdescription' where cid=$cid");
     } else {
-	sql_query("update ".$prefix."_downloads_subcategories set title='$title' where sid=$sid", $dbi);
+	mysqli_query($dbi, "update ".$prefix."_downloads_subcategories set title='$title' where sid=$sid");
     }
     Header("Location: admin.php?op=downloads");
 }
@@ -761,27 +761,27 @@ function DownloadsDelCat($cid, $sid, $sub, $ok=0) {
     global $prefix, $dbi;
     if($ok==1) {
 	if ($sub>0) {
-    	sql_query("delete from ".$prefix."_downloads_categories where cid=$cid", $dbi);
-	    sql_query("delete from ".$prefix."_downloads_downloads where cid=$cid", $dbi);
+    	mysqli_query($dbi, "delete from ".$prefix."_downloads_categories where cid=$cid");
+	    mysqli_query($dbi, "delete from ".$prefix."_downloads_downloads where cid=$cid");
 	} else {
-	    sql_query("delete from ".$prefix."_downloads_downloads where cid=$cid", $dbi);
-		// suppression des liens de cat�gories filles
-    	$result2 = sql_query("select cid from ".$prefix."_downloads_categories where parentid=$cid", $dbi);
-    	while(list($cid2) = sql_fetch_row($result2, $dbi)) {
-			sql_query("delete from ".$prefix."_downloads_downloads where cid=$cid2", $dbi);
+	    mysqli_query($dbi, "delete from ".$prefix."_downloads_downloads where cid=$cid");
+		// suppression des liens de catégories filles
+    	$result2 = mysqli_query($dbi, "select cid from ".$prefix."_downloads_categories where parentid=$cid");
+    	while(list($cid2) = mysqli_fetch_row($result2)) {
+			mysqli_query($dbi, "delete from ".$prefix."_downloads_downloads where cid=$cid2");
 		}
-	    sql_query("delete from ".$prefix."_downloads_categories where parentid=$cid", $dbi);
-	    sql_query("delete from ".$prefix."_downloads_categories where cid=$cid", $dbi);
+	    mysqli_query($dbi, "delete from ".$prefix."_downloads_categories where parentid=$cid");
+	    mysqli_query($dbi, "delete from ".$prefix."_downloads_categories where cid=$cid");
 	}
 	Header("Location: admin.php?op=downloads");    
     } else {
-	$result = sql_query("select * from ".$prefix."_downloads_categories where parentid=$cid", $dbi);
-	$nbsubcat = sql_num_rows($result, $dbi);
+	$result = mysqli_query($dbi, "select * from ".$prefix."_downloads_categories where parentid=$cid");
+	$nbsubcat = $result->num_rows;
 
-	$result2 = sql_query("select cid from ".$prefix."_downloads_categories where parentid=$cid", $dbi);
-	while(list($cid2) = sql_fetch_row($result2, $dbi)) {
-		$result3 = sql_query("select * from ".$prefix."_downloads_downloads where cid=$cid2", $dbi);
-		$nblink += sql_num_rows($result3, $dbi);
+	$result2 = mysqli_query($dbi, "select cid from ".$prefix."_downloads_categories where parentid=$cid");
+	while(list($cid2) = mysqli_fetch_row($result2)) {
+		$result3 = mysqli_query($dbi, "select * from ".$prefix."_downloads_downloads where cid=$cid2");
+		$nblink += sql_num_rows($result3);
 	}
 
 	include("header.php");
@@ -799,14 +799,14 @@ function DownloadsDelCat($cid, $sid, $sub, $ok=0) {
 
 function DownloadsDelNew($lid) {
     global $prefix, $dbi;
-    sql_query("delete from ".$prefix."_downloads_newdownload where lid=$lid", $dbi);
+    mysqli_query($dbi, "delete from ".$prefix."_downloads_newdownload where lid=$lid");
     Header("Location: admin.php?op=downloads");
 }
 
 function DownloadsAddCat($title, $cdescription) {
     global $prefix, $dbi;
-    $result = sql_query("select cid from ".$prefix."_downloads_categories where title='$title'", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select cid from ".$prefix."_downloads_categories where title='$title'");
+    $numrows = $result->num_rows;
     if ($numrows>0) {
 	include("header.php");
 	GraphicAdmin();
@@ -817,15 +817,15 @@ function DownloadsAddCat($title, $cdescription) {
 	CloseTable();
 	include("footer.php");
     } else {
-	sql_query("insert into ".$prefix."_downloads_categories values (NULL, '$title', '$cdescription', '$parentid')", $dbi);
+	mysqli_query($dbi, "insert into ".$prefix."_downloads_categories values (NULL, '$title', '$cdescription', '$parentid')");
 	Header("Location: admin.php?op=downloads");
     }
 }
 
 function DownloadsAddSubCat($cid, $title, $cdescription) {
     global $prefix, $dbi;
-    $result = sql_query("select cid from ".$prefix."_downloads_categories where title='$title' AND cid='$cid'", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select cid from ".$prefix."_downloads_categories where title='$title' AND cid='$cid'");
+    $numrows = $result->num_rows;
     if ($numrows>0) {
 	include("header.php");
 	GraphicAdmin();
@@ -836,7 +836,7 @@ function DownloadsAddSubCat($cid, $title, $cdescription) {
 	    .""._GOBACK."<br><br>";
 	include("footer.php");
     } else {
-	sql_query("insert into ".$prefix."_downloads_categories values (NULL, '$title', '$cdescription', '$cid')", $dbi);
+	mysqli_query($dbi, "insert into ".$prefix."_downloads_categories values (NULL, '$title', '$cdescription', '$cid')");
 	Header("Location: admin.php?op=downloads");
     }
 }
@@ -844,7 +844,7 @@ function DownloadsAddSubCat($cid, $title, $cdescription) {
 function DownloadsAddEditorial($downloadid, $editorialtitle, $editorialtext) {
     global $aid, $prefix, $dbi;
     $editorialtext = stripslashes(FixQuotes($editorialtext));
-    sql_query("insert into ".$prefix."_downloads_editorials values ($downloadid, '$aid', now(), '$editorialtext', '$editorialtitle')", $dbi);
+    mysqli_query($dbi, "insert into ".$prefix."_downloads_editorials values ($downloadid, '$aid', now(), '$editorialtext', '$editorialtitle')");
     include("header.php");
     GraphicAdmin();
     OpenTable();
@@ -860,7 +860,7 @@ function DownloadsAddEditorial($downloadid, $editorialtitle, $editorialtext) {
 function DownloadsModEditorial($downloadid, $editorialtitle, $editorialtext) {
     global $prefix, $dbi;
     $editorialtext = stripslashes(FixQuotes($editorialtext));
-    sql_query("update ".$prefix."_downloads_editorials set editorialtext='$editorialtext', editorialtitle='$editorialtitle' where downloadid=$downloadid", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_downloads_editorials set editorialtext='$editorialtext', editorialtitle='$editorialtitle' where downloadid=$downloadid");
     include("header.php");
     GraphicAdmin();
     OpenTable();
@@ -874,7 +874,7 @@ function DownloadsModEditorial($downloadid, $editorialtitle, $editorialtext) {
 
 function DownloadsDelEditorial($downloadid) {
     global $prefix, $dbi;
-    sql_query("delete from ".$prefix."_downloads_editorials where downloadid=$downloadid", $dbi);
+    mysqli_query($dbi, "delete from ".$prefix."_downloads_editorials where downloadid=$downloadid");
     include("header.php");
     GraphicAdmin();
     OpenTable();
@@ -899,18 +899,18 @@ function DownloadsDownloadCheck() {
 	."<table width=\"100%\" align=\"center\"><tr><td colspan=\"2\" align=\"center\">"
 	."<a href=\"admin.php?op=DownloadsValidate&amp;cid=0&amp;sid=0\">"._CHECKALLDOWNLOADS."</a><br><br></td></tr>"
 	."<tr><td valign=\"top\"><center><b>"._CHECKCATEGORIES."</b><br>"._INCLUDESUBCATEGORIES."<br><br><font class=\"tiny\">";
-    $result = sql_query("select cid, title from ".$prefix."_downloads_categories order by title", $dbi);
-    while(list($cid, $title) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select cid, title from ".$prefix."_downloads_categories order by title");
+    while(list($cid, $title) = mysqli_fetch_row($result)) {
         $transfertitle = str_replace (" ", "_", $title);
     	echo "<a href=\"admin.php?op=DownloadsValidate&amp;cid=$cid&amp;sid=0&amp;ttitle=$transfertitle\">$title</a><br>";
     }
     echo "</font></center></td>";
     echo "<td valign=\"top\"><center><b>"._CHECKSUBCATEGORIES."</b><br><font class=\"tiny\">";
-    $result = sql_query("select sid, cid, title from ".$prefix."_downloads_subcategories order by title", $dbi);
-    while(list($sid, $cid, $title) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select sid, cid, title from ".$prefix."_downloads_subcategories order by title");
+    while(list($sid, $cid, $title) = mysqli_fetch_row($result)) {
         $transfertitle = str_replace (" ", "_", $title);
-    	$result2 = sql_query("select title from ".$prefix."_downloads_categories where cid = $cid", $dbi);
-    	while(list($ctitle) = sql_fetch_row($result2, $dbi)) {
+    	$result2 = mysqli_query($dbi, "select title from ".$prefix."_downloads_categories where cid = $cid");
+    	while(list($ctitle) = mysqli_fetch_row($result2)) {
 	    echo "<a href=\"admin.php?op=DownloadsValidate&amp;cid=0&amp;sid=$sid&amp;ttitle=$transfertitle\">$ctitle</a>";
 	}
     echo " / <a href=\"admin.php?op=DownloadsValidate&amp;cid=0&amp;sid=$sid&amp;ttitle=$transfertitle\">$title</a><br>";
@@ -934,20 +934,20 @@ function DownloadsValidate($cid, $sid, $ttitle) {
     echo "<table width=100% border=0>";
     if ($cid==0 && $sid==0) {
 	echo "<tr><td colspan=\"3\"><center><b>"._CHECKALLDOWNLOADS."</b><br>"._BEPATIENT."</center><br><br></td></tr>";
-	$result = sql_query("select lid, title, url, name, email, submitter from ".$prefix."_downloads_downloads order by title", $dbi);
+	$result = mysqli_query($dbi, "select lid, title, url, name, email, submitter from ".$prefix."_downloads_downloads order by title");
     }   	
     /* Check Categories & Subcategories */
     if ($cid!=0 && $sid==0) {
 	echo "<tr><td colspan=\"3\"><center><b>"._VALIDATINGCAT.": $transfertitle</b><br>"._BEPATIENT."</center><br><br></td></tr>";
-	$result = sql_query("select lid, title, url, name, email, submitter from ".$prefix."_downloads_downloads where cid=$cid order by title", $dbi);
+	$result = mysqli_query($dbi, "select lid, title, url, name, email, submitter from ".$prefix."_downloads_downloads where cid=$cid order by title");
     }
     /* Check Only Subcategory */
     if ($cid==0 && $sid!=0) {
    	echo "<tr><td colspan=\"3\"><center><b>"._VALIDATINGSUBCAT.": $transfertitle</b><br>"._BEPATIENT."</center><br><br></td></tr>";
-   	$result = sql_query("select lid, title, url, name, email, submitter from ".$prefix."_downloads_downloads where sid=$sid order by title", $dbi);
+   	$result = mysqli_query($dbi, "select lid, title, url, name, email, submitter from ".$prefix."_downloads_downloads where sid=$sid order by title");
     }
     echo "<tr><td bgcolor=\"$bgcolor2\" align=\"center\"><b>"._STATUS."</b></td><td bgcolor=\"$bgcolor2\" width=\"100%\"><b>"._DOWNLOADTITLE."</b></td><td bgcolor=\"$bgcolor2\" align=\"center\"><b>"._FUNCTIONS."</b></td></tr>";
-    while(list($lid, $title, $url, $name, $email, $submitter) = sql_fetch_row($result, $dbi)) {
+    while(list($lid, $title, $url, $name, $email, $submitter) = mysqli_fetch_row($result)) {
 	$vurl = parse_url($url);
 	$fp = fsockopen($vurl['host'], 80, $errno, $errstr, 15);
 	if (!$fp){ 
@@ -970,8 +970,8 @@ function DownloadsValidate($cid, $sid, $ttitle) {
 
 function DownloadsAddDownload($new, $lid, $title, $url, $cat, $description, $name, $email, $submitter, $filesize, $version, $homepage, $hits) {
     global $prefix, $dbi;
-    $result = sql_query("select url from ".$prefix."_downloads_downloads where url='$url'", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select url from ".$prefix."_downloads_downloads where url='$url'");
+    $numrows = $result->num_rows;
     if ($numrows>0) {
 	include("header.php");
 	GraphicAdmin();
@@ -1044,7 +1044,7 @@ function DownloadsAddDownload($new, $lid, $title, $url, $cat, $description, $nam
     $description = stripslashes(FixQuotes($description));
     $name = stripslashes(FixQuotes($name));
     $email = stripslashes(FixQuotes($email));
-    sql_query("insert into ".$prefix."_downloads_downloads values (NULL, '$cat[0]', '$cat[1]', '$title', '$url', '$description', now(), '$name', '$email', '$hits','$submitter',0,0,0, '$filesize', '$version', '$homepage')", $dbi);
+    mysqli_query($dbi, "insert into ".$prefix."_downloads_downloads values (NULL, '$cat[0]', '$cat[1]', '$title', '$url', '$description', now(), '$name', '$email', '$hits','$submitter',0,0,0, '$filesize', '$version', '$homepage')");
     global $nukeurl, $sitename;
     include("header.php");
     GraphicAdmin();
@@ -1055,7 +1055,7 @@ function DownloadsAddDownload($new, $lid, $title, $url, $cat, $description, $nam
     echo "[ <a href=\"admin.php?op=downloads\">"._WEBDOWNLOADSADMIN."</a> ]</center><br><br>";
     CloseTable();
     if ($new==1) {
-	sql_query("delete from ".$prefix."_downloads_newdownload where lid=$lid", $dbi);
+	mysqli_query($dbi, "delete from ".$prefix."_downloads_newdownload where lid=$lid");
     }
     include("footer.php");
     }

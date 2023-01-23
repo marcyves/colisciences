@@ -40,7 +40,7 @@ function alpha($quoi) {
     echo "<center>[ ";
     $counter = 0;
     while (list(, $ltr) = each($alphabet)) {
-    $result = sql_query("select distinct $quoi from cb_biblio where UPPER($quoi) LIKE '$ltr%'", $dbi);
+    $result = mysqli_query($dbi, "select distinct $quoi from cb_biblio where UPPER($quoi) LIKE '$ltr%'");
 		$count = sql_num_rows($result);
 	if ( $count > 0) {
 	    echo "<a href=\"parcours.php?name=$module_name&op=terms&eid=$quoi&ltr=$ltr\">$ltr</a><small>($count)</small>";
@@ -73,8 +73,8 @@ function list_content($quoi) {
 		if ($quoi=="") {
 			$quoi = "titre";
 		}
-    echo "<center><b>Bibliographie compl�te</b></center><br>"
-	."<p align=\"justify\">Tri�e par $quoi</p>";
+    echo "<center><b>Bibliographie compléte</b></center><br>"
+	."<p align=\"justify\">Triée par $quoi</p>";
     CloseTable();
     echo "<br>";
     OpenTable();
@@ -93,14 +93,14 @@ function terms($quoi, $ltr) {
 		include("header.php");
 		title("Bibliographie");
 		OpenTable();
-		echo "<center>Vous pouvez s�lectionner un terme dans la liste ci-dessous:</center><br><br>"
+		echo "<center>Vous pouvez sélectionner un terme dans la liste ci-dessous:</center><br><br>"
 	    ."<table border=\"0\" align=\"center\">";
-    $result = sql_query("select Numero, $quoi, Titre from cb_biblio where UPPER($quoi) LIKE '$ltr%' order by $quoi", $dbi);
-    //list($numero, $biblio, $categorie, $dates, $type, $titre, $compil, $lieu, $editeurRevue, $reference, $commentaires, $auteurs) = sql_fetch_row($result, $dbi);
-		if (sql_num_rows($result, $dbi) == 0) {
+    $result = mysqli_query($dbi, "select Numero, $quoi, Titre from cb_biblio where UPPER($quoi) LIKE '$ltr%' order by $quoi");
+    //list($numero, $biblio, $categorie, $dates, $type, $titre, $compil, $lieu, $editeurRevue, $reference, $commentaires, $auteurs) = mysqli_fetch_row($result);
+		if (sql_num_rows($result) == 0) {
 	    echo "<center><i>"._NOCONTENTFORLETTER." $ltr.</i></center>";
 		}
-		while(list($tid, $title, $detail) = sql_fetch_row($result, $dbi)) {
+		while(list($tid, $title, $detail) = mysqli_fetch_row($result)) {
 			echo "<tr><td><a href=\"parcours.php?name=$module_name&op=content&tid=$tid\">$title</a>";
 			if ($title != $detail) {
 				echo " ($detail)";
@@ -118,7 +118,7 @@ function content($tid, $ltr, $page=0, $query="") {
     include("header.php");
     OpenTable();
 		
-    $result = sql_query("SELECT Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs from cb_biblio where Numero='$tid'", $dbi);
+    $result = mysqli_query($dbi, "SELECT Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs from cb_biblio where Numero='$tid'");
 	afficheEntreesBiblio($result);
     CloseTable();
     include("footer.php");

@@ -14,8 +14,8 @@
 
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 
-$result = sql_query("select radminnewsletter, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminnewsletter, $radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radminnewsletter, radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radminnewsletter, $radminsuper) = mysqli_fetch_row($result);
 if (($radminnewsletter==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -26,8 +26,8 @@ function newsletter() {
     global $prefix, $user_prefix, $dbi, $sitename;
     include("header.php");
     GraphicAdmin();
-    $srow = sql_num_rows(sql_query("select * from ".$user_prefix."_users where newsletter='1'", $dbi), $dbi);
-    $urow = sql_num_rows(sql_query("select * from ".$user_prefix."_users", $dbi), $dbi);
+    $srow = sql_num_rows(mysqli_query($dbi, "select * from ".$user_prefix."_users where newsletter='1'"));
+    $urow = sql_num_rows(mysqli_query($dbi, "select * from ".$user_prefix."_users"));
     $urow--;
     OpenTable();
     echo "<center><font class=\"title\"><b>"._NEWSLETTER."</b></font></center>";
@@ -58,8 +58,8 @@ function check_type($subject, $content, $type) {
     global $user_prefix, $dbi, $sitename;
     include("header.php");
     GraphicAdmin();
-    $srow = sql_num_rows(sql_query("select * from ".$user_prefix."_users where newsletter='1'", $dbi), $dbi);
-    $urow = sql_num_rows(sql_query("select * from ".$user_prefix."_users", $dbi), $dbi);
+    $srow = sql_num_rows(mysqli_query($dbi, "select * from ".$user_prefix."_users where newsletter='1'"));
+    $urow = sql_num_rows(mysqli_query($dbi, "select * from ".$user_prefix."_users"));
     $urow--;
     OpenTable();
     echo "<center><font class=\"title\"><b>"._NEWSLETTER."</b></font></center>";
@@ -118,8 +118,8 @@ function newsletter_send($title, $content) {
     $subject = "[$sitename Newsletter]: ".stripslashes($title)."";
     $content = stripslashes($content);
     $content = "$sitename "._NEWSLETTER."\n\n\n$content\n\n- $sitename "._STAFF."\n\n\n\n\n\n"._NLUNSUBSCRIBE."";
-    $result = sql_query("select email from ".$user_prefix."_users where newsletter='1'", $dbi);
-    while(list($email) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select email from ".$user_prefix."_users where newsletter='1'");
+    while(list($email) = mysqli_fetch_row($result)) {
 	mail($email, $subject, $content, "From: $from\nX-Mailer: PHP/" . phpversion());
     }
     Header("Location: admin.php?op=newsletter_sent");
@@ -145,8 +145,8 @@ function massmail_send($title, $content) {
     $subject = "[$sitename]: $title";
     $content = stripslashes($content);
     $content = ""._FROM.": $sitename\n\n\n\n$content\n\n\n\n- $sitename "._STAFF."\n\n\n\n"._MASSEMAILMSG."";
-    $result = sql_query("select email from ".$user_prefix."_users where uid != '1'", $dbi);
-    while(list($email) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select email from ".$user_prefix."_users where uid != '1'");
+    while(list($email) = mysqli_fetch_row($result)) {
 	mail($email, $subject, $content, "From: $from\nX-Mailer: PHP/" . phpversion());
     }
     Header("Location: admin.php?op=massmail_sent");

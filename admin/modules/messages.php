@@ -14,8 +14,8 @@
 
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 
-$result = sql_query("select radminsuper, admlanguage from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminsuper,$admlanguage) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radminsuper, admlanguage from ".$prefix."_authors where aid='$aid'");
+list($radminsuper,$admlanguage) = mysqli_fetch_row($result);
 if ($radminsuper==1) {
 
 /*********************************************************/
@@ -24,7 +24,7 @@ if ($radminsuper==1) {
 
 function MsgDeactive($mid) {
     global $prefix, $dbi;
-    sql_query("update ".$prefix."_message set active='0' WHERE mid='$mid'", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_message set active='0' WHERE mid='$mid'");
     Header("Location: admin.php?op=messages");
 }
 
@@ -47,8 +47,8 @@ function messages() {
 	."<td bgcolor=\"$bgcolor2\" align=\"center\" nowrap>&nbsp;<b>"._VIEW."</b>&nbsp;</td>"
 	."<td bgcolor=\"$bgcolor2\" align=\"center\">&nbsp;<b>"._ACTIVE."</b>&nbsp;</td>"
 	."<td bgcolor=\"$bgcolor2\" align=\"center\">&nbsp;<b>"._FUNCTIONS."</b>&nbsp;</td></tr>";
-    $result = sql_query("select mid, title, content, date, expire, active, view, mlanguage from ".$prefix."_message", $dbi);
-    while(list($mid, $title, $content, $mdate, $expire, $active, $view, $mlanguage) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select mid, title, content, date, expire, active, view, mlanguage from ".$prefix."_message");
+    while(list($mid, $title, $content, $mdate, $expire, $active, $view, $mlanguage) = mysqli_fetch_row($result)) {
     if ($active == 1) {
 	$mactive = ""._YES."";
     } elseif ($active == 0) {
@@ -143,8 +143,8 @@ function editmsg($mid) {
     echo "<center><font class=\"title\"><b>"._MESSAGESADMIN."</b></font></center>";
     CloseTable();
     echo "<br>";
-    $result = sql_query("select title, content, date, expire, active, view, mlanguage from ".$prefix."_message WHERE mid='$mid'", $dbi);
-    list($title, $content, $mdate, $expire, $active, $view, $mlanguage) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select title, content, date, expire, active, view, mlanguage from ".$prefix."_message WHERE mid='$mid'");
+    list($title, $content, $mdate, $expire, $active, $view, $mlanguage) = mysqli_fetch_row($result);
     OpenTable();
     echo "<center><font class=\"title\"><b>"._EDITMSG."</b></font></center>";
     if ($active == 1) {
@@ -294,7 +294,7 @@ function savemsg($mid, $title, $content, $mdate, $expire, $active, $view, $chng_
     } elseif ($chng_date == 0) {
 	$newdate = $mdate;
     }
-    $result = sql_query("update ".$prefix."_message set title='$title', content='$content', date='$newdate', expire='$expire', active='$active', view='$view', mlanguage='$mlanguage' WHERE mid='$mid'", $dbi);
+    $result = mysqli_query($dbi, "update ".$prefix."_message set title='$title', content='$content', date='$newdate', expire='$expire', active='$active', view='$view', mlanguage='$mlanguage' WHERE mid='$mid'");
     Header("Location: admin.php?op=messages");
 }
 
@@ -302,7 +302,7 @@ function addmsg($add_title, $add_content, $add_mdate, $add_expire, $add_active, 
     global $prefix, $dbi;
     $title = stripslashes(FixQuotes($add_title));
     $content = stripslashes(FixQuotes($add_content));
-    $result = sql_query("insert into ".$prefix."_message values (NULL, '$add_title', '$add_content', '$add_mdate', '$add_expire', '$add_active', '$add_view', '$add_mlanguage')", $dbi);
+    $result = mysqli_query($dbi, "insert into ".$prefix."_message values (NULL, '$add_title', '$add_content', '$add_mdate', '$add_expire', '$add_active', '$add_view', '$add_mlanguage')");
     if (!$result) {
 	exit();
     }
@@ -312,7 +312,7 @@ function addmsg($add_title, $add_content, $add_mdate, $add_expire, $add_active, 
 function deletemsg($mid, $ok=0) {
     global $prefix, $dbi;
     if($ok) {
-	$result = sql_query("delete from ".$prefix."_message where mid=$mid", $dbi);
+	$result = mysqli_query($dbi, "delete from ".$prefix."_message where mid=$mid");
     	if (!$result) {
 	    return;
     	}

@@ -23,7 +23,7 @@ echo "<META NAME=\"RESOURCE-TYPE\" CONTENT=\"DOCUMENT\">\n";
 echo "<META NAME=\"DISTRIBUTION\" CONTENT=\"GLOBAL\">\n";
 echo "<META NAME=\"AUTHOR\" CONTENT=\"$sitename\">\n";
 echo "<META NAME=\"COPYRIGHT\" CONTENT=\"Copyright (c) 2002 by $sitename\">\n";
-echo "<META NAME=\"KEYWORDS\" CONTENT=\"Corpus, Litt�rature, Hypertexte, Scientifique, Claude Bernard, Armand de Quatrefages, Isidore Geoffroy Saint-Hilaire, CNRS\">\n";
+echo "<META NAME=\"KEYWORDS\" CONTENT=\"Corpus, Littérature, Hypertexte, Scientifique, Claude Bernard, Armand de Quatrefages, Isidore Geoffroy Saint-Hilaire, CNRS\">\n";
 echo "<META NAME=\"DESCRIPTION\" CONTENT=\"$slogan\">\n";
 echo "<META NAME=\"ROBOTS\" CONTENT=\"INDEX, FOLLOW\">\n";
 echo "<META NAME=\"REVISIT-AFTER\" CONTENT=\"1 DAYS\">\n";

@@ -14,11 +14,11 @@
 
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 $result = sql_query("select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radmincontent, $radminsuper) = sql_fetch_row($result, $dbi);
+list($radmincontent, $radminsuper) = mysqli_fetch_row($result, $dbi);
 if (($radmincontent==1) OR ($radminsuper==1)) {
 
 ######################################################################
-# SpÈcifique CoLiSciences
+# Sp√©cifique CoLiSciences
 ######################################################################
 //$colisroot = "/var/www/html/Colis/";
 
@@ -39,22 +39,22 @@ function ouvrages() {
 <tr><td colspan=\"4\">	
 	<button type=\"submit\" name=\"op\" value=\"ouvrage_edit\">Modifier</button>
 	<button type=\"submit\" name=\"op\" value=\"fichiers_ouvrage\">Afficher les fichiers</button>
-	<button type=\"submit\" name=\"op\" value=\"ouvrage_change_status\">Activer/dÈsactiver</button>
+	<button type=\"submit\" name=\"op\" value=\"ouvrage_change_status\">Activer/d√©sactiver</button>
 	<button type=\"submit\" name=\"op\" value=\"ouvrage_delete\">Effacer</button>
 </td></tr>
 <tr><td colspan=\"4\">
-	TransfÈrer le fichier de commentaires(html): <input type=\"file\" name=\"file\" size=\"35\" accept=\"text/html\">\n",
-	"<button type=\"submit\" name=\"op\" value=\"ouvrage_upload_comment\">TransfÈrer</button>",
+	Transf√©rer le fichier de commentaires(html): <input type=\"file\" name=\"file\" size=\"35\" accept=\"text/html\">\n",
+	"<button type=\"submit\" name=\"op\" value=\"ouvrage_upload_comment\">Transf√©rer</button>",
 "</td></tr>
 <tr><td bgcolor=\"$bgcolor2\">
 	<b>"._TITLE."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._CURRENTSTATUS."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>Nombre de pages</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>Nombre de noeuds</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._FUNCTIONS."</b></td></tr>";
 
     $result0 = sql_query("select aid, nom, prenom from cb_auteurs order by nom, prenom", $dbi);
-    while($mypages0 = sql_fetch_array($result0, $dbi)) {
+    while($mypages0 = mysqli_fetch_array($result0, $dbi)) {
 		echo "
 		<tr><td bgcolor=\"#AAAAAA\" colspan='5'>$mypages0[prenom] $mypages0[nom]</td></tr>";
 	    $result = sql_query("select * from cb_ouvrages where auteur='$mypages0[aid]' order by active,auteur,titre", $dbi);
-	    while($mypages = sql_fetch_array($result, $dbi)) {
+	    while($mypages = mysqli_fetch_array($result, $dbi)) {
 			if ($mypages[active] == 1) {
 	    		$status = _ACTIVE;
 			    $status_chng = _DEACTIVATE;
@@ -90,13 +90,13 @@ function ouvrages() {
 
     OpenTable();
 	echo '
-<p align=center><b>Ajouter/Modifier disciplines et thÈmatiques d\'un ouvrage</b></p>
+<p align=center><b>Ajouter/Modifier disciplines et th√©matiques d\'un ouvrage</b></p>
 <form action="admin.php" method="post" enctype="multipart/form-data">';
 
     $rescat = sql_query("select pid, titre from cb_ouvrages order by titre", $dbi);
     if (sql_num_rows($rescat, $dbi) > 0) {
 		echo "<select name=\"pid\">";
-		while (list($pid, $titre) = sql_fetch_row($rescat, $dbi)) {
+		while (list($pid, $titre) = mysqli_fetch_row($rescat, $dbi)) {
 	    	echo "<option value=\"$pid\">$titre</option>";
 		}
 		echo "</select>";
@@ -110,13 +110,13 @@ function ouvrages() {
 
     OpenTable();
 	echo '
-<p align=center><b>TÈlÈcharger le fichier XML d\'un ouvrage</b></p>
+<p align=center><b>T√©l√©charger le fichier XML d\'un ouvrage</b></p>
 <form action="admin.php" method="post" enctype="multipart/form-data">';
 
     $rescat = sql_query("select pid, titre from cb_ouvrages order by titre", $dbi);
     if (sql_num_rows($rescat, $dbi) > 0) {
 		echo "<select name=\"pid\">";
-		while (list($pid, $titre) = sql_fetch_row($rescat, $dbi)) {
+		while (list($pid, $titre) = mysqli_fetch_row($rescat, $dbi)) {
 	    	echo "<option value=\"$pid\">$titre</option>";
 		}
 		echo "</select>";
@@ -125,20 +125,20 @@ function ouvrages() {
 <INPUT NAME="userfile" TYPE="file">
 <input type="checkbox" name="debug" value="1">Verbose
 <input type="hidden" name="op" value="upload_ouvrage_XML"><br>
-<input type="submit" value="transfÈrer">
+<input type="submit" value="transf√©rer">
 </form>';
     CloseTable();
     echo "<br>";
 
     OpenTable();
 	echo '
-<p align=center><b>TÈlÈcharger la liste des notions d\'un ouvrage</b></p>
+<p align=center><b>T√©l√©charger la liste des notions d\'un ouvrage</b></p>
 <form action="admin.php" method="post" enctype="multipart/form-data">';
 
     $rescat = sql_query("select pid, titre from cb_ouvrages order by titre", $dbi);
     if (sql_num_rows($rescat, $dbi) > 0) {
 		echo "<select name=\"pid\">";
-		while (list($pid, $titre) = sql_fetch_row($rescat, $dbi)) {
+		while (list($pid, $titre) = mysqli_fetch_row($rescat, $dbi)) {
 	    	echo "<option value=\"$pid\">$titre</option>";
 		}
 		echo "</select>";
@@ -146,31 +146,31 @@ function ouvrages() {
 	echo '
 <INPUT NAME="userfile" TYPE="file">
 <input type="hidden" name="op" value="upload_notions_ouvrage"><br>
-<input type="submit" value="transfÈrer">
+<input type="submit" value="transf√©rer">
 </form>';
     CloseTable();
     echo "<br>";
 
     OpenTable();
 	echo '
-<p align=center><b>TÈlÈcharger les fichiers image ou xml d\'un ouvrage dans un ZIP</b></p>
+<p align=center><b>T√©l√©charger les fichiers image ou xml d\'un ouvrage dans un ZIP</b></p>
 <form action="admin.php" method="post" enctype="multipart/form-data">';
 
     $rescat = sql_query("select pid, titre from cb_ouvrages order by titre", $dbi);
     if (sql_num_rows($rescat, $dbi) > 0) {
 		echo "<select name=\"pid\">";
-		while (list($pid, $titre) = sql_fetch_row($rescat, $dbi)) {
+		while (list($pid, $titre) = mysqli_fetch_row($rescat, $dbi)) {
 	    	echo "<option value=\"$pid\">$titre</option>";
 		}
 		echo "</select>";
 	}
-	echo '<INPUT NAME="userfile" TYPE="file"><input type="hidden" name="op" value="upload_ouvrage"><br><input type="submit" value="transfÈrer"></form>';
+	echo '<INPUT NAME="userfile" TYPE="file"><input type="hidden" name="op" value="upload_ouvrage"><br><input type="submit" value="transf√©rer"></form>';
     CloseTable();
 
     include("footer.php");
 }
 
-// Formulaire d'Èdition des caractÈristiques d'un ouvrage
+// Formulaire d'√©dition des caract√©ristiques d'un ouvrage
 
 function displayForm($caption, $title, $auteur, $active, $debut, $nombre_pages,$nombre_noeuds,$dossier,$signature,$texteActif,$notionActif, $facActif) {
     global $prefix, $dbi, $language, $multilingual, $bgcolor2;
@@ -181,7 +181,7 @@ function displayForm($caption, $title, $auteur, $active, $debut, $nombre_pages,$
 	."<tr><td colspan=\"5\" align=\"center\"><b>"._TITLE.":</b> <input type=\"text\" name=\"titre\" value=\"$title\" size=\"50\">"
 	."<tr><td colspan=\"3\"><b>"._AUTHOR."</b><br><select name=\"auteur\">";
     $result = sql_query("select aid, nom, prenom from cb_auteurs order by nom, prenom", $dbi);
-	while (list($aid, $nom, $prenom) = sql_fetch_row($result, $dbi)) {
+	while (list($aid, $nom, $prenom) = mysqli_fetch_row($result, $dbi)) {
 		echo "<option value=\"$aid\"";
 		if ($auteur==$aid) { echo "selected";}
 		echo ">$prenom $nom</option>";
@@ -206,7 +206,7 @@ function displayForm($caption, $title, $auteur, $active, $debut, $nombre_pages,$
 	echo ">Notions<br>"
 	."<input type=\"checkbox\" name=\"facActif\" value=\"1\"";
 	if ($facActif) echo "checked";
-	echo ">Fac-similÈ<br>";
+	echo ">Fac-simil√©<br>";
 	if ($caption=="Ajouter un nouvel ouvrage"){
 		echo "<input type=\"hidden\" name=\"op\" value=\"add_ouvrage\">"
 		."<tr><td colspan=\"4\" align=\"center\"><input type=\"submit\" value=\""._ADD."\">";
@@ -221,7 +221,7 @@ function terms($eid) {
     global $module_name, $prefix, $sitename, $dbi, $admin;
 
 	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='$eid'", $dbi);
-	while (list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	while (list($tid, $title) = mysqli_fetch_row($result, $dbi)) {
 		echo "<option value=\"$tid\">$title</option>";
 	}
 }
@@ -234,14 +234,14 @@ function fichiers_ouvrage($pid,$fichier,$action,$newfile){
     OpenTable();
 	if ($pid!=""){
 	    $baseDir = $colisroot."$pid/";
-    	$sql = sql_query("select titre, auteur from cb_ouvrages where pid=$pid",$dbi);
-	    list($titre, $auteur) = sql_fetch_row($sql, $dbi);
-    	$sql = sql_query("select Nom, Prenom from cb_auteurs where aid=$auteur",$dbi);
-	    list($nom, $prenom) = sql_fetch_row($sql, $dbi);
+    	$sql = sql_query("select titre, auteur from cb_ouvrages where pid=$pid");
+	    list($titre, $auteur) = mysqli_fetch_row($sql, $dbi);
+    	$sql = sql_query("select Nom, Prenom from cb_auteurs where aid=$auteur");
+	    list($nom, $prenom) = mysqli_fetch_row($sql, $dbi);
 		echo "<h2>$nom, $prenom<br>$titre</h2>";
 		require_once "fonctions.dir.inc";
 	}else{
-		echo "<p>Il faut sÈlectionner un ouvrage";
+		echo "<p>Il faut s√©lectionner un ouvrage";
 	}
     CloseTable();
 
@@ -267,7 +267,7 @@ function upload_notions_ouvrage($userfile, $nombre, $pid){
     OpenTable();
 	echo "<p>Transfert de $userfile vers $file";
     copy($userfile,$file);
-    echo "<p>Le fichier $file a bien ÈtÈ transfÈrÈ.";
+    echo "<p>Le fichier $file a bien √©t√© transf√©r√©.";
 
     CloseTable();
     include("footer.php");
@@ -291,7 +291,7 @@ function upload_ouvrage_XML($userfile, $nombre, $pid){
     OpenTable();
 	echo "<p>Transfert de $userfile vers $file";
     copy($userfile,$file);
-    echo "<p>Le fichier $file a bien ÈtÈ transfÈrÈ.<h2>Le traitement commence...</h2>";
+    echo "<p>Le fichier $file a bien √©t√© transf√©r√©.<h2>Le traitement commence...</h2>";
 	$titre  = "";
 	$numero = "";
 	$front  = "";
@@ -391,7 +391,7 @@ function ouvrage_edit($pid) {
     GraphicAdmin();
     title(""._CONTENTMANAGER."");
     $result = sql_query("select * from cb_ouvrages WHERE pid='$pid'", $dbi);
-    $mypages = sql_fetch_array($result, $dbi);
+    $mypages = mysqli_fetch_array($result, $dbi);
 
     OpenTable();
 	displayForm(_EDITPAGECONTENT, $mypages[titre], $mypages[auteur] , $mypages[active],$mypages[debut],$mypages[nombre_pages],$mypages[nombre_noeuds],$mypages[pid], $mypages[signature], $mypages[texteActif], $mypages[notionActif], $mypages[facActif]);
@@ -404,13 +404,13 @@ function ouvrage_discipline($pid) {
 
     include("header.php");
     GraphicAdmin();
-    title("Modifier les disciplines et les thÈmatiques d'un ouvrage");
+    title("Modifier les disciplines et les th√©matiques d'un ouvrage");
 
     OpenTable();
     $result = sql_query("select titre from cb_ouvrages WHERE pid='$pid'", $dbi);
-    list($ceTitre) = sql_fetch_row($result, $dbi);
+    list($ceTitre) = mysqli_fetch_row($result, $dbi);
 	echo "<h2>$ceTitre</h2>";
-// Les discliplines dÈj‡ enregistrÈes
+// Les discliplines d√©j√© enregistr√©es
     $result = sql_query("select title, discipline from cb_disciplines, nuke_encyclopedia_text WHERE pid='$pid' and discipline=tid", $dbi);
 	echo "<h3>Disciplines</h3>
 	<table align=\"center\" width=\"60%\" bgcolor=\"#CCDDDD\">
@@ -419,7 +419,7 @@ function ouvrage_discipline($pid) {
 	<input type=\"hidden\" name=\"op\" value=\"del_discipline\">
 	<input type=\"hidden\" name=\"pid\" value=\"$pid\">
 	";
-    while (list($cetteDiscipline, $did) = sql_fetch_row($result, $dbi)){
+    while (list($cetteDiscipline, $did) = mysqli_fetch_row($result, $dbi)){
 		echo"<br><input type=\"radio\" name=\"did\" value=\"$did\"> ($did) - $cetteDiscipline";
 	};
 	echo "<br><input type=\"submit\" value=\"Supprimer\">
@@ -430,18 +430,18 @@ function ouvrage_discipline($pid) {
 	<input type=\"hidden\" name=\"pid\" value=\"$pid\">
 	<select name=\"did\">";
 	terms(_DISCIPLINE);
-//	echo "</select></td><td><b>ThÈmatique:</b><br><select name=\"thematique\">";
+//	echo "</select></td><td><b>Th√©matique:</b><br><select name=\"thematique\">";
 //	echo "</select></td>";
 	echo "</select>
 	<input type=\"submit\" value=\"ajouter\"></form></td></tr></table>";
-//Les domaines dÈj‡ enregistrÈs
+//Les domaines d√©j√© enregistr√©s
     $result = sql_query("select title, domaine from cb_domaines, nuke_encyclopedia_text WHERE pid='$pid' and domaine=tid", $dbi);
 	echo "<h3>Domaines</h3><table align=\"center\" width=\"60%\" bgcolor=\"#CCDDDD\"><tr><td><h4>Supprimer</h4>
 	<form action=\"admin.php\" method=\"post\">
 	<input type=\"hidden\" name=\"op\" value=\"del_domaine\">
 	<input type=\"hidden\" name=\"pid\" value=\"$pid\">
 	";
-    while (list($ceDomaine, $did) = sql_fetch_row($result, $dbi)){
+    while (list($ceDomaine, $did) = mysqli_fetch_row($result, $dbi)){
 		echo"<br><input type=\"radio\" name=\"did\" value=\"$did\"> ($did) - $ceDomaine";
 	};
 	echo "<br><input type=\"submit\" value=\"Supprimer\">
@@ -481,7 +481,7 @@ function ouvrage_change_status($pid, $active) {
 	    include("header.php");
 	    GraphicAdmin();
     	OpenTable();
-		echo "<p>Il faut sÈlectionner un ouvrage";
+		echo "<p>Il faut s√©lectionner un ouvrage";
 		CloseTable();
 	    include("footer.php");
 	}
@@ -499,7 +499,7 @@ function ouvrage_delete($pid, $ok=0) {
         	GraphicAdmin();
 			title(""._CONTENTMANAGER."");
 			$result = sql_query("select titre from cb_ouvrages where pid='$pid'", $dbi);
-			list($title) = sql_fetch_row($result, $dbi);
+			list($title) = mysqli_fetch_row($result, $dbi);
 			OpenTable();
 			echo "<center><b>"._DELCONTENT.": $title</b><br><br>"
 	    	.""._DELCONTWARNING." $title?<br><br>"
@@ -511,7 +511,7 @@ function ouvrage_delete($pid, $ok=0) {
 	    include("header.php");
 	    GraphicAdmin();
     	OpenTable();
-		echo "<p>Il faut sÈlectionner un ouvrage";
+		echo "<p>Il faut s√©lectionner un ouvrage";
 		CloseTable();
 	    include("footer.php");
 	}
@@ -525,7 +525,7 @@ function ouvrage_upload_comment($pid, $file){
        	GraphicAdmin();
 		title(""._CONTENTMANAGER."");
 		$result = sql_query("select titre from cb_ouvrages where pid='$pid'", $dbi);
-		list($title) = sql_fetch_row($result, $dbi);
+		list($title) = mysqli_fetch_row($result, $dbi);
 		OpenTable();
 		echo "<center><b>Transfert des commentaires pour: $title</b><br>$pid<br>$file to ".$colisroot."$pid/presentation.html"."</center>";
 
@@ -537,7 +537,7 @@ function ouvrage_upload_comment($pid, $file){
 	    include("header.php");
 	    GraphicAdmin();
     	OpenTable();
-		echo "<p>Il faut sÈlectionner un ouvrage";
+		echo "<p>Il faut s√©lectionner un ouvrage";
 		CloseTable();
 	    include("footer.php");
 	}

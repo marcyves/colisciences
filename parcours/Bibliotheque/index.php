@@ -32,7 +32,7 @@ if (isset($newetagere)) {
 function lienBiblio($aid,$categorie, $alt){
     global $theme,$prefix, $dbi;
     $sql = mysqli_query($dbi, "select Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs   from cb_biblio where Biblio='$aid' and categorie='$categorie' order by Dates");
-	if (mysqli_num_rows($sql, $dbi) == 0) {
+	if (mysqli_num_rows($sql) == 0) {
 		return "&nbsp;";
 	} else {
 		return "&nbsp;<a href=\"parcours.php?name=Bibliotheque&pa=biblio&id=$aid&categorie=$categorie\"><img src=\"themes/$theme/img/bilbio.gif\" alt=\"$alt\"></a>&nbsp;";	}
@@ -52,22 +52,22 @@ function showbiblio($id, $categorie){
 	switch ($categorie){
 	case "bio":
 	    $sql = mysqli_query($dbi, "select nom, prenom from cb_auteurs where aid='$id'");
-   		list($nom, $prenom) = mysqli_fetch_row($sql, $dbi);
+   		list($nom, $prenom) = mysqli_fetch_row($sql);
  		echo "<font class=\"title4\">La bibliographie sur $prenom $nom</font>";
 	break;
 	case "biblio":
 	    $sql = mysqli_query($dbi, "select nom, prenom from cb_auteurs where aid='$id'");
-   		list($nom, $prenom) = mysqli_fetch_row($sql, $dbi);
+   		list($nom, $prenom) = mysqli_fetch_row($sql);
  		echo "<font class=\"title4\"> Les oeuvres de $prenom $nom</font>";
 	break;
 	case "discipline":
-		$sql = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia_text WHERE tid='$id' and eid='"._DISCIPLINE."'", $dbi);
-   		list($title) = mysqli_fetch_row($sql, $dbi);
+		$sql = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia_text WHERE tid='$id' and eid='"._DISCIPLINE."'");
+   		list($title) = mysqli_fetch_row($sql);
  		echo "<font class=\"title3\">La bibliographie sur $title (discipline)</font>";
 	break;
 	case "domaine":
-		$sql = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia_text WHERE tid='$id' and eid='"._DOMAINE."'", $dbi);
-   		list($title) = mysqli_fetch_row($sql, $dbi);
+		$sql = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia_text WHERE tid='$id' and eid='"._DOMAINE."'");
+   		list($title) = mysqli_fetch_row($sql);
  		echo "<font class=\"title3\">La bibliographie sur $title (domaine)</font>";
 	break;
 	}	
@@ -79,7 +79,7 @@ function showbiblio($id, $categorie){
 
     $sql = mysqli_query($dbi, "select Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs   from cb_biblio where Biblio='$id' and categorie='$categorie' order by Dates");
 echo "<br>";
-	if (mysqli_num_rows($sql, $dbi) == 0) {
+	if (mysqli_num_rows($sql) == 0) {
 	    echo "<center><i>Il n'y a pas d'entrée de bibliographie.</i></center>";
 	}
 	afficheEntreesBiblio($sql);
@@ -95,7 +95,7 @@ function afficheNomEtagere($etagere){
 	global $dbi;
 	if ($etagere!=0){
 		$sql = mysqli_query($dbi, "select nom, description from cb_etagere where eid='$etagere'");
-	    list($nom, $description) = mysqli_fetch_row($sql, $dbi);
+	    list($nom, $description) = mysqli_fetch_row($sql);
 		echo "<h3>$nom</h3>$description
 		<P class=\"menubar2\"><A href=\"parcours.php?name=Bibliotheque&newetagere=0\">Revenir à l'ensemble des ouvrages</A></P>";
 	}else{
@@ -109,7 +109,7 @@ function rendre_public($eid){
 
 	$sql = mysqli_query($dbi, "update cb_etagere set public='1' where eid='$eid'");
 	$sql = mysqli_query($dbi, "select nom from cb_etagere where eid='$eid'");
-	list($nom) = mysqli_fetch_row($sql, $dbi);
+	list($nom) = mysqli_fetch_row($sql);
 	echo "<p><b>$nom</b> est maintenant visible de tous.";
 }
 
@@ -119,7 +119,7 @@ function effacer($eid){
 	echo "select nom from cb_etagere where eid='$eid'";
 	
 	$sql = mysqli_query($dbi, "select nom from cb_etagere where eid='$eid'");
-	list($nom) = mysqli_fetch_row($sql, $dbi);
+	list($nom) = mysqli_fetch_row($sql);
 //
 //Il faut la vider !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //	$sql = mysqli_query($dbi, "select evid, ouvrage from cb_etagere_ouvrages where eid='$eid'");
@@ -134,7 +134,7 @@ function cacher($eid){
 
 	$sql = mysqli_query($dbi, "update cb_etagere set public='0' where eid='$eid'");
 	$sql = mysqli_query($dbi, "select nom from cb_etagere where eid='$eid'");
-	list($nom) = mysqli_fetch_row($sql, $dbi);
+	list($nom) = mysqli_fetch_row($sql);
 	echo "<p><b>$nom</b> est maintenant cachée.";
 }
 
@@ -181,7 +181,7 @@ function inserer_etagere($uid, $nom, $description){
 	echo "<p><b>$nom</b> est maintenant crée, vous pouvez commencer à y déposer des ouvrages.";
 
 	$sql = mysqli_query($dbi, "select eid from cb_etagere where nom='$nom'");
-	list($eid) = mysqli_fetch_row($sql, $dbi);
+	list($eid) = mysqli_fetch_row($sql);
 	
 	return $eid;
 }
@@ -190,7 +190,7 @@ function modifier_ouvrages_etagere($uid, $eid){
 	global $dbi;
 	
 	$sql = mysqli_query($dbi, "select pid, titre, debut, auteur, date_titre, type_book from cb_ouvrages where active='1' order by date_titre,titre");
-   	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = mysqli_fetch_row($sql, $dbi)) {
+   	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = mysqli_fetch_row($sql)) {
 		$titre = stripslashes($titre);
 		if ($date_titre!="0"){
 			$date_titre = "($date_titre)";
@@ -198,7 +198,7 @@ function modifier_ouvrages_etagere($uid, $eid){
 			$date_titre = "";
 		}
 		$result = mysqli_query($dbi, "select evid from cb_etagere_ouvrage where eid='$eid' and ouvrage='$pid'");
-		$count = mymysqli_num_rows($result);
+		$count = mysqli_num_rows($result);
 		if ($count>0){
 			$selected = "checked";
 		}else{
@@ -208,7 +208,7 @@ function modifier_ouvrages_etagere($uid, $eid){
    	}
 	echo "<h3>Les ouvrages par auteur dans CoLiSciences</h3>Vous pouvez sélectionner les ouvrages que vous voulez voir apparaitre sur votre étagère dans la liste suivante.<br><form method=\"post\" action=\"$PHP_SELF\">";
 	$sql = mysqli_query($dbi, "select aid, nom, prenom from cb_auteurs order by aid");
-    while (list($aid, $nom, $prenom) = mysqli_fetch_row($sql, $dbi)) {
+    while (list($aid, $nom, $prenom) = mysqli_fetch_row($sql)) {
 //			$lienBiblio = lienBiblio($aid,"biblio","Sa bibliographie");
 //			$lienBiblio .= lienBiblio($aid,"bio","Ses biographes");
 //			afficheShowHide("AUT$aid",creeLienAuteur($aid, $nom, $prenom)."&nbsp;$lienBiblio", $debutForm.$tmp[$aid].$finForm);
@@ -224,7 +224,7 @@ function inserer_ouvrage_etagere($uid,$eid, $ouvrage_list){
 	global $dbi;
 
 	$sql = mysqli_query($dbi, "select nom from cb_etagere where eid='$eid'");
-	list($nom) = mysqli_fetch_row($sql, $dbi);
+	list($nom) = mysqli_fetch_row($sql);
 	
 	echo "<h3>Insertion des ouvrages pour $nom</h3>";
 	$sql = mysqli_query($dbi, "delete from cb_etagere_ouvrage where eid='$eid'");
@@ -266,7 +266,7 @@ Les icones placées devant le nom d'une étagère donnent accès aux outils de g
 			echo "<h3>Vos étagères</h3>
 			<ul>";
 			$sql = mysqli_query($dbi, "select eid, nom, public from cb_etagere where uid='$uid'");
-		    while (list($eid, $nom, $public) = mysqli_fetch_row($sql, $dbi)){
+		    while (list($eid, $nom, $public) = mysqli_fetch_row($sql)){
 				echo "<li>".creeLienEtagere($eid,$nom,true,$public)."</li>";
 			}
 			echo "<li><a href=\"$PHP_SELF?name=Bibliotheque&pa=creation_etagere\"><img src=\"\" alt=\"Créer une nouvelle étagère\"></a></li>";
@@ -277,7 +277,7 @@ Les icones placées devant le nom d'une étagère donnent accès aux outils de g
 		echo "<h3>Les étagères publiques</h3>
 		<ul>";
 		$sql = mysqli_query($dbi, "select eid, nom from cb_etagere where public='1'");
-	    while (list($eid, $nom) = mysqli_fetch_row($sql, $dbi)){
+	    while (list($eid, $nom) = mysqli_fetch_row($sql)){
 			echo "<li>".creeLienEtagere($eid,$nom,false,$public);
 		}
 		echo "</ul><p>";
@@ -291,19 +291,21 @@ Les icones placées devant le nom d'une étagère donnent accès aux outils de g
 function auteurs(){
     global $theme,$prefix, $dbi, $sitename, $admin, $module_name,$colispage, $etagere, $webroot;
 
+	echo "<h1>function auteurs</h1>";
     if ($etagere!=0){
 		$where = "o, cb_etagere_ouvrage e where eid='$etagere' and pid=ouvrage and active='1'";
 	}else{
 		$where = "where active='1'";
 	}
 	$sql = mysqli_query($dbi, "select distinct pid, titre, debut, auteur, date_titre, type_book from cb_ouvrages $where order by date_titre,titre");
-   	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = mysqli_fetch_row($sql, $dbi)) {
+	$tmp[] = [];
+   	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = mysqli_fetch_row($sql)) {
 		$titre = stripslashes($titre);
     	$tmp[$auteur] .= "<table><tr><td valign=\"top\"><img width=\"30\" height=\"12\"  src=\"themes/$theme/img/plot.gif\"></td><td>".creeLienOuvrage($pid,$titre, $debut, $date_titre,$type_book) ."</td></tr></table>";
    	}
 	echo "<font class=\"title3\">Les ouvrages par auteur dans CoLiSciences</font><p>Pour d'autres informations sur un auteur, cliquer sur son nom.";
 	$sql = mysqli_query($dbi, "select aid, nom, prenom from cb_auteurs order by nom");
-    while (list($aid, $nom, $prenom) = mysqli_fetch_row($sql, $dbi)) {
+    while (list($aid, $nom, $prenom) = mysqli_fetch_row($sql)) {
 //			$lienBiblio = lienBiblio($aid,"biblio","Sa bibliographie");
 //			$lienBiblio .= lienBiblio($aid,"bio","Ses biographes");
 //			afficheShowHide("AUT$aid",creeLienAuteur($aid, $nom, $prenom)."&nbsp;$lienBiblio", $debutForm.$tmp[$aid].$finForm);
@@ -316,7 +318,7 @@ function detail_auteur($aid){
 
 	// On récupère le nom et le prénom de l'auteur
 	$sql = mysqli_query($dbi, "select nom, prenom from cb_auteurs where aid=$aid");
-    list($nom, $prenom) = mysqli_fetch_row($sql, $dbi);
+    list($nom, $prenom) = mysqli_fetch_row($sql);
 
 	$fichierAuteur = $prenom."_".$nom.".";
 	$fichierAuteur = str_replace(" ","_",$fichierAuteur);
@@ -334,9 +336,9 @@ function detail_auteur($aid){
 	echo "</td></tr>
 		<tr><td>";
 	// On retrouve ici l'entrée de l'encyclopédie 'savants cités' quand elle existe
-    $result = mysqli_query($dbi, "select title, text from ".$prefix."_encyclopedia_text where title like '".strtoupper($nom)."' and eid='"._AUTEURS."'", $dbi);
+    $result = mysqli_query($dbi, "select title, text from ".$prefix."_encyclopedia_text where title like '".strtoupper($nom)."' and eid='"._AUTEURS."'");
 	//echo "select title, text from ".$prefix."_encyclopedia_text where title like '".strtoupper($nom)."' and eid='"._AUTEURS."'";
-    if (list($title, $text) = mysqli_fetch_row($result, $dbi)) {
+    if (list($title, $text) = mysqli_fetch_row($result)) {
 		$text = autop($text);
 		echo "<font class=\"title3\">Nous trouvons dans <a href=\"/parcours.php?name=Auteurs_cités\">L'encyclopédie des Savants</a> de CoLiSciences:</font><br>$text<br>";
 	}
@@ -348,7 +350,7 @@ function detail_auteur($aid){
  		$tmp .= "<br><font class=\"title3\">Les ouvrages de $prenom $nom</font><br>";
 
 	    $sql = mysqli_query($dbi, "select pid,titre,debut, auteur, date_titre, type_book from cb_ouvrages where active='1' and auteur=$aid order by date_titre, titre");
-    	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = mysqli_fetch_row($sql, $dbi)) {
+    	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = mysqli_fetch_row($sql)) {
  	    	$tmp .= "<table><tr><td valign=\"top\"><img width=\"30\" height=\"12\"  src=\"themes/$theme/img/plot.gif\"></td><td>".creeLienOuvrage($pid,$titre,$debut,$date_titre,$type_book) ."</td></tr></table>";
     	}
 		*/ 
@@ -368,7 +370,7 @@ function discipline(){
 		$where = "where pid=did and active='1' and auteur=aid";
 	}
     $sql = mysqli_query($dbi, "select pid, titre, debut, auteur, date_titre, type_book, did, discipline, aid, nom, prenom  from cb_ouvrages, cb_disciplines, cb_auteurs  $where order by date_titre,titre");
-   	while (list($pid, $titre, $debut, $auteur, $date_titre, $type_book, $did, $discipline , $aid, $nom, $prenom) = mysqli_fetch_row($sql, $dbi)) {
+   	while (list($pid, $titre, $debut, $auteur, $date_titre, $type_book, $did, $discipline , $aid, $nom, $prenom) = mysqli_fetch_row($sql)) {
 		$titre = stripslashes($titre);
     	$tmp[$discipline] .= "<li>".creeLienAuteur($aid, $nom, $prenom)." : ".creeLienOuvrage($pid, $titre, $debut, $date_titre,$type_book);
    	}
@@ -389,7 +391,7 @@ function domaine(){
 		$where = "where pid=did and active='1' and auteur=aid";
 	}
     $sql = mysqli_query($dbi, "select pid, titre, debut, auteur, date_titre, type_book, did, domaine, aid, nom, prenom from cb_ouvrages, cb_domaines, cb_auteurs $where order by date_titre,titre");
-   	while (list($pid, $titre, $debut, $auteur, $date_titre, $type_book, $did, $domaine, $aid, $nom, $prenom) = mysqli_fetch_row($sql, $dbi)) {
+   	while (list($pid, $titre, $debut, $auteur, $date_titre, $type_book, $did, $domaine, $aid, $nom, $prenom) = mysqli_fetch_row($sql)) {
 		$titre = stripslashes($titre);
     	$tmp[$domaine] .= "<li>".creeLienAuteur($aid, $nom, $prenom)." : ".creeLienOuvrage($pid, $titre, $debut, $date_titre,$type_book); 
    	}
@@ -446,11 +448,11 @@ function terms($eid, $liste, $lien) {
 	$finForm = "</ul>";
 
 	echo "<table border=\"0\" align=\"center\">";
-	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='$eid' order by title", $dbi);
-	if (mysqli_num_rows($result, $dbi) == 0) {
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='$eid' order by title");
+	if (mysqli_num_rows($result) == 0) {
  	    echo "<font class=\"info\">"._NOCONTENTFORLETTER. "$ltr.</font>";
 	}
-	while(list($tid, $title) = mysqli_fetch_row($result, $dbi)) {
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 		$title .= lienBiblio($tid,$lien,"Bilbiographie");
 		afficheShowHide("DIS$tid",$title, $debutForm.$liste[$tid].$finForm);
 	}
@@ -479,8 +481,8 @@ function terms($eid, $liste, $lien) {
 	NavigationMenu($selection,$pa,2,2,1);
 	OpenTable();
 	echo afficheNomEtagere($etagere);
-	
-switch($pa) {
+
+	switch($pa) {
 
 	case "biblio":
 		showbiblio($id, $categorie);

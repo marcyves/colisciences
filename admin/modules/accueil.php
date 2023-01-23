@@ -12,8 +12,8 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-$result = sql_query("select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radmincontent, $radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radmincontent, $radminsuper) = mysqli_fetch_row($result);
 if (($radmincontent==1) OR ($radminsuper==1)) {
 
 
@@ -34,8 +34,8 @@ title(""._HOMEMANAGER."");
     echo "<table border=\"0\" width=\"100%\"><tr>"
 	."<td bgcolor=\"$bgcolor2\" align=\"center\" colspan=\"4\"><b>La page d'accueil</b></td></tr>"
 	."<td bgcolor=\"$bgcolor2\"><b>"._TITLE."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._CURRENTSTATUS."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._CATEGORY."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._FUNCTIONS."</b></td></tr>";
-    $result = sql_query("select p.*, c.title from ".$prefix."_pages p, ".$prefix."_pages_categories c where description='accueil' and p.cid=c.cid order by pid", $dbi);
-    while($mypages = sql_fetch_array($result, $dbi)) {
+    $result = mysqli_query($dbi, "select p.*, c.title from ".$prefix."_pages p, ".$prefix."_pages_categories c where description='accueil' and p.cid=c.cid order by pid");
+    while($mypages = mysqli_fetch_array($result)) {
 	if ($mypages[cid] == "0" OR $mypages[cid] == "") {
 	    $cat_title = _NONE;
 	} else {
@@ -72,8 +72,8 @@ title(""._HOMEMANAGER."");
     echo "<table border=\"0\" width=\"100%\"><tr>"
 	."<td bgcolor=\"$bgcolor2\" align=\"center\" colspan=\"4\"><b>Le texte d'annonce de la page d'accueil</b></td></tr>"
 	."<td bgcolor=\"$bgcolor2\"><b>"._TITLE."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._CURRENTSTATUS."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._CATEGORY."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._FUNCTIONS."</b></td></tr>";
-    $result = sql_query("select * from ".$prefix."_pages where title='Annonce' order by pid", $dbi);
-    while($mypages = sql_fetch_array($result, $dbi)) {
+    $result = mysqli_query($dbi, "select * from ".$prefix."_pages where title='Annonce' order by pid");
+    while($mypages = mysqli_fetch_array($result)) {
 	if ($mypages[cid] == "0" OR $mypages[cid] == "") {
 	    $cat_title = _NONE;
 	} else {
@@ -98,8 +98,8 @@ title(""._HOMEMANAGER."");
     echo "<table border=\"0\" width=\"100%\"><tr>"
 	."<td bgcolor=\"$bgcolor2\" align=\"center\" colspan=\"4\"><b>Les autres textes</b></td></tr>"
 	."<td bgcolor=\"$bgcolor2\"><b>"._TITLE."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._CURRENTSTATUS."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._CATEGORY."</b></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>"._FUNCTIONS."</b></td></tr>";
-    $result = sql_query("select distinct p.pid, c.cid, p.title, c.title, active from ".$prefix."_pages p, ".$prefix."_pages_categories c where description<>'accueil' and p.cid=c.cid order by pid", $dbi);
-    while(list($pid, $cid, $titre, $menu, $active) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select distinct p.pid, c.cid, p.title, c.title, active from ".$prefix."_pages p, ".$prefix."_pages_categories c where description<>'accueil' and p.cid=c.cid order by pid");
+    while(list($pid, $cid, $titre, $menu, $active) = mysqli_fetch_row($result)) {
 	if ($cid == "0" OR $cid == "") {
 	    $cat_title = _NONE;
 	} else {
@@ -116,8 +116,8 @@ title(""._HOMEMANAGER."");
 	}
 	echo "<tr><td><a href=\"modules.php?name=accueil&pa=showpage&pid=$pid\">$titre</a></td><td align=\"center\">$status</td><td align=\"center\">$cat_title</td><td align=\"center\">[ <a href=\"admin.php?op=accueil_edit&pid=$pid\">"._EDIT."</a> | <a href=\"admin.php?op=accueil_change_status&pid=$pid&active=$active\">$status_chng</a> | <a href=\"admin.php?op=accueil_delete&pid=$pid\">"._DELETE."</a> ]</td></tr>";
     }
-    $result = sql_query("select distinct pid, cid, title, active from ".$prefix."_pages where cid=0 and title<>'Annonce' order by pid", $dbi);
-    while(list($pid, $cid, $titre, $active) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select distinct pid, cid, title, active from ".$prefix."_pages where cid=0 and title<>'Annonce' order by pid");
+    while(list($pid, $cid, $titre, $active) = mysqli_fetch_row($result)) {
 	if ($cid == "0" OR $cid == "") {
 	    $cat_title = _NONE;
 	} else {
@@ -137,15 +137,15 @@ title(""._HOMEMANAGER."");
     echo "</table>";
     CloseTable();
 
-    $rescat = sql_query("select cid, title from ".$prefix."_pages_categories where description='accueil' order by title", $dbi);
-    if (sql_num_rows($rescat, $dbi) > 0) {
+    $rescat = mysqli_query($dbi, "select cid, title from ".$prefix."_pages_categories where description='accueil' order by title");
+    if (sql_num_rows($rescat) > 0) {
 	echo "<br>";
 	OpenTable();
 	echo "<center><b>"._EDITCATEGORY."</b></center><br><br>"
 	    ."<form action=\"admin.php\" method=\"post\">"
 	    ."<b>"._CATEGORY.":</b> "
 	    ."<select name=\"cid\">";
-	while (list($cid, $cat_title) = sql_fetch_row($rescat, $dbi)) {
+	while (list($cid, $cat_title) = mysqli_fetch_row($rescat)) {
 	    echo "<option value=\"$cid\">$cat_title</option>";
 	}
 	echo "</select>&nbsp;&nbsp;"
@@ -162,7 +162,7 @@ title(""._HOMEMANAGER."");
 
 function add_category($cat_title, $description) {
     global $prefix, $dbi;
-    sql_query("insert into ".$prefix."_pages_categories values (NULL, '$cat_title', 'accueil')", $dbi);
+    mysqli_query($dbi, "insert into ".$prefix."_pages_categories values (NULL, '$cat_title', 'accueil')");
     Header("Location: admin.php?op=accueil");
 }
 
@@ -176,8 +176,8 @@ GraphicAdmin();
 title(""._HOMEMANAGER."");
 
     OpenTable();
-    $result = sql_query("select title, description from ".$prefix."_pages_categories where description='accueil' and cid='$cid'", $dbi);
-    list($title, $description) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select title, description from ".$prefix."_pages_categories where description='accueil' and cid='$cid'");
+    list($title, $description) = mysqli_fetch_row($result);
     echo "<center><b>"._EDITCATEGORY."</b></center><br><br>"
 	."<form action=\"admin.php\" method=\"post\">"
 	."<b>"._TITLE."</b><br>"
@@ -195,17 +195,17 @@ title(""._HOMEMANAGER."");
 
 function save_category($cid, $cat_title, $description) {
     global $prefix, $dbi;
-    sql_query("update ".$prefix."_pages_categories set title='$cat_title', description='accueil' where cid='$cid'", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_pages_categories set title='$cat_title', description='accueil' where cid='$cid'");
     Header("Location: admin.php?op=accueil");
 }
 
 function del_accueil_cat($cid, $ok=0) {
     global $prefix, $dbi;
     if ($ok==1) {
-        sql_query("delete from ".$prefix."_pages_categories where cid='$cid'", $dbi);
-	$result = sql_query("select pid from ".$prefix."_pages where cid='$cid'", $dbi);
-	while (list($pid) = sql_fetch_row($result, $dbi)) {
-	    sql_query("update ".$prefix."_pages set cid='0' where pid='$pid'", $dbi);
+        mysqli_query($dbi, "delete from ".$prefix."_pages_categories where cid='$cid'");
+	$result = mysqli_query($dbi, "select pid from ".$prefix."_pages where cid='$cid'");
+	while (list($pid) = mysqli_fetch_row($result)) {
+	    mysqli_query($dbi, "update ".$prefix."_pages set cid='0' where pid='$pid'");
 	}
         Header("Location: admin.php?op=accueil");
     } else {
@@ -215,8 +215,8 @@ include_once("wysiwyg.inc");
 GraphicAdmin();
 title(""._HOMEMANAGER."");
 
-	$result = sql_query("select title from ".$prefix."_pages_categories where cid='$cid'", $dbi);
-	list($title) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select title from ".$prefix."_pages_categories where cid='$cid'");
+	list($title) = mysqli_fetch_row($result);
 	OpenTable();
 	echo "<center><b>"._DELCATEGORY.": $title</b><br><br>"
 	    .""._DELCONTENTCAT."<br><br>"
@@ -230,8 +230,8 @@ function accueil_edit($pid) {
     global $prefix, $dbi, $language, $multilingual, $bgcolor2;
 
 	
-    $result = sql_query("select * from ".$prefix."_pages WHERE pid='$pid'", $dbi);
-    $mypages = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "select * from ".$prefix."_pages WHERE pid='$pid'");
+    $mypages = mysqli_fetch_array($result);
 
 //$body = ' onload="Start(\''.addslashes($mypages[text]).'\')"';
 include_once("header.php");
@@ -260,8 +260,8 @@ function display_form($caption,$pid,$title,$topic, $subtitle, $page_header, $tex
 		."<b>"._TITLE.":</b><br>"
 		."<input type=\"text\" name=\"title\" size=\"50\" value=\"$title\"> ";
 
-    $res = sql_query("select cid, title from ".$prefix."_pages_categories", $dbi);
-    if (sql_num_rows($res, $dbi) > 0) {
+    $res = mysqli_query($dbi, "select cid, title from ".$prefix."_pages_categories");
+    if (sql_num_rows($res) > 0) {
 		echo "<b>"._CATEGORY.":</b>&nbsp;&nbsp;"
 	    ."<select name=\"cid\">";
 		if ($mypages[cid] == 0) {
@@ -270,7 +270,7 @@ function display_form($caption,$pid,$title,$topic, $subtitle, $page_header, $tex
 	    	$sel = "";
 		}
 		echo "<option value=\"0\" $sel>"._NONE."</option>";
-		while(list($cid, $cat_title) = sql_fetch_row($res, $dbi)) {
+		while(list($cid, $cat_title) = mysqli_fetch_row($res)) {
 	    	if ($topic == $cid) {
 				$sel = "selected";
 	    	} else {
@@ -381,16 +381,16 @@ writeRichText('page_footer', '<? echo $content?>', 800, 100, true, false);
 
 function accueil_save($title, $subtitle, $page_header, $text, $page_footer, $signature, $clanguage, $active, $cid) {
     global $prefix, $dbi;
-    sql_query("insert into ".$prefix."_pages values (NULL, '$cid', '$title', '$subtitle', '$active', '$page_header', '$text', '$page_footer', '$signature', now(), '0', '$clanguage')", $dbi);
+    mysqli_query($dbi, "insert into ".$prefix."_pages values (NULL, '$cid', '$title', '$subtitle', '$active', '$page_header', '$text', '$page_footer', '$signature', now(), '0', '$clanguage')");
     Header("Location: admin.php?op=accueil");
 }
 
 function accueil_save_edit($pid, $title, $subtitle, $page_header, $text, $page_footer, $signature, $clanguage, $active, $cid) {
     global $prefix, $dbi;
 
-// la ligne suivante ne sert qu'� debugger: elle g�n�re une erreur de header
-//	echo "<h3>Le texte a �t� sauv�</h3>".stripslashes($text)."<p>";
-    sql_query("update ".$prefix."_pages set cid='$cid', title='$title', subtitle='$subtitle', active='$active', page_header='$page_header', text='$text', page_footer='$page_footer', signature='$signature', clanguage='$clanguage' where pid='$pid'", $dbi);
+// la ligne suivante ne sert qu'é debugger: elle génére une erreur de header
+//	echo "<h3>Le texte a été sauvé</h3>".stripslashes($text)."<p>";
+    mysqli_query($dbi, "update ".$prefix."_pages set cid='$cid', title='$title', subtitle='$subtitle', active='$active', page_header='$page_header', text='$text', page_footer='$page_footer', signature='$signature', clanguage='$clanguage' where pid='$pid'");
     Header("Location: admin.php?op=accueil");
 }
 
@@ -401,7 +401,7 @@ function accueil_change_status($pid, $active) {
     } elseif ($active == 0) {
 	$new_active = 1;
     }
-    sql_query("update ".$prefix."_pages set active='$new_active' WHERE pid='$pid'", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_pages set active='$new_active' WHERE pid='$pid'");
     Header("Location: admin.php?op=accueil");
 }
 
@@ -409,7 +409,7 @@ function accueil_delete($pid, $ok=0) {
     global $prefix, $dbi;
 
     if ($ok==1) {
-        sql_query("delete from ".$prefix."_pages where pid='$pid'", $dbi);
+        mysqli_query($dbi, "delete from ".$prefix."_pages where pid='$pid'");
         Header("Location: admin.php?op=accueil");
     } else {
 include_once("header.php");
@@ -418,8 +418,8 @@ include_once("wysiwyg.inc");
 GraphicAdmin();
 title(""._HOMEMANAGER."");
 
-	$result = sql_query("select title from ".$prefix."_pages where pid='$pid'", $dbi);
-	list($title) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select title from ".$prefix."_pages where pid='$pid'");
+	list($title) = mysqli_fetch_row($result);
 	OpenTable();
 	echo "<center><b>"._DELCONTENT.": $title</b><br><br>"
 	    .""._DELCONTWARNING." $title?<br><br>"
@@ -452,7 +452,7 @@ function submitStory($name, $address, $subject, $story, $storyext, $topic, $alan
 	$story = FixQuotes(filter_text($story));
 	$storyext = FixQuotes(filter_text($storyext));
     }
-    $result = sql_query("insert into $prefix"._queue." values (NULL, '$uid', '$name', '$subject', '$story', '$storyext', now(), '$topic', '$alanguage')", $dbi);
+    $result = mysqli_query($dbi, "insert into $prefix"._queue." values (NULL, '$uid', '$name', '$subject', '$story', '$storyext', now(), '$topic', '$alanguage')");
     if(!$result) {
     	echo ""._ERROR."<br>";
 	exit();
@@ -463,8 +463,8 @@ function submitStory($name, $address, $subject, $story, $storyext, $topic, $alan
     }
 	
     OpenTable();
-    $result = sql_query("select * from $prefix"._queue."", $dbi);
-    $waiting = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select * from $prefix"._queue."");
+    $waiting = sql_num_rows($result);
     echo "<center><font class=\"title\">"._SUBSENT."</font><br><br>"
 	."<font class=\"accueil\"><b>"._THANKSSUB."</b><br><br>"
 	.""._SUBTEXT.""

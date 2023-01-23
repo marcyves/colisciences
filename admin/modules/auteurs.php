@@ -12,12 +12,12 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-$result = sql_query("select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radmincontent, $radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radmincontent, $radminsuper) = mysqli_fetch_row($result);
 if (($radmincontent==1) OR ($radminsuper==1)) {
 
 ######################################################################
-# Sp�cifique CoLiSciences
+# Spécifique CoLiSciences
 ######################################################################
 //$colisroot = "/var/www/html/Colis/";
 
@@ -40,18 +40,18 @@ function auteurs() {
 	<button type=\"submit\" name=\"op\" value=\"fichiers_auteur\">Afficher tous les fichiers</button>
 </td></tr>
 <tr><td colspan=\"2\">
-	Transf�rer un fichier:
+	Transférer un fichier:
 	<td>
 	<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"30000\" />
 	<input type=\"file\" name=\"userfile\" size=\"55\" >\n",
-	"<input type=\"submit\" value=\"Transf�rer\">
+	"<input type=\"submit\" value=\"Transférer\">
     <input type=\"hidden\" name=\"op\" value=\"auteur_upload\">
 Commentaire (html)ou Image (jpg)",
 "</td></tr>
-<tr><td width=\"2%\"></td><td></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>Nom et pr�nom</b></td></tr>";
+<tr><td width=\"2%\"></td><td></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>Nom et prénom</b></td></tr>";
 
-    $result0 = sql_query("select aid, nom, prenom from cb_auteurs order by nom, prenom", $dbi);
-    while($mypages0 = sql_fetch_array($result0, $dbi)) {
+    $result0 = mysqli_query($dbi, "select aid, nom, prenom from cb_auteurs order by nom, prenom");
+    while($mypages0 = mysqli_fetch_array($result0)) {
 		echo "<tr>
 			<td><input type=\"radio\" name=\"auteurId\" value=\"$mypages0[aid]\">
 			<td bgcolor=\"#AAAAAA\" colspan='5'>$mypages0[prenom] $mypages0[nom]</td></tr>";
@@ -66,7 +66,7 @@ Commentaire (html)ou Image (jpg)",
 	."<form action=\"admin.php\" method=\"post\">"
 	."<input type=\"hidden\" name=\"op\" value=\"add_auteur\">"
 	." <b>Nom:</b> <input type=\"text\" name=\"nom\" size=\"30\">"
-	." <b>Pr�nom:</b> <input type=\"text\" name=\"prenom\" size=\"30\"><br><br>"
+	." <b>Prénom:</b> <input type=\"text\" name=\"prenom\" size=\"30\"><br><br>"
 	." <input type=\"submit\" value=\""._ADD."\">"
 	."</form>";
     CloseTable();
@@ -75,7 +75,7 @@ Commentaire (html)ou Image (jpg)",
     include("footer.php");
 }
 
-// Formulaire d'�dition des caract�ristiques d'un auteur
+// Formulaire d'édition des caractéristiques d'un auteur
 
 function displayForm($caption, $title, $auteur, $active, $debut, $nombre_pages,$nombre_noeuds,$dossier,$signature,$texteActif,$notionActif, $facActif) {
     global $prefix, $dbi, $language, $multilingual, $bgcolor2;
@@ -85,8 +85,8 @@ function displayForm($caption, $title, $auteur, $active, $debut, $nombre_pages,$
 	."<table width=\"80%\" align=\"center\">"
 	."<tr><td colspan=\"5\" align=\"center\"><b>"._TITLE.":</b> <input type=\"text\" name=\"titre\" value=\"$title\" size=\"50\">"
 	."<tr><td colspan=\"3\"><b>"._AUTHOR."</b><br><select name=\"auteur\">";
-    $result = sql_query("select aid, nom, prenom from cb_auteurs order by nom, prenom", $dbi);
-	while (list($aid, $nom, $prenom) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select aid, nom, prenom from cb_auteurs order by nom, prenom");
+	while (list($aid, $nom, $prenom) = mysqli_fetch_row($result)) {
 		echo "<option value=\"$aid\"";
 		if ($auteur==$aid) { echo "selected";}
 		echo ">$prenom $nom</option>";
@@ -111,7 +111,7 @@ function displayForm($caption, $title, $auteur, $active, $debut, $nombre_pages,$
 	echo ">Notions<br>"
 	."<input type=\"checkbox\" name=\"facActif\" value=\"1\"";
 	if ($facActif) echo "checked";
-	echo ">Fac-simil�<br>";
+	echo ">Fac-similé<br>";
 	if ($caption=="Ajouter un nouvel ouvrage"){
 		echo "<input type=\"hidden\" name=\"op\" value=\"add_ouvrage\">"
 		."<tr><td colspan=\"4\" align=\"center\"><input type=\"submit\" value=\""._ADD."\">";
@@ -125,8 +125,8 @@ function displayForm($caption, $title, $auteur, $active, $debut, $nombre_pages,$
 function terms($eid) {
     global $module_name, $prefix, $sitename, $dbi, $admin;
 
-	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='$eid'", $dbi);
-	while (list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='$eid'");
+	while (list($tid, $title) = mysqli_fetch_row($result)) {
 		echo "<option value=\"$tid\">$title</option>";
 	}
 }
@@ -147,8 +147,8 @@ function auteur_upload($pid){
 			echo "<center>Erreur $erreur pendant le transfert</center>";
 	}else {
 		if ($pid!=""){
-    		$result = sql_query("select Nom, Prenom from cb_auteurs where aid='$pid'", $dbi);
-			list($nom, $prenom) = sql_fetch_row($result, $dbi);
+    		$result = mysqli_query($dbi, "select Nom, Prenom from cb_auteurs where aid='$pid'");
+			list($nom, $prenom) = mysqli_fetch_row($result);
 
 			if ($file_type=="image/jpeg"){
 				$ext = ".jpg";
@@ -161,13 +161,13 @@ function auteur_upload($pid){
 			if ($ext!=""){
 				$target = $webroot."auteurs/".$prenom."_".$nom.$ext;
 				$target = str_replace(" ","_",$target);
-				echo "<center><b>Transfert pour: $prenom $nom ($pid)</b><br>Fichier cr�� : ".$target."</center>";	
+				echo "<center><b>Transfert pour: $prenom $nom ($pid)</b><br>Fichier créé : ".$target."</center>";	
 
 				/* COPY THE FILE TO THE DESIRED DESTINATION */	
 				copy ($file, $target);
 			}
 		}else{
-			echo "<p>Il faut s�lectionner un auteur";
+			echo "<p>Il faut sélectionner un auteur";
 		}
 	}
 	CloseTable();
@@ -184,7 +184,7 @@ function auteur_upload($pid){
 function add_auteur($nom, $prenom) {
     global $dbi;
 
-    sql_query("insert into cb_auteurs values (NULL, '$nom', '$prenom')", $dbi);
+    mysqli_query($dbi, "insert into cb_auteurs values (NULL, '$nom', '$prenom')");
     Header("Location: admin.php?op=auteurs");
 }
 
@@ -196,7 +196,7 @@ function add_auteur($nom, $prenom) {
  */
 function auteur_delete($aid) {
     global $dbi;
-    sql_query("delete from cb_auteurs where aid='$aid'", $dbi);
+    mysqli_query($dbi, "delete from cb_auteurs where aid='$aid'");
     Header("Location: admin.php?op=auteurs");
 }
 

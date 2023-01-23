@@ -19,7 +19,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-// Initialisation pour pr�parer le parsing d'un fichier XML
+// Initialisation pour préparer le parsing d'un fichier XML
 $file1 = "/var/www/html/Colis/$ouvrage/$valeur.xml";
 $suivant = $valeur + 1;
 $file2 = "/var/www/html/Colis/$ouvrage/$suivant.xml";
@@ -78,25 +78,25 @@ if (($paragraphe1['partie'] == $paragraphe2['partie'])&&($paragraphe1['chapitre'
 		}
 	} while ($i>0);
 	
-//Cr�ation du fichier XML pour �criture
+//Création du fichier XML pour écriture
 	$tmp = createHeaderXML().$xml1->get_file();
 
     if ($pointer = @fopen($file1, "w")) {
 		fwrite($pointer,$tmp);
 	}
-	echo "<h3>Les paragraphes $valeur et $suivant ont �t� fusionn�s.</h3>";
+	echo "<h3>Les paragraphes $valeur et $suivant ont été fusionnés.</h3>";
 
-//Efface le deuxi�me paragraphe 
+//Efface le deuxiéme paragraphe 
 	unlink($file2);	
-	echo "<h3>Le paragraphe $suivant est effac�.</h3>";
+	echo "<h3>Le paragraphe $suivant est effacé.</h3>";
 
-//Renum�rotation des paragraphes � partir de suivant
+//Renumérotation des paragraphes é partir de suivant
 	for ($i=$suivant;$i<$nombre_noeuds;$i++){
 		$destination = "/var/www/html/Colis/$ouvrage/$i.xml";
 		$j = $i + 1;
 		$source = "/var/www/html/Colis/$ouvrage/$j.xml";
 		copy ($source,$destination);
-//On renum�rote le paragraphe comme attribut XML dans le fichier
+//On renumérote le paragraphe comme attribut XML dans le fichier
 	    $xml = new XML($destination);
    
 // Selectionne toutes les balises de l'ouvrage.
@@ -105,7 +105,7 @@ if (($paragraphe1['partie'] == $paragraphe2['partie'])&&($paragraphe1['chapitre'
         $paragraphe = $xml->get_attributes($arbreXML."/paragraphe[1]");
 		$paragraphe['numero'] = $i;
 		$xml->set_attributes($arbreXML."/paragraphe[1]",$paragraphe);
-//Cr�ation du fichier XML pour �criture
+//Création du fichier XML pour écriture
 	$tmp = createHeaderXML().$xml->get_file();
 
     if ($pointer = @fopen($destination, "w")) {
@@ -114,12 +114,12 @@ if (($paragraphe1['partie'] == $paragraphe2['partie'])&&($paragraphe1['chapitre'
 		unset($xml);
 	}
 	$suivant = $suivant + 1;
-	echo "<h3>Les paragraphes $suivant � $nombre_noeuds ont �t� renum�rot�s.</h3>";
+	echo "<h3>Les paragraphes $suivant é $nombre_noeuds ont été renumérotés.</h3>";
 
 	$nextStep = "paragraphe";
 
 } else {
-	echo "<h3>Les paragraphes $valeur et $suivant ne peuvent pas �tre fusionn�s.</h3>Ils ne font pas partie de la m�me unit� de texte.";
+	echo "<h3>Les paragraphes $valeur et $suivant ne peuvent pas étre fusionnés.</h3>Ils ne font pas partie de la méme unité de texte.";
 }
 
  ?>

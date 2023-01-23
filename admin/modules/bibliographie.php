@@ -12,8 +12,8 @@
 /************************************************************************/
 
 if (!("admin.php", $PHP_SELF)) { die ("Access Denied"); }
-$result = sql_query("select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radmincontent, $radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radmincontent, $radminsuper) = mysqli_fetch_row($result);
 if (($radmincontent==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -31,8 +31,8 @@ function bibliographies() {
     echo "<table border=\"1\" width=\"100%\">
 	<tr><td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des auteurs en ligne dans CoLiSciences</b></td></tr>";
 
-    $result0 = sql_query("select aid, nom, prenom from cb_auteurs order by nom, prenom", $dbi);
-    while($mypages0 = sql_fetch_array($result0, $dbi)) {
+    $result0 = mysqli_query($dbi, "select aid, nom, prenom from cb_auteurs order by nom, prenom");
+    while($mypages0 = mysqli_fetch_array($result0)) {
 		echo "<tr><td bgcolor=\"#BBCCDD\">$mypages0[prenom] $mypages0[nom]</td><td width=\"8%\" align=\"center\">[ <a href=\"admin.php?op=bibliographie_display&id=$mypages0[aid]&categorie=biblio\"> Biblio</a> ]</td><td width=\"8%\" align=\"center\">[ <a href=\"admin.php?op=bibliographie_display&id=$mypages0[aid]&categorie=bio\"> Bio</a> ]</td></tr>";
 	}
     echo "</table>";
@@ -41,13 +41,13 @@ function bibliographies() {
 
     OpenTable();
     echo "<table border=\"1\" width=\"100%\">
-	<tr><td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des disciplines cit�es dans CoLiSciences</b></td></tr>";
+	<tr><td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des disciplines citées dans CoLiSciences</b></td></tr>";
 
-	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._DISCIPLINE."'", $dbi);
-	if (sql_num_rows($result, $dbi) == 0) {
-	    echo "<center><i>Il n'y a pas de discipline d�finie'.</i></center>";
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._DISCIPLINE."'");
+	if (sql_num_rows($result) == 0) {
+	    echo "<center><i>Il n'y a pas de discipline définie'.</i></center>";
 	}
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 		echo "<tr><td bgcolor=\"#BBCCDD\">$title</td><td width=\"8%\" align=\"center\">[ <a href=\"admin.php?op=bibliographie_display&id=$tid&categorie=discipline\"> Biblio</a> ]</td></tr>";
 	}
     echo "</table>";
@@ -56,13 +56,13 @@ function bibliographies() {
 
     OpenTable();
     echo "<table border=\"1\" width=\"100%\">
-	<tr><td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des domaines cit�s dans CoLiSciences</b></td></tr>";
+	<tr><td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des domaines cités dans CoLiSciences</b></td></tr>";
 
-	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._DOMAINE."'", $dbi);
-	if (sql_num_rows($result, $dbi) == 0) {
-	    echo "<center><i>Il n'y a pas de discipline d�finie'.</i></center>";
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._DOMAINE."'");
+	if (sql_num_rows($result) == 0) {
+	    echo "<center><i>Il n'y a pas de discipline définie'.</i></center>";
 	}
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 		echo "<tr><td bgcolor=\"#BBCCDD\">$title</td><td width=\"8%\" align=\"center\">[ <a href=\"admin.php?op=bibliographie_display&id=$tid&categorie=domaine\"> Biblio</a> ]</td></tr>";
 	}
     echo "</table>";
@@ -70,7 +70,7 @@ function bibliographies() {
     echo "<br>";
 
 
-    title("Ajouter une nouvelle entr�e de bibliographie");
+    title("Ajouter une nouvelle entrée de bibliographie");
     OpenTable();
 	displayForm("Bibliographie sur les auteurs (bio)", "","bio","","","","","","","","","","");
     CloseTable();
@@ -100,23 +100,23 @@ function bibliographie_display($id, $categorie){
 
 	switch ($categorie){
 	case "bio":
-	    $sql = sql_query("select nom, prenom from cb_auteurs where aid='$id'",$dbi);
-   		list($nom, $prenom) = sql_fetch_row($sql, $dbi);
+	    $sql = mysqli_query($dbi, "select nom, prenom from cb_auteurs where aid='$id'");
+   		list($nom, $prenom) = mysqli_fetch_row($sql);
 		$tmp = "Les oeuvres sur $prenom $nom";
 	break;
 	case "biblio":
-	    $sql = sql_query("select nom, prenom from cb_auteurs where aid='$id'",$dbi);
-   		list($nom, $prenom) = sql_fetch_row($sql, $dbi);
+	    $sql = mysqli_query($dbi, "select nom, prenom from cb_auteurs where aid='$id'");
+   		list($nom, $prenom) = mysqli_fetch_row($sql);
 		$tmp = "Les oeuvres de $prenom $nom";
 	break;
 	case "discipline":
-		$sql = sql_query("select title from ".$prefix."_encyclopedia_text WHERE tid='$id' and eid='"._DISCIPLINE."'", $dbi);
-   		list($title) = sql_fetch_row($sql, $dbi);
+		$sql = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia_text WHERE tid='$id' and eid='"._DISCIPLINE."'");
+   		list($title) = mysqli_fetch_row($sql);
 		$tmp = "Les oeuvres de $title";
 	break;
 	case "domaine":
-		$sql = sql_query("select title from ".$prefix."_encyclopedia_text WHERE tid='$id' and eid='"._DOMAINE."'", $dbi);
-   		list($title) = sql_fetch_row($sql, $dbi);
+		$sql = mysqli_query($dbi, "select title from ".$prefix."_encyclopedia_text WHERE tid='$id' and eid='"._DOMAINE."'");
+   		list($title) = mysqli_fetch_row($sql);
 		$tmp = "Les oeuvres de $title";
 	break;
 	default:
@@ -126,14 +126,14 @@ function bibliographie_display($id, $categorie){
     title($tmp." ($categorie)");
 
 	OpenTable();
-    $sql = sql_query("select Numero, Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs from cb_biblio where Biblio='$id' and categorie='$categorie' order by Dates",$dbi);
+    $sql = mysqli_query($dbi, "select Numero, Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs from cb_biblio where Biblio='$id' and categorie='$categorie' order by Dates");
 
-	if (sql_num_rows($sql, $dbi) == 0) {
-	    echo "<center><i>Il n'y a pas de r�f�rences bibliographiques.</i></center>";
+	if (sql_num_rows($sql) == 0) {
+	    echo "<center><i>Il n'y a pas de références bibliographiques.</i></center>";
 	} else {
 	    echo "<table border=\"1\" width=\"100%\"><tr>"
-		."<td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des r�f�rences bibliographiques</b></td></tr>";
-	   	while (list($numero, $Dates, $type, $Titre, $Compil, $Lieu, $EditeurRevue, $Reference, $Commentaires, $Auteurs  ) = sql_fetch_row($sql, $dbi)) {
+		."<td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des références bibliographiques</b></td></tr>";
+	   	while (list($numero, $Dates, $type, $Titre, $Compil, $Lieu, $EditeurRevue, $Reference, $Commentaires, $Auteurs  ) = mysqli_fetch_row($sql)) {
 			$lien = "<td width=\"8%\" align=\"center\">[ <a href=\"admin.php?op=bibliographie_edit&id=$numero&categorie=$categorie\"> Modifier</a> ]</td><td width=\"8%\" align=\"center\">[ <a href=\"admin.php?op=bibliographie_delete&id=$numero&categorie=$categorie\"> Supprimer</a> ]</td>";
 			switch ($type){
 			case "Livre":
@@ -154,20 +154,20 @@ echo "</table>";
     include("footer.php");
 }
 
-// Formulaire d'�dition des caract�ristiques d'un bibliographie
+// Formulaire d'édition des caractéristiques d'un bibliographie
 
 function displayForm($caption, $numero, $categorie, $biblio, $dates, $type, $titre, $compil, $lieu, $editeurRevue, $reference, $commentaires, $auteurs ) {
     global $prefix, $dbi, $language, $multilingual, $bgcolor2;
 
-//Traduction champ type pour des boites � cocher "radio"
+//Traduction champ type pour des boites é cocher "radio"
 	$checkLivre = "";
 	$checkArticle = "";
 	if ($type=="Livre") {$checkLivre = "checked";}
 	if ($type=="Article") {$checkArticle = "checked";}
 	if ($categorie == "discipline"){
 		$tmp = "<b>Discipline</b><br><select name=\"biblio\">";
-		$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._DISCIPLINE."'", $dbi);
-		while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+		$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._DISCIPLINE."'");
+		while(list($tid, $title) = mysqli_fetch_row($result)) {
 			$tmp .= "<option value=\"$tid\"";
 			if ($biblio==$tid) { $tmp .= "selected";}
 			$tmp .= ">$title</option>";
@@ -175,8 +175,8 @@ function displayForm($caption, $numero, $categorie, $biblio, $dates, $type, $tit
 		$tmp .= "</select>";
 	} else 	if ($categorie == "domaine"){
 		$tmp = "<b>Domaine</b><br><select name=\"biblio\">";
-		$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._DOMAINE."'", $dbi);
-		while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+		$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._DOMAINE."'");
+		while(list($tid, $title) = mysqli_fetch_row($result)) {
 			$tmp .= "<option value=\"$tid\"";
 			if ($biblio==$tid) { $tmp .= "selected";}
 			$tmp .= ">$title</option>";
@@ -184,9 +184,9 @@ function displayForm($caption, $numero, $categorie, $biblio, $dates, $type, $tit
 		$tmp .= "</select>";
 	} else {
 	//Traduction champ biblio en nom d'auteur CoLiSciences
-		$tmp ="Auteur concern�<br>dans CoLiSciences <select name=\"biblio\">";
-   		$result = sql_query("select aid, nom, prenom from cb_auteurs order by nom, prenom", $dbi);
-		while (list($aid, $nom, $prenom) = sql_fetch_row($result, $dbi)) {
+		$tmp ="Auteur concerné<br>dans CoLiSciences <select name=\"biblio\">";
+   		$result = mysqli_query($dbi, "select aid, nom, prenom from cb_auteurs order by nom, prenom");
+		while (list($aid, $nom, $prenom) = mysqli_fetch_row($result)) {
 			$tmp .= "<option value=\"$aid\"";
 			if ($biblio==$aid) { $tmp .= "selected";}
 			$tmp .= ">$prenom $nom</option>";
@@ -210,7 +210,7 @@ function displayForm($caption, $numero, $categorie, $biblio, $dates, $type, $tit
 	<td><b>Auteur</b><br><input type=\"text\" name=\"auteurs\" value=\"$auteurs\" size=\"30\">
 <tr><td colspan=\"4\" ><b>commentaires</b><br><input type=\"text\" name=\"commentaires\" value=\"$commentaires\" size=\"100\">";
 
-//Les boutons de commande affich�s d�pendent de la fonction, identifi�e par le numero d'enregistrement � modifier vide
+//Les boutons de commande affichés dépendent de la fonction, identifiée par le numero d'enregistrement é modifier vide
  	if ($numero ==""){
 		echo "<input type=\"hidden\" name=\"op\" value=\"add_bibliographie\">"
 		."<tr><td colspan=\"4\" align=\"center\"><input type=\"submit\" value=\""._ADD."\">";
@@ -224,7 +224,7 @@ function displayForm($caption, $numero, $categorie, $biblio, $dates, $type, $tit
 function add_bibliographie($Biblio, $categorie , $Dates, $Type, $Titre, $Compil, $Lieu, $EditeurRevue, $Reference, $Commentaires, $Auteurs) {
     global $dbi;
 
-    sql_query("insert into cb_biblio values (NULL, '$Biblio', '$categorie', '$Dates', '$Type', '$Titre', '$Compil', '$Lieu', '$EditeurRevue', '$Reference', '$Commentaires', '$Auteurs')", $dbi);
+    mysqli_query($dbi, "insert into cb_biblio values (NULL, '$Biblio', '$categorie', '$Dates', '$Type', '$Titre', '$Compil', '$Lieu', '$EditeurRevue', '$Reference', '$Commentaires', '$Auteurs')");
 //echo "insert into cb_biblio values (NULL, '$Biblio', '$categorie', '$Dates', '$Type', '$Titre', '$Compil', '$Lieu', '$EditeurRevue', '$Reference', '$Commentaires', '$Auteurs')";
     Header("Location: admin.php?op=biblio");
 }
@@ -234,9 +234,9 @@ function bibliographie_edit($pid, $type) {
 
     include("header.php");
     GraphicAdmin();
-    title("Modification d'une entr�e de bibliographie");
-    $result = sql_query("select * from cb_biblio WHERE Numero='$pid'", $dbi);
-    $mypages = sql_fetch_array($result, $dbi);
+    title("Modification d'une entrée de bibliographie");
+    $result = mysqli_query($dbi, "select * from cb_biblio WHERE Numero='$pid'");
+    $mypages = mysqli_fetch_array($result);
 
     OpenTable();
 	displayForm(_EDITPAGECONTENT, $pid, $type, $mypages[Biblio], $mypages[Dates] , $mypages[Type],$mypages[Titre],$mypages[Compil],$mypages[Lieu], $mypages[EditeurRevue], $mypages[Reference], $mypages[Commentaires], $mypages[Auteurs]);
@@ -248,24 +248,24 @@ function bibliographie_edit($pid, $type) {
 function bibliographie_save_edit($Numero, $Biblio, $categorie , $Dates, $Type, $Titre, $Compil, $Lieu, $EditeurRevue, $Reference, $Commentaires, $Auteurs) {
     global $prefix, $dbi;
 //Numero  Biblio  categorie  Dates  Type  Titre  Compil  Lieu  EditeurRevue  Reference  Commentaires  Auteurs 
-    sql_query("update cb_biblio set  Biblio='$Biblio', categorie='$categorie', Dates='$Dates', Type='$Type', Titre='$Titre', Compil='$Compil', Lieu='$Lieu', EditeurRevue='$EditeurRevue', Reference='$Reference', Commentaires='$Commentaires', Auteurs='$Auteurs' where Numero='$Numero'", $dbi);
+    mysqli_query($dbi, "update cb_biblio set  Biblio='$Biblio', categorie='$categorie', Dates='$Dates', Type='$Type', Titre='$Titre', Compil='$Compil', Lieu='$Lieu', EditeurRevue='$EditeurRevue', Reference='$Reference', Commentaires='$Commentaires', Auteurs='$Auteurs' where Numero='$Numero'");
     Header("Location: admin.php?op=bibliographie_display&categorie=$categorie&id=$Biblio");
 }
 
 function bibliographie_delete($pid, $ok=0) {
     global $prefix, $dbi;
     if ($ok==1) {
-        sql_query("delete from cb_biblio where Numero='$pid'", $dbi);
+        mysqli_query($dbi, "delete from cb_biblio where Numero='$pid'");
         Header("Location: admin.php?op=biblio");
     } else {
         include("header.php");
         GraphicAdmin();
 		title(""._CONTENTMANAGER."");
-		$result = sql_query("select Titre from cb_biblio where Numero='$pid'", $dbi);
-		list($title) = sql_fetch_row($result, $dbi);
+		$result = mysqli_query($dbi, "select Titre from cb_biblio where Numero='$pid'");
+		list($title) = mysqli_fetch_row($result);
 		OpenTable();
 		echo "<center><b>Supprimer $title</b><br><br>"
-	    ."Etes-vous sur de vouloir supprimer cette r�f�rence?<br><br>"
+	    ."Etes-vous sur de vouloir supprimer cette référence?<br><br>"
 	    ."[ <a href=\"admin.php?op=biblio\">"._NO."</a> | <a href=\"admin.php?op=bibliographie_delete&amp;id=$pid&amp;ok=1\">"._YES."</a> ]</center>";
 		CloseTable();
         include("footer.php");

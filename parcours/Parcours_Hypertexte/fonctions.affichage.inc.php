@@ -35,16 +35,16 @@ function afficheEchelleCouleurs($maxCount, $compteur,$type){
 	$tmp = "";
 	if ($type!="style"){
 		if ($maxCount==0){
-			$tmp .= "<td width=\"15%\" align=\"center\"><h2>Il n'y a pas encore de parcours de lecture enregistré</h2>";
+			$tmp .= "<td width=\"15%\" align=\"center\"><h2>Il n'y a pas encore de parcours de lecture enregistrÃ©</h2>";
 			$i = 0;
 			$l = substr("__________".$i." _",-8);
 			$tmp .= "<br>".boutonSelfCommande("&mode=short&limit=$i",$l,"_self","L$i");
 			//On s'assure que la couleur du bouton sera dans la feuille de style
 			$compteur->ajouteUnique($i);
 		}else{
-			//L'échelle de couleurs est affichée par l'intermédiaire d'une feuille de style
-			$tmp .= "<td width=\"15%\" align=\"center\"><small>cliquer une couleur limite l'affichage à ce niveau.</small>";
-			//On affiche toujours 20 boutons de couleur pour l'échelle
+			//L'Ã©chelle de couleurs est affichÃ©e par l'intermÃ©diaire d'une feuille de style
+			$tmp .= "<td width=\"15%\" align=\"center\"><small>cliquer une couleur limite l'affichage Ã© ce niveau.</small>";
+			//On affiche toujours 20 boutons de couleur pour l'Ã©chelle
 			if ($maxCount>20){
 				$step = ceil($maxCount/20)-1;
 			}else {
@@ -63,7 +63,7 @@ function afficheEchelleCouleurs($maxCount, $compteur,$type){
 	}
 
 // echo $compteur->liste("");
-// On a fini d'afficher les boutons, on passe à la feuille de style qui va afficher les
+// On a fini d'afficher les boutons, on passe Ã© la feuille de style qui va afficher les
 // couleurs correspondantes
 
 	echo "\n<style>";
@@ -180,9 +180,9 @@ function affichageFacSimile($num) {
  	creeLienNavigation($valeur,$num);
 
 	if (file_exists($webroot.$file)) {
-	    echo "<p align=\"center\"><a href=\"$file\" target=\"popup\"><img src=\"$file\" alt=\"Ouvrir la page $num dans une fenêtre\" width=\"$taille%\"></a><p>";
+	    echo "<p align=\"center\"><a href=\"$file\" target=\"popup\"><img src=\"$file\" alt=\"Ouvrir la page $num dans une fenÃ©tre\" width=\"$taille%\"></a><p>";
 	} else {
-		echo "<h3>Désolé, le fac-similé de la page $num n'est pas encore disponible</h3>";
+		echo "<h3>DÃ©solÃ©, le fac-similÃ© de la page $num n'est pas encore disponible</h3>";
 	}
 }
 
@@ -210,8 +210,8 @@ function affichageIcone($num, $classe) {
 
 /**
  * affiche()
- * Cette fonction sert à afficher tout ce qui apparait dans la boite sous les onglets.
- * Au départ prévue pour afficher les textes du corpus, elle a été "étendue" pour afficher
+ * Cette fonction sert Ã© afficher tout ce qui apparait dans la boite sous les onglets.
+ * Au dÃ©part prÃ©vue pour afficher les textes du corpus, elle a Ã©tÃ© "Ã©tendue" pour afficher
  * aussi de simples messages. 
  * @param $num
  * @param $texte
@@ -228,16 +228,16 @@ function affiche($titre1, $notion, $titre2, $glossaire, $titre3, $parcours3) {
 	global $paragraphe, $texte , $admin , $ouvrage, $webroot ;
 	global $prefix, $dbi;
 	
-//debug	echo "<p>affiche avec les paramètres: $titre1, $notion, $titre2, $glossaire, $titre3, $parcours3";
+//debug	echo "<p>affiche avec les paramÃ©tres: $titre1, $notion, $titre2, $glossaire, $titre3, $parcours3";
 		
 if ($titre3 == "msg") {
-//Nous ne sommes pas en train de présenter un paragraphe mais un simple message
+//Nous ne sommes pas en train de prÃ©senter un paragraphe mais un simple message
 	echo "<table><tr><td valign=\"top\">";
 	afficheShowHide("NOT$num", $titre1, $notion);
 	echo "</td></tr></table>";
 } else {
-//Nous sommes en train de présenter un paragraphe
-//Nous commençons par récupérer l'identifiant du paragraphe et de la page'
+//Nous sommes en train de prÃ©senter un paragraphe
+//Nous commenÃ©ons par rÃ©cupÃ©rer l'identifiant du paragraphe et de la page'
 	$num   = $paragraphe['numero'];
 	$page  = $paragraphe['page'];
     if ($num == ""){
@@ -247,7 +247,7 @@ if ($titre3 == "msg") {
 	if (($parcours!="sommaire")&&($parcours!="signets")){
 		creeLienNavigation($num);
 	}
-//Affichage des titres quand ils apparaissent, sinon vu que html ignore les balises on économise les tests.
+//Affichage des titres quand ils apparaissent, sinon vu que html ignore les balises on Ã©conomise les tests.
 	echo "<table>
 	<tr><td width=\"80%\"><h3>".$paragraphe['partie']."</h3>
 	<h4>".$paragraphe['chapitre']."</h4>
@@ -258,11 +258,11 @@ if ($titre3 == "msg") {
 	$file = "$ouvrage/$i.jpg";
 	if (file_exists($webroot."vignettes/".$file)) {
 	    echo "<a href=\"Fac/$file\" target=\"popup\">
-		<img src=\"vignettes/$file\" alt=\"Ouvrir la page $num dans une fenêtre\">
+		<img src=\"vignettes/$file\" alt=\"Ouvrir la page $num dans une fenÃ©tre\">
 		</a>";
 	} else {
-//		echo "Désolé<br>Le fac-similé ".$webroot.$file." de la page $num n'est pas encore disponible.";
-		echo "<small>Désolé<br>L'imagette de la page $num n'est pas disponible.</small>";
+//		echo "DÃ©solÃ©<br>Le fac-similÃ© ".$webroot.$file." de la page $num n'est pas encore disponible.";
+		echo "<small>DÃ©solÃ©<br>L'imagette de la page $num n'est pas disponible.</small>";
 	}
 	echo "</td></tr>\n</table>\n";
 	
@@ -307,10 +307,10 @@ if ($titre3 == "msg") {
 <table>
 	<tr><td>
 		<select name=\"notion\">
-				<option>sélectionner une notion principale</option>";
+				<option>sÃ©lectionner une notion principale</option>";
 
-	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._NOTION."' order by title", $dbi);
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._NOTION."' order by title");
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 		$listeNotions .= "<option>$title</option>";
 	}
 $tmp .= "
@@ -318,15 +318,15 @@ $tmp .= "
 		</select>
 	</td><td>
 		<select name=\"relation\">
-		<option>sélectionner une relation</option>
+		<option>sÃ©lectionner une relation</option>
 		<option>association</option>
 		<option>opposition</option>
 		<option>composition</option>
-		<option>réitération</option>
+		<option>rÃ©itÃ©ration</option>
 		</select>
 	</td><td>
 		<select name=\"liennotion\">
-		<option>sélectionner une notion liée</option>
+		<option>sÃ©lectionner une notion liÃ©e</option>
 		$listeNotions
 		</select>
 	</td></tr>
@@ -349,7 +349,7 @@ $tmp .= "
  * @return 
  */
 function parseEncyclopedie($texte, $eid){
-	// Variables globales pour accès à l'encyclopédie
+	// Variables globales pour accÃ©s Ã© l'encyclopÃ©die
     global $prefix, $dbi, $sitename, $admin, $multilingual, $module_name;
 
 	// pad it with a space so we can match things at the start of the 1st line.
@@ -359,21 +359,21 @@ function parseEncyclopedie($texte, $eid){
 		$label = "Glossaire";
 	break;
 	case _AUTEURS:
-		$label = "Auteurs_cités";
+		$label = "Auteurs_citÃ©s";
 	break;
 		}
-	// On lit la table des mots du glossaire par ordre alphabétique décroissant pour lire les mots composés
+	// On lit la table des mots du glossaire par ordre alphabÃ©tique dÃ©croissant pour lire les mots composÃ©s
 	// avant le mot simple.
-	// Par exemple 'sulfate de magnésium' avant 'sulfate'
+	// Par exemple 'sulfate de magnÃ©sium' avant 'sulfate'
 	// et pour les remplacer par un lien dans le texte
-	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='$eid' order by title desc", $dbi);
-	if (sql_num_rows($result, $dbi) == 0) {
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='$eid' order by title desc");
+	if ($result->num_rows == 0) {
 	    echo "<center>Le Glossaire n'est pas disponible.</center>";
 	}
 	$i = 0;
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 //debug 	echo "#$title#<br>";
-// Premier test pour ne pas imbriquer les liens dans le glossaire (mots composés)
+// Premier test pour ne pas imbriquer les liens dans le glossaire (mots composÃ©s)
 		if (!preg_match ( "{>".$title."}i", $ret) ){
 			$ret = preg_replace("{(".$title.")\b}i", 
 					"<a href=\"parcours.php?name=$label&op=content&tid=".$tid."\" class=\"$label\" target=\"_blank\">\\1</a>", 
@@ -496,14 +496,14 @@ function creeLienNotion($paragraphe, $notion, $type) {
  */
 function creeLienNavigation($paragraphe,$numPage="") {
     global $admin,$ouvrage,$parcours,$nombre_noeuds, $nombre_pages, $taille, $dbi ;
-	// variables correspondant aux entités de la DTD
+	// variables correspondant aux entitÃ©s de la DTD
     global $titre;
     global $nom, $prenom;
     global $editeur, $ville, $date;
     global $numero, $partie, $chapitre, $souschapitre;
     global $texte;
 
-	//Calibrage des liens 'suivant' et 'précédent'
+	//Calibrage des liens 'suivant' et 'prÃ©cÃ©dent'
     $suivant = $paragraphe + 1;
     $precedent = $paragraphe - 1;
     if ($suivant > $nombre_noeuds ) { $suivant = 1; }
@@ -511,7 +511,7 @@ function creeLienNavigation($paragraphe,$numPage="") {
 
 	echo "<table><tr><td valign=\"top\">";
     $lien = "";
-	//les administrateurs peuvent éditer le fichier XML du paragraphe
+	//les administrateurs peuvent Ã©diter le fichier XML du paragraphe
     if ($admin) {
          $lien .= "<form method=\"post\" action=\"parcours.php?name=Parcours_Hypertexte&file=moteurCB&ouvrage=$ouvrage&parcours=edition&valeur=$paragraphe\">";
          $lien .= "\n<input type=hidden name=titre value=\"$titre\">";
@@ -536,7 +536,7 @@ function creeLienNavigation($paragraphe,$numPage="") {
     if ($admin) {
          $lien .= "<input type=submit value=\"Modifier $paragraphe\">";
     } else {  
-         $lien .= "§: $paragraphe";
+         $lien .= "Ã©: $paragraphe";
     }
 	$lien .= creeLien($suivant, "menunav", " >", $parcours);
 	$lien .= " ";
@@ -571,7 +571,7 @@ function creeLienNavigation($paragraphe,$numPage="") {
 		if (!isset($taille)) $taille=60;
 	    echo "<td valign=\"top\"><form action=\"parcours.php?name=Parcours_Hypertexte&file=moteurCB&ouvrage=$ouvrage&parcours=Fac&valeur=$num\" method=\"post\">
 		Echelle: <input type=\"text\" name=\"newtaille\" value=\"$taille\" size=\"4\">
-		<input type=\"submit\" value=\"Modifier\">(exemple: 50 pour diminuer de moitié)
+		<input type=\"submit\" value=\"Modifier\">(exemple: 50 pour diminuer de moitiÃ©)
 		</form></td>";
 	}
 	echo "<td valign=\"top\">";
@@ -591,14 +591,14 @@ function afficheIconeLecto($paragraphe){
 
 	$tmp = "";
 		
-	$sql = sql_query("select count from cb_parcours_paragraphe where ouvrage=$ouvrage and source='$paragraphe'",$dbi);
-	sql_query($sql, $dbi);
-	list($count) = sql_fetch_row($sql, $dbi);
+	$result = mysqli_query($dbi, "select count from cb_parcours_paragraphe where ouvrage=$ouvrage and source='$paragraphe'");
+	//mysqli_query($dbi, $sql);
+	list($count) = mysqli_fetch_row($result);
 	$compteur->ajouteUnique($count);
 
-	$sql = sql_query("select max(count) from cb_parcours_paragraphe where ouvrage='$ouvrage' and source != '1' ",$dbi);
-	sql_query($sql, $dbi);
-	list($maxCount) = sql_fetch_row($sql, $dbi);
+	$result = mysqli_query($dbi, "select max(count) from cb_parcours_paragraphe where ouvrage='$ouvrage' and source != '1' ");
+	//	mysqli_query($dbi, $sql);
+	list($maxCount) = mysqli_fetch_row($result);
 
 	$tmp .= affichageIcone("$count", "C".$count);
 	$limit = afficheEchelleCouleurs($maxCount, $compteur,"style");
@@ -618,29 +618,29 @@ function traitementNotions($typeParcours){
 	//echo "<p>relance pour $titre($ouvrage) de $prenom $nom pour la notion $notion type $type";
 
 if ($notion == "") {
-// Ce n'est pas une recherche de notion spécifique
+// Ce n'est pas une recherche de notion spÃ©cifique
 	decodeDocument($valeur);
 	affiche( "Notions et relations de ce paragraphe", $notionsParagraphe->lien($valeur), "Mots et notions", $motclef->liste("motclef"),"Parcours", $memoire->paragraphe("icone"));
 	$flagParcours = true;
 } else {
-//on est en train de lire un ouvrage à la recherche de notions
+//on est en train de lire un ouvrage Ã© la recherche de notions
 	if ($valeur >= $nombre_noeuds) {
-	//on a dépassé la fin: on termine la boucle dans le moteur
+	//on a dÃ©passÃ© la fin: on termine la boucle dans le moteur
 		if ($transCorpus) {
 			affiche( "La recherche continue sur l'ouvrage suivant",  "", "", "","msg","");
 			$nextStep = "ouvrage_suivant";
 			$parcours = $typeParcours;		
 		} else {
-		//affiche( "Recherche terminée",  "La fin de l'ouvrage est atteinte.", "", "","msg","");
+		//affiche( "Recherche terminÃ©e",  "La fin de l'ouvrage est atteinte.", "", "","msg","");
 			$nextStep = "";
 			$flagParcours = true;
 		}
 	} else {
-	//on étudie ce paragraphe
-	//debug echo "<h2>on décode le paragraphe $valeur</h2>";
+	//on Ã©tudie ce paragraphe
+	//debug echo "<h2>on dÃ©code le paragraphe $valeur</h2>";
 		decodeDocument($valeur);
 
-		//on affiche le titre la première fois
+		//on affiche le titre la premiÃ©re fois
 		if (!$flagTitreNotion){
 			echo "<font class=\"title2\">Etude de la notion $notion apparaissant comme";
 			switch ($typeParcours){
@@ -648,10 +648,10 @@ if ($notion == "") {
 				echo " notion principale</font><br>";
 			break;
 			case "notion_secondaire":
-				echo " notion liée</font><br>";
+				echo " notion liÃ©e</font><br>";
 			break;
 			case "notion_entrambi":
-				echo " notion principale ou liée</font><br>";
+				echo " notion principale ou liÃ©e</font><br>";
 			break;
 			}
 			if($transCorpus){
@@ -706,7 +706,7 @@ if ($notion == "") {
             }
             $ancienTitre = $titre;
 		}
-				//préparation pour le paragraphe suivant
+				//prÃ©paration pour le paragraphe suivant
 		$nextStep = $typeParcours;
 		$valeur = $valeur + 1;
 
@@ -726,7 +726,7 @@ function api_colis_affiche_date($date,$format){
 		return $t;
 	break;
 	default:
-		return "le ". $y." à ".$t;
+		return "le ". $y." Ã© ".$t;
 	}
 }
 
@@ -750,13 +750,13 @@ function api_gethost ($ip) {
 function api_colis_user_id($userColis){
 	global $HTTP_SERVER_VARS;
 	global $debut_execution, $admin;
-// Identification des surfeurs non loggés
+// Identification des surfeurs non loggÃ©s
 //debug   if ($admin) {echo "<br>Dans api_colis_user_id ($userColis): ".ecrire_temps($debut_execution, "4");}
 
 	if ($userColis == "anonyme") {
 //		$userColis = gethostbyaddr($HTTP_SERVER_VARS['REMOTE_ADDR']);
 		$userColis = api_gethost($HTTP_SERVER_VARS['REMOTE_ADDR']);
-//debug	if ($admin) {echo "<br>Après api_gethost($userColis): ".ecrire_temps($debut_execution, "4");}
+//debug	if ($admin) {echo "<br>AprÃ©s api_gethost($userColis): ".ecrire_temps($debut_execution, "4");}
 		if ($userColis=="")
 		{
 			$userColis = $HTTP_SERVER_VARS['REMOTE_ADDR'];
@@ -836,63 +836,63 @@ function enregistreLeParcours($userColis, $ouvrage, $source, $time, $etape, $par
 
 //	$userColis = api_colis_user_id($userColis);	
 
-//	if ($admin) {echo "<br>Après api_colis_user_id : ".ecrire_temps($debut_execution, "4");}
+//	if ($admin) {echo "<br>AprÃ©s api_colis_user_id : ".ecrire_temps($debut_execution, "4");}
 
-	$sql = sql_query("select avg(elapsed) from cb_parcours where ouvrage='$ouvrage' and source='$source'",$dbi);
-	sql_query($sql, $dbi);
-	list($moyenne) = sql_fetch_row($sql, $dbi);
+	$result = mysqli_query($dbi, "select avg(elapsed) from cb_parcours where ouvrage='$ouvrage' and source='$source'");
+//	mysqli_query($sql, $dbi);
+	list($moyenne) = mysqli_fetch_row($result);
 	$moyenne = round($moyenne,1);
-	if ($admin) {echo "<br>Après avg(elapsed)=<$moyenne> : ".ecrire_temps($debut_execution, "4");}
+	if ($admin) {echo "<br>AprÃ©s avg(elapsed)=<$moyenne> : ".ecrire_temps($debut_execution, "4");}
 
-	$tmp = "<p>Vous venez du § $source<br>Vous l'avez lu pendant $time sec. soit ".calcElapsedTime($memoire->quand());
+	$tmp = "<p>Vous venez du paragraphe $source<br>Vous l'avez lu pendant $time sec. soit ".calcElapsedTime($memoire->quand());
 
 	if ($moyenne>0){
-		$sql = sql_query("select count from cb_parcours_paragraphe where ouvrage=$ouvrage and source='$source'",$dbi);
-		sql_query($sql, $dbi);
-		list($count) = sql_fetch_row($sql, $dbi);
-		if ($admin) {echo "<br>Après count=<$count> : ".ecrire_temps($debut_execution, "4");}
+		$result = mysqli_query($dbi, "select count from cb_parcours_paragraphe where ouvrage=$ouvrage and source='$source'");
+		//mysqli_query($dbi, $sql);
+		list($count) = mysqli_fetch_row(result);
+		if ($admin) {echo "<br>AprÃ¨s count=<$count> : ".ecrire_temps($debut_execution, "4");}
 
 		if ($count>1){
-			$tmp .= "<br>Les $count lecteurs précédents ont passé en moyenne $moyenne sec. sur le même paragraphe.";
+			$tmp .= "<br>Les $count lecteurs prÃ©cÃ©dents ont passÃ© en moyenne $moyenne sec. sur le mÃ©me paragraphe.";
 		}else{
-			$tmp .= "<br>Le lecteur précédent a passé $moyenne sec. sur ce paragraphe.";
+			$tmp .= "<br>Le lecteur prÃ©cÃ©dent a passÃ© $moyenne sec. sur ce paragraphe.";
 		}
-/* Il semble que cette joyeuseté nous pompe les perfs
+/* Il semble que cette joyeusetÃ© nous pompe les perfs
 * On la commente vu qu'on ne l'utilise pas
-		$sql = sql_query("select distinct source from cb_parcours where ouvrage=$ouvrage and cible='$cible'",$dbi);
-		sql_query($sql, $dbi);
-		$tmp .= "<br><br>Quand ils sont arrivés sur $cible<br>... les autres lecteurs venaient de";
-		while (list($tmp1) = sql_fetch_row($sql, $dbi)){
+		$sql = mysqli_query($dbi, "select distinct source from cb_parcours where ouvrage=$ouvrage and cible='$cible'");
+		mysqli_query($dbi, $sql);
+		$tmp .= "<br><br>Quand ils sont arrivÃ©s sur $cible<br>... les autres lecteurs venaient de";
+		while (list($tmp1) = mysqli_fetch_row($sql)){
 			$tmp .=" $tmp1,";
 //			$tmp .= " ".afficheIconeLecto($paragraphe).",";
 		}
-		if ($admin) {echo "<br>Après distinct source   : ".ecrire_temps($debut_execution, "4");}
+		if ($admin) {echo "<br>AprÃ©s distinct source   : ".ecrire_temps($debut_execution, "4");}
 
-		$sql = sql_query("select distinct cible from cb_parcours where ouvrage=$ouvrage and source='$source'",$dbi);
-		sql_query($sql, $dbi);
+		$sql = mysqli_query($dbi, "select distinct cible from cb_parcours where ouvrage=$ouvrage and source='$source'");
+		mysqli_query($dbi, $sql);
 		$tmp .="<br>... les autres lecteurs sont partis vers";
-		while (list($tmp1) = sql_fetch_row($sql, $dbi)){
+		while (list($tmp1) = mysqli_fetch_row($sql)){
 			$tmp .=" $tmp1,";
 //			$tmp .= " ".afficheIconeLecto($paragraphe).",";
 		} */
 	}else{
-		$tmp .= "<br>Ce paragraphe n'a pas encore été lu.";
+		$tmp .= "<br>Ce paragraphe n'a pas encore Ã©tÃ© lu.";
 	}
 
 	if ($time>500){
-		$tmp .= "<br>Votre temps de lecture parait très élevé, il ne sera pas comptabilisé.";
+		$tmp .= "<br>Votre temps de lecture parait trÃ©s Ã©levÃ©, il ne sera pas comptabilisÃ©.";
 	}else{
 		$sql = "insert into cb_parcours values ( NULL, NULL,'$etape','$ouvrage','$source', '$parcours', '$cible', '$type', '$notion0', '$userColis','$time')";
-		sql_query($sql, $dbi);
+		mysqli_query($dbi, $sql);
 
 		$count += 1;
 		$sql = "update cb_parcours_paragraphe set count=$count where ouvrage='$ouvrage' and paragraphe='$source'";
-		sql_query($sql, $dbi);
-//A ajouter pour mise à jour 	 cb_parcours_count	
+		mysqli_query($dbi, $sql);
+//A ajouter pour mise Ã  jour 	 cb_parcours_count	
 		$sql = "select count, elapsed from cb_parcours_count where ouvrage='$ouvrage' and user='$userColis'";
 //debug		echo "<p>$sql";
-		$result = sql_query($sql, $dbi);
-		list($count, $elapsed) = sql_fetch_row($result, $dbi);
+		$result = mysqli_query($dbi, $sql);
+		list($count, $elapsed) = mysqli_fetch_row($result);
 		$count +=  1;
 		$elapsed += $time;
 		if ($count==1){
@@ -901,7 +901,7 @@ function enregistreLeParcours($userColis, $ouvrage, $source, $time, $etape, $par
 			$sql = "update cb_parcours_count set count=$count, elapsed=$elapsed where ouvrage='$ouvrage' and user='$userColis'";
 		}
 //debug		echo "<p>$sql";
-		sql_query($sql, $dbi);
+		mysqli_query($dbi, $sql);
 ////////////////////////////////////
 
 	}

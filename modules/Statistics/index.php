@@ -9,7 +9,7 @@
 /*                                                                      */
 /* Enhanced with NukeStats Module Version 1.0                           */
 /* ==========================================                           */
-/* Copyright ©2002 by Harry Mangindaan (sens@indosat.net) and           */
+/* Copyright ï¿½2002 by Harry Mangindaan (sens@indosat.net) and           */
 /*                    Sudirman (sudirman@akademika.net)                 */
 /* http://www.nuketest.com                                              */
 /*                                                                      */
@@ -46,8 +46,8 @@ $nowyear = $dot[2];
 function Stats_Main() {
     global $prefix, $dbi, $startdate, $sitename, $ThemeSel, $user_prefix, $Version_Num;
     include("header.php");
-    $result = sql_query("select type, var, count from ".$prefix."_counter order by type desc", $dbi);
-    while(list($type, $var, $count) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select type, var, count from ".$prefix."_counter order by type desc");
+    while(list($type, $var, $count) = mysqli_fetch_row($result)) {
 	if(($type == "total") && ($var == "hits")) {
 		$total = $count;
 	} elseif($type == "browser") {
@@ -147,16 +147,16 @@ function Stats_Main() {
     CloseTable2();
     echo "<br><br>\n";
 
-    $unum = sql_num_rows(sql_query("select * from ".$user_prefix."_users", $dbi));
-    $anum = sql_num_rows(sql_query("select * from ".$prefix."_authors", $dbi));
-//    $snum = sql_num_rows(sql_query("select * from ".$prefix."_stories", $dbi));
-//    $cnum = sql_num_rows(sql_query("select * from ".$prefix."_comments", $dbi));
-//    $secnum = sql_num_rows(sql_query("select * from ".$prefix."_sections", $dbi));
-//    $secanum = sql_num_rows(sql_query("select * from ".$prefix."_seccont", $dbi));
-//    $subnum = sql_num_rows(sql_query("select * from ".$prefix."_queue", $dbi));
-//    $tnum = sql_num_rows(sql_query("select * from ".$prefix."_topics", $dbi));
-//    $links = sql_num_rows(sql_query("select * from ".$prefix."_links_links", $dbi));
-//    $cat = sql_num_rows(sql_query("select * from ".$prefix."_links_categories", $dbi));
+    $unum = sql_num_rows(mysqli_query($dbi, "select * from ".$user_prefix."_users"));
+    $anum = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_authors"));
+//    $snum = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_stories"));
+//    $cnum = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_comments"));
+//    $secnum = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_sections"));
+//    $secanum = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_seccont"));
+//    $subnum = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_queue"));
+//    $tnum = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_topics"));
+//    $links = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_links_links"));
+//    $cat = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_links_categories"));
 
     OpenTable2();
     echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" align=\"center\"><tr><td colspan=\"2\">\n";
@@ -183,26 +183,26 @@ function Stats_Main() {
 
 function Stats($total) {
     global $hlpfile,$nowyear,$nowmonth,$nowdate,$nowhour, $sitename, $startdate, $prefix, $dbi, $now;
-    $result = sql_query("select count from ".$prefix."_counter order by type desc", $dbi);
-    list($total) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select count from ".$prefix."_counter order by type desc");
+    list($total) = mysqli_fetch_row($result);
     include ("header.php");
     title("$sitename "._STATS."");
     OpenTable();
     OpenTable();
     echo "<center><font class=\"option\"><b>$sitename "._STATS."</b></font><br><br>"._WERECEIVED." <b>$total</b> "._PAGESVIEWS." $startdate<br>"._TODAYIS.": $now[0]/$now[1]/$now[2]<br><br>";
 
-    $result = sql_query("select year, month, hits from ".$prefix."_stats_month order by hits DESC limit 0,1", $dbi);
-    list($year, $month, $hits) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select year, month, hits from ".$prefix."_stats_month order by hits DESC limit 0,1");
+    list($year, $month, $hits) = mysqli_fetch_row($result);
     if ($month == 1) {$month = _JANUARY;} elseif ($month == 2) {$month = _FEBRUARY;} elseif ($month == 3) {$month = _MARCH;} elseif ($month == 4) {$month = _APRIL;} elseif ($month == 5) {$month = _MAY;} elseif ($month == 6) {$month = _JUNE;} elseif ($month == 7) {$month = _JULY;} elseif ($month == 8) {$month = _AUGUST;} elseif ($month == 9) {$month = _OCTOBER;} elseif ($month == 10) {$month = _SEPTEMBER;} elseif ($month == 11) {$month = _NOVEMBER;} elseif ($month == 12) {$month = _DECEMBER;}
     echo ""._MOSTMONTH.": $month $year ($hits "._HITS.")<br>";
 
-    $result = sql_query("select year, month, date, hits from ".$prefix."_stats_date order by hits DESC limit 0,1", $dbi);
-    list($year, $month, $date, $hits) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select year, month, date, hits from ".$prefix."_stats_date order by hits DESC limit 0,1");
+    list($year, $month, $date, $hits) = mysqli_fetch_row($result);
     if ($month == 1) {$month = _JANUARY;} elseif ($month == 2) {$month = _FEBRUARY;} elseif ($month == 3) {$month = _MARCH;} elseif ($month == 4) {$month = _APRIL;} elseif ($month == 5) {$month = _MAY;} elseif ($month == 6) {$month = _JUNE;} elseif ($month == 7) {$month = _JULY;} elseif ($month == 8) {$month = _AUGUST;} elseif ($month == 9) {$month = _OCTOBER;} elseif ($month == 10) {$month = _SEPTEMBER;} elseif ($month == 11) {$month = _NOVEMBER;} elseif ($month == 12) {$month = _DECEMBER;}
     echo ""._MOSTDAY.": $date $month $year ($hits "._HITS.")<br>";
 
-    $result = sql_query("select year, month, date, hour, hits from ".$prefix."_stats_hour order by hits DESC limit 0,1", $dbi);
-    list($year, $month, $date, $hour, $hits) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select year, month, date, hour, hits from ".$prefix."_stats_hour order by hits DESC limit 0,1");
+    list($year, $month, $date, $hour, $hits) = mysqli_fetch_row($result);
     if ($month == 1) {$month = _JANUARY;} elseif ($month == 2) {$month = _FEBRUARY;} elseif ($month == 3) {$month = _MARCH;} elseif ($month == 4) {$month = _APRIL;} elseif ($month == 5) {$month = _MAY;} elseif ($month == 6) {$month = _JUNE;} elseif ($month == 7) {$month = _JULY;} elseif ($month == 8) {$month = _AUGUST;} elseif ($month == 9) {$month = _OCTOBER;} elseif ($month == 10) {$month = _SEPTEMBER;} elseif ($month == 11) {$month = _NOVEMBER;} elseif ($month == 12) {$month = _DECEMBER;}
     if ($hour < 10) {
 	$hour = "0$hour:00 - 0$hour:59";
@@ -268,14 +268,14 @@ function showYearStats($nowyear){
     $l_size = getimagesize("themes/$ThemeSel/images/leftbar.gif");
     $m_size = getimagesize("themes/$ThemeSel/images/mainbar.gif");
     $r_size = getimagesize("themes/$ThemeSel/images/rightbar.gif");
-    $resulttotal = sql_query("select sum(hits) as TotalHitsYear from ".$prefix."_stats_year",$dbi);
-    list($TotalHitsYear) = sql_fetch_row($resulttotal,$dbi);
-    sql_free_result($resulttotal, $dbi);
-    $result = sql_query("select year,hits from ".$prefix."_stats_year order by year",$dbi);
+    $resulttotal = mysqli_query($dbi, "select sum(hits) as TotalHitsYear from ".$prefix."_stats_year");
+    list($TotalHitsYear) = mysqli_fetch_row($resulttotal);
+    sql_free_result($resulttotal);
+    $result = mysqli_query($dbi, "select year,hits from ".$prefix."_stats_year order by year");
     echo "<center><b>"._YEARLYSTATS."</b></center><br>";
     echo "<table align=\"center\" bgcolor=\"#000000\" cellspacing=\"1\" cellpadding=\"3\" border=\"0\">";
     echo "<tr><td width=\"25%\" bgcolor=\"$bgcolor2\">"._YEAR."</td><td bgcolor=\"$bgcolor2\">"._SPAGESVIEWS."</td></tr>";
-    while (list($year,$hits) = sql_fetch_row($result,$dbi)){
+    while (list($year,$hits) = mysqli_fetch_row($result)){
 	echo "<tr bgcolor=\"$bgcolor1\"><td>";
 	if ($year != $nowyear) {
 	    echo "<a href=\"modules.php?name=Statistics&amp;op=YearlyStats&amp;year=$year\">$year</a>";
@@ -287,7 +287,7 @@ function showYearStats($nowyear){
 	echo "<img src=\"themes/$ThemeSel/images/leftbar.gif\" Alt=\"\" width=\"$l_size[0]\" height=\"$l_size[1]\"><img src=\"themes/$ThemeSel/images/mainbar.gif\" height=\"$m_size[1]\" width=",$WidthIMG * 2," Alt=\"\">"
 	    ."<img src=\"themes/$ThemeSel/images/rightbar.gif\" Alt=\"\" width=\"$r_size[0]\" height=\"$r_size[1]\"> ($hits)</td></tr>";
     }
-    sql_free_result($result,$dbi);
+    sql_free_result($result);
     echo "</table>";
 }
 
@@ -296,14 +296,14 @@ function showMonthStats($nowyear,$nowmonth){
     $l_size = getimagesize("themes/$ThemeSel/images/leftbar.gif");
     $m_size = getimagesize("themes/$ThemeSel/images/mainbar.gif");
     $r_size = getimagesize("themes/$ThemeSel/images/rightbar.gif");
-    $resultmonth = sql_query("select sum(hits) as TotalHitsMonth from ".$prefix."_stats_month where year='$nowyear'",$dbi);
-    list($TotalHitsMonth) = sql_fetch_row($resultmonth,$dbi);
-    sql_free_result($resultmonth, $dbi);
-    $result = sql_query("select month,hits from ".$prefix."_stats_month where year='$nowyear'",$dbi);
+    $resultmonth = mysqli_query($dbi, "select sum(hits) as TotalHitsMonth from ".$prefix."_stats_month where year='$nowyear'");
+    list($TotalHitsMonth) = mysqli_fetch_row($resultmonth);
+    sql_free_result($resultmonth);
+    $result = mysqli_query($dbi, "select month,hits from ".$prefix."_stats_month where year='$nowyear'");
     echo "<center><b>"._MONTLYSTATS." $nowyear</b></center><br>";
     echo "<table align=\"center\" bgcolor=\"#000000\" cellspacing=\"1\" cellpadding=\"3\" border=\"0\">";
     echo "<tr><td width=\"25%\" bgcolor=\"$bgcolor2\">"._UMONTH."</td><td bgcolor=\"$bgcolor2\">"._SPAGESVIEWS."</td></tr>";
-    while (list($month,$hits) = sql_fetch_row($result,$dbi)){
+    while (list($month,$hits) = mysqli_fetch_row($result)){
 	echo "<tr bgcolor=\"$bgcolor1\"><td>";
 	if ($month != $nowmonth) {
 	    echo "<a href=\"modules.php?name=Statistics&amp;op=MonthlyStats&amp;year=$nowyear&amp;month=$month\" class=\"hover_orange\">";
@@ -327,17 +327,17 @@ function showDailyStats($year,$month,$nowdate){
     $l_size = getimagesize("themes/$ThemeSel/images/leftbar.gif");
     $m_size = getimagesize("themes/$ThemeSel/images/mainbar.gif");
     $r_size = getimagesize("themes/$ThemeSel/images/rightbar.gif");
-    $resulttotal = sql_query("select sum(hits) as TotalHitsDate from ".$prefix."_stats_date where year='$year' and month='$month'",$dbi);
-    list($TotalHitsDate) = sql_fetch_row($resulttotal,$dbi);
+    $resulttotal = mysqli_query($dbi, "select sum(hits) as TotalHitsDate from ".$prefix."_stats_date where year='$year' and month='$month'");
+    list($TotalHitsDate) = mysqli_fetch_row($resulttotal);
     mysql_free_result($resulttotal);
-    $result = sql_query("select year,month,date,hits from ".$prefix."_stats_date where year='$year' and month='$month' order by date",$dbi);
-    $total = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "select year,month,date,hits from ".$prefix."_stats_date where year='$year' and month='$month' order by date");
+    $total = sql_num_rows($result);
     echo "<center><b>"._DAILYSTATS." ";
     getmonth($month);
     echo ", $year</b></center><br>";
     echo "<table align=\"center\" bgcolor=\"#000000\" cellspacing=\"1\" cellpadding=\"3\" border=\"0\">";
     echo "<tr><td width=\"25%\" bgcolor=\"$bgcolor2\">"._DATE."</td><td bgcolor=\"$bgcolor2\">"._SPAGESVIEWS."</td></tr>";
-    while (list($year,$month,$date,$hits) = sql_fetch_row($result,$dbi)){
+    while (list($year,$month,$date,$hits) = mysqli_fetch_row($result)){
 	echo "<tr bgcolor=\"$bgcolor1\"><td>";
 	if ($date != $nowdate) {
 	    echo "<a href=\"modules.php?name=Statistics&amp;op=DailyStats&amp;year=$year&amp;month=$month&amp;date=$date\" class=\"hover_orange\">";
@@ -358,7 +358,7 @@ function showDailyStats($year,$month,$nowdate){
 	    ."<img src=\"themes/$ThemeSel/images/rightbar.gif\" Alt=\"\" width=\"$r_size[0]\" height=\"$r_size[1]\"> $d_percent% ($hits)</td></tr>"
 	    ."</td></tr>";
     }
-    sql_free_result($result, $dbi);
+    sql_free_result($result);
     echo "</table>";
 }
 
@@ -367,9 +367,9 @@ function showHourlyStats($year,$month,$date){
     $l_size = getimagesize("themes/$ThemeSel/images/leftbar.gif");
     $m_size = getimagesize("themes/$ThemeSel/images/mainbar.gif");
     $r_size = getimagesize("themes/$ThemeSel/images/rightbar.gif");
-    $resulttotal = sql_query("select sum(hits) as TotalHitsHour from ".$prefix."_stats_hour where year='$year' and month='$month' and date='$date'",$dbi);
-    list ($TotalHitsHour) = sql_fetch_row($resulttotal,$dbi);
-    sql_free_result($resulttotal,$dbi);
+    $resulttotal = mysqli_query($dbi, "select sum(hits) as TotalHitsHour from ".$prefix."_stats_hour where year='$year' and month='$month' and date='$date'");
+    list ($TotalHitsHour) = mysqli_fetch_row($resulttotal);
+    sql_free_result($resulttotal);
     $nowdate = date("d-m-Y");
     $nowdate_arr = explode("-",$nowdate);
     echo "<center><b>"._HOURLYSTATS." ";
@@ -377,11 +377,11 @@ function showHourlyStats($year,$month,$date){
     echo "<table align=\"center\" bgcolor=\"#000000\" cellspacing=\"1\" cellpadding=\"3\" border=\"0\">";
     echo "<tr><td width=\"25%\" bgcolor=\"$bgcolor2\">"._HOUR."</td><td bgcolor=\"$bgcolor2\" width=\"70%\">"._SPAGESVIEWS."</td></tr>";
     for ($k = 0;$k<=23;$k++) {
-	$result = sql_query("select hour,hits from ".$prefix."_stats_hour where year='$year' and month='$month' and date='$date' and hour='$k'",$dbi);
-	if (sql_num_rows($result,$dbi) == 0){
+	$result = mysqli_query($dbi, "select hour,hits from ".$prefix."_stats_hour where year='$year' and month='$month' and date='$date' and hour='$k'");
+	if (sql_num_rows($result) == 0){
 	    $hits=0;
 	} else {
-	    list($hour,$hits) = sql_fetch_row($result,$dbi);
+	    list($hour,$hits) = mysqli_fetch_row($result);
 	}
 	echo "<tr><td bgcolor=\"$bgcolor1\">";
 	if ($k < 10) {
@@ -403,7 +403,7 @@ function showHourlyStats($year,$month,$date){
 	    ."<img src=\"themes/$ThemeSel/images/rightbar.gif\" Alt=\"\" width=\"$r_size[0]\" height=\"$r_size[1]\"> $d_percent% ($hits)</td></tr>"
 	    ."</td></tr>";
     }
-    sql_free_result($result, $dbi);
+    sql_free_result($result);
     echo "</table>";
 }
 

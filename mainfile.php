@@ -230,7 +230,7 @@ function ecritParagraphe($numero){
     global $partie, $chapitre, $souschapitre ;
 	global $page,$texteParagraphe ;
 	
-	messageLog ("Info", "Le <b>paragraphe: $numero</b> est termin�.$texteParagraphe");
+	messageLog ("Info", "Le <b>paragraphe: $numero</b> est terminé.$texteParagraphe");
 
 	$tmp = "";
 	if ($partie<>"") {
@@ -287,7 +287,7 @@ function ecritFichier($file, $texte){
 	global $baseDir, $front; 
 
 	if ($file==""){
-		messageLog ("Erreur","Le fichier XML ne peut �tre �crit: nom invalide.");
+		messageLog ("Erreur","Le fichier XML ne peut étre écrit: nom invalide.");
 	}else {
 		$texte = $front.$texte.'
 </ouvrage>';
@@ -314,9 +314,9 @@ function parcoursBox($paragraphe){
 &ouvrage=' . $ouvrage . '
 &valeur=' . $paragraphe . '">
 <table>
-<tr class="old"><td colspan="2" align="center">Pour d�marrer un parcours notionnel vous devez s�lectionner la notion � �tudier, comment elle apparait et la mani�re dont vous voulez afficher le r�sultat.</td></tr>
+<tr class="old"><td colspan="2" align="center">Pour démarrer un parcours notionnel vous devez sélectionner la notion é étudier, comment elle apparait et la maniére dont vous voulez afficher le résultat.</td></tr>
 <tr><td></td></tr>
-<tr class="odd"><td colspan="2">Vous voulez �tudier la notion <select name=notion>';
+<tr class="odd"><td colspan="2">Vous voulez étudier la notion <select name=notion>';
 
 	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._NOTION."' order by title");
 	while(list($tid, $title) = mysqli_fetch_row($result)) {
@@ -325,17 +325,17 @@ function parcoursBox($paragraphe){
 	$tmp .= '</select> quand elle apparait comme: <br>
 	<br><input type="radio" value="notion_principal"  name="parcours" checked>notion principale
 	<br><input type="radio" value="notion_secondaire" name="parcours">secondaire
-	<br><input type="radio" value="notion_entrambi"   name="parcours">indiff�remment principale ou secondaire.
+	<br><input type="radio" value="notion_entrambi"   name="parcours">indifféremment principale ou secondaire.
 	</td></tr>
-<tr class="old"><td colspan="2" align="center">Pr�sentation du r�sultat</td></tr>
-<tr class="even"><td width="50%" align="center">Le texte des paragraphes ne traitant pas la notion</td><td align="center">Le texte des paragraphes n\'est jamais montr�</td></tr>
-<tr class="odd"><td><input type="radio" value="cache" name="type" checked>est cach�
-<br><input type="radio" value="montre" name="type">est montr�, gris�
-</td><td><input type="radio" value="icone" name="type">les paragraphes sont affich�s sous forme d\'icones (vue "a�rienne").
+<tr class="old"><td colspan="2" align="center">Présentation du résultat</td></tr>
+<tr class="even"><td width="50%" align="center">Le texte des paragraphes ne traitant pas la notion</td><td align="center">Le texte des paragraphes n\'est jamais montré</td></tr>
+<tr class="odd"><td><input type="radio" value="cache" name="type" checked>est caché
+<br><input type="radio" value="montre" name="type">est montré, grisé
+</td><td><input type="radio" value="icone" name="type">les paragraphes sont affichés sous forme d\'icones (vue "aérienne").
 </table><p align="center"><input class="menulink" type="submit" value="Chercher">
 </form>
 ';
-	afficheShowHide("PPN","S�lection de Parcours notionnels", $tmp);
+	afficheShowHide("PPN","Sélection de Parcours notionnels", $tmp);
 }
 
 function NavigationMenu($active,$flag1,$flag2,$flag3, $menu=0) {
@@ -345,7 +345,7 @@ function NavigationMenu($active,$flag1,$flag2,$flag3, $menu=0) {
 
 	switch ($menu) {
 	case 0:
-		if ($flag3=="1") NavigationLien("Fac",$active,"Fac-simil�");
+		if ($flag3=="1") NavigationLien("Fac",$active,"Fac-similé");
 		if ($flag1=="1") NavigationLien("paragraphe",$active,"Texte");
 		if ($flag2=="1") NavigationLien("notion",$active,"Notions et Relations");
 		echo "<td>&nbsp;</td>";
@@ -363,7 +363,7 @@ function NavigationMenu($active,$flag1,$flag2,$flag3, $menu=0) {
 	cookiedecode($user);
 	$username =$cookie[1];
 	if ($username != ""&&$username!="Anonymous") {
-//Si l'utilisateur est enregistr�, le menu "texte complet" apparait dans ses onnglets
+//Si l'utilisateur est enregistré, le menu "texte complet" apparait dans ses onnglets
 		if ($flag1=="1") NavigationLien("complet","admin","Texte Complet");
 	}
 	if ($admin) {
@@ -414,7 +414,7 @@ function NavigationLien($parcours, $active, $alt, $menu=0) {
 
 function creelienBiblio($aid,$categorie, $alt){
     global $prefix, $dbi;
-    $sql = mysqli_query($dbi, "select Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs   from cb_biblio where Biblio='$aid' and categorie='$categorie' order by Dates",$dbi);
+    $sql = mysqli_query($dbi, "select Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs   from cb_biblio where Biblio='$aid' and categorie='$categorie' order by Dates");
 	if (mysqli_num_rows($sql) == 0) {
 		return "&nbsp;";
 	} else {
@@ -431,12 +431,12 @@ function afficheDetailsAuteur($aid,$nom,$prenom) {
 	global $dbi, $prefix, $theme;
 	
 		$tmp = "";
-		// On retrouve ici l'entr�e de l'encyclop�die 'savants cit�s' quand elle existe
+		// On retrouve ici l'entrée de l'encyclopédie 'savants cités' quand elle existe
 	    $result = mysqli_query($dbi, "select title, text from ".$prefix."_encyclopedia_text where title like '".strtoupper($nom)."' and eid='"._AUTEURS."'");
 		//echo "select title, text from ".$prefix."_encyclopedia_text where title like '".strtoupper($nom)."' and eid='"._AUTEURS."'";
 	    if (list($title, $text) = mysqli_fetch_row($result)) {
 			$text = autop($text);
-			$tmp .= "<font class=\"title3\">Nous trouvons dans <a href=\"/parcours.php?name=Auteurs_cit�s\">L'encyclop�die des Savants</a> de CoLiSciences:</font><br>$text<br>";
+			$tmp .= "<font class=\"title3\">Nous trouvons dans <a href=\"/parcours.php?name=Auteurs_cités\">L'encyclopédie des Savants</a> de CoLiSciences:</font><br>$text<br>";
 		}
 		// On affiche les liens vers la biblio et la biographie
 		$tmp .= creelienBiblio($aid,"biblio","Sa bibliographie");
@@ -444,7 +444,7 @@ function afficheDetailsAuteur($aid,$nom,$prenom) {
 /*
  		$tmp .= "<br><font class=\"title3\">Les ouvrages de $prenom $nom</font><br>";
 
-	    $sql = mysqli_query($dbi, "select pid,titre,debut, auteur, date_titre, type_book from cb_ouvrages where active='1' and auteur=$aid order by date_titre, titre",$dbi);
+	    $sql = mysqli_query($dbi, "select pid,titre,debut, auteur, date_titre, type_book from cb_ouvrages where active='1' and auteur=$aid order by date_titre, titre");
     	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = mysqli_fetch_row($sql)) {
  	    	$tmp .= "<table><tr><td valign=\"top\"><img width=\"30\" height=\"12\"  src=\"themes/$theme/img/plot.gif\"></td><td>".creeLienOuvrage($pid,$titre,$debut,$date_titre,$type_book) ."</td></tr></table>";
     	}
@@ -1245,7 +1245,7 @@ function automated_news() {
     }
 }
 
-// Fonction utilis�e pour afficher le titre d'un ouvrage en respectant les normes bibliographiques
+// Fonction utilisée pour afficher le titre d'un ouvrage en respectant les normes bibliographiques
 function creeLienOuvrage($ouvrage, $titre, $debut, $date_titre, $type_book){
 	    return "<a href=\"parcours.php?name=Parcours_Hypertexte&amp;file=moteurCB&amp;valeur=$debut&amp;newouvrage=$ouvrage\">".afficheTitreOuvrage($titre, $date_titre, $type_book)."</a>";
 }

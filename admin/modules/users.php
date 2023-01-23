@@ -10,7 +10,7 @@
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 
 $result = sql_query("select radminuser, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminuser, $radminsuper) = sql_fetch_row($result, $dbi);
+list($radminuser, $radminsuper) = mysqli_fetch_row($result, $dbi);
 if (($radminuser==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -38,7 +38,7 @@ function displayUsers() {
 	."<td class=\"boxtitle\">"._USERNAME." ("._ID.")</td>"
 	."<td align=\"center\" class=\"boxtitle\">"._NEWSLETTER."</td>"
 	."<td align=\"center\" class=\"boxtitle\">"._FUNCTIONS."</td></tr>";
-    while(list($upid, $uname, $email, $newsletter) = sql_fetch_row($result, $dbi)) {
+    while(list($upid, $uname, $email, $newsletter) = mysqli_fetch_row($result, $dbi)) {
 	echo "<tr class=\"$boxcontent\">"
 	    ."<td><a href=\"mailto:$email\">$uname</a> ($upid)</td>";
         if ($newsletter == "1" ) {
@@ -63,7 +63,7 @@ function displayUsers() {
 	."<b>"._USERNAME.": </b>\n"
         ."<select name=\"chng_uid\">";
 	
-    while(list($uid, $uname) = sql_fetch_row($result, $dbi)) {
+    while(list($uid, $uname) = mysqli_fetch_row($result, $dbi)) {
 	echo "<option value=\"$uid\">$uname</option>";
     }
 
@@ -128,7 +128,7 @@ function modifyUser($chng_user) {
     echo "<br>";
     $result = sql_query("select uid, uname, name, url, email, femail, user_icq, user_aim, user_yim, user_msnm, user_from, user_occ, user_intrest, user_viewemail, user_avatar, user_sig, pass, newsletter from ".$user_prefix."_users where uid='$chng_user' or uname='$chng_user'", $dbi);
     if(sql_num_rows($result, $dbi) > 0) {
-        list($chng_uid, $chng_uname, $chng_name, $chng_url, $chng_email, $chng_femail, $chng_user_icq, $chng_user_aim, $chng_user_yim, $chng_user_msnm, $chng_user_from, $chng_user_occ, $chng_user_intrest, $chng_user_viewemail, $chng_avatar, $chng_user_sig, $chng_pass, $chng_newsletter) = sql_fetch_row($result, $dbi);
+        list($chng_uid, $chng_uname, $chng_name, $chng_url, $chng_email, $chng_femail, $chng_user_icq, $chng_user_aim, $chng_user_yim, $chng_user_msnm, $chng_user_from, $chng_user_occ, $chng_user_intrest, $chng_user_viewemail, $chng_avatar, $chng_user_sig, $chng_pass, $chng_newsletter) = mysqli_fetch_row($result, $dbi);
 	OpenTable();
 	echo "<center><font class=\"option\"><b>"._USERUPDATE.": <i>$chng_user</i></b></font></center>"
 	    ."<form action=\"admin.php\" method=\"post\">"
@@ -233,7 +233,7 @@ function detailsUser($chng_user) {
     echo "<br>";
     $result = sql_query("select upid, uname, name, url, email, femail, user_icq, user_aim, user_yim, user_msnm, user_from, user_occ, user_intrest, user_viewemail, user_avatar, user_sig, pass, newsletter from $user_prefix"._users_pending." where upid='$chng_user' or uname='$chng_user'", $dbi);
     if(sql_num_rows($result, $dbi) > 0) {
-        list($chng_upid, $chng_uname, $chng_name, $chng_url, $chng_email, $chng_femail, $chng_user_icq, $chng_user_aim, $chng_user_yim, $chng_user_msnm, $chng_user_from, $chng_user_occ, $chng_user_intrest, $chng_user_viewemail, $chng_avatar, $chng_user_sig, $chng_pass, $chng_newsletter) = sql_fetch_row($result, $dbi);
+        list($chng_upid, $chng_uname, $chng_name, $chng_url, $chng_email, $chng_femail, $chng_user_icq, $chng_user_aim, $chng_user_yim, $chng_user_msnm, $chng_user_from, $chng_user_occ, $chng_user_intrest, $chng_user_viewemail, $chng_avatar, $chng_user_sig, $chng_pass, $chng_newsletter) = mysqli_fetch_row($result, $dbi);
 	OpenTable();
 	echo "<center><font class=\"option\"><b>"._DETUSER.": <i>$chng_user</i></b></font></center>\n"
 	    ."<form action=\"admin.php\" method=\"post\">\n"
@@ -309,11 +309,11 @@ switch($op) {
 
     case "approveUserConf":
     $result = sql_query("SELECT uname, email, url, user_avatar, user_regdate, user_icq, user_occ, user_from, user_intrest, user_sig, user_viewemail, user_aim, user_yim, user_msnm, newsletter FROM $user_prefix"._users_pending." WHERE upid='$chng_upid'", $dbi);
-    list($uname, $email, $url, $user_avatar, $user_regdate, $user_icq, $user_occ, $user_from, $user_intrest, $user_sig, $user_viewemail, $user_aim, $user_yim, $user_msnm, $newsletter) = sql_fetch_row($result, $dbi);
+    list($uname, $email, $url, $user_avatar, $user_regdate, $user_icq, $user_occ, $user_from, $user_intrest, $user_sig, $user_viewemail, $user_aim, $user_yim, $user_msnm, $newsletter) = mysqli_fetch_row($result, $dbi);
     $makepass=makePass();
     $cryptpass = md5($makepass);
                 $tempto = sql_query("SELECT max(uid) AS latest_uid FROM $user_prefix"._users."", $dbi);
-                list($latest_uid) = sql_fetch_array($tempto, $dbi);
+                list($latest_uid) = mysqli_fetch_array($tempto, $dbi);
                 if ($latest_uid == "-1") {
                     $latest_uid = 1;
                 } else {
@@ -345,7 +345,7 @@ switch($op) {
 
     case "denyUserConf":
     $result = sql_query("select uname, email from $user_prefix"._users_pending." where upid=$chng_upid", $dbi);
-    list($uname, $email) = sql_fetch_row($result, $dbi);
+    list($uname, $email) = mysqli_fetch_row($result, $dbi);
                      $message = ""._SORRYTO." $sitename "._YOUDENIED."";
                     $subject=""._APPLDENIED."";
                     $from="$email";

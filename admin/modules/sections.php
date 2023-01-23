@@ -14,8 +14,8 @@
 
 if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 
-$result = sql_query("select radminsection, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-list($radminsection, $radminsuper) = sql_fetch_row($result, $dbi);
+$result = mysqli_query($dbi, "select radminsection, radminsuper from ".$prefix."_authors where aid='$aid'");
+list($radminsection, $radminsuper) = mysqli_fetch_row($result);
 if (($radminsection==1) OR ($radminsuper==1)) {
 
 /*********************************************************/
@@ -29,13 +29,13 @@ function sections() {
     OpenTable();
     echo "<center><font class=\"title\"><b>"._SECTIONSADMIN."</b></font></center>";
     CloseTable();
-    $result = sql_query("select secid, secname from ".$prefix."_sections order by secid", $dbi);
-    if (sql_num_rows($result, $dbi) > 0) {
+    $result = mysqli_query($dbi, "select secid, secname from ".$prefix."_sections order by secid");
+    if (sql_num_rows($result) > 0) {
 	echo "<br>";
 	OpenTable();
 	echo "<center><b>"._ACTIVESECTIONS."</b><br><font class=\"content\">"._CLICK2EDITSEC."</font></center><br>"
 	    ."<table border=0 width=100% align=center cellpadding=1 align=\"center\"><tr><td align=center>";
-	while(list($secid, $secname) = sql_fetch_array($result, $dbi)) {
+	while(list($secid, $secname) = mysqli_fetch_array($result)) {
 	    echo "<strong><big>&middot;</big></strong>&nbsp;&nbsp;<a href=\"admin.php?op=sectionedit&amp;secid=$secid\">$secname</a>";
 	}
 	echo "</td></tr></table>";
@@ -47,8 +47,8 @@ function sections() {
 	    ."<b>"._TITLE."</b><br>"
 	    ."<input type=\"text\" name=\"title\" size=\"60\"><br><br>"
 	    ."<b>"._SELSECTION.":</b><br>";
-	$result = sql_query("select secid, secname from ".$prefix."_sections order by secid", $dbi);
-	while(list($secid, $secname) = sql_fetch_array($result, $dbi)) {
+	$result = mysqli_query($dbi, "select secid, secname from ".$prefix."_sections order by secid");
+	while(list($secid, $secname) = mysqli_fetch_array($result)) {
 	    echo "<input type=\"radio\" name=\"secid\" value=\"$secid\"> $secname<br>";
 	}
 	echo "<font class=\"content\">"._DONTSELECT."</font><br>";
@@ -87,10 +87,10 @@ function sections() {
 	OpenTable();
 	echo "<center><font class=\"option\"><b>"._LAST." 20 "._ARTICLES."</b></font></center><br>"
 	    ."<ul>";
-	$result = sql_query("select artid, secid, title, content, slanguage from ".$prefix."_seccont order by artid desc limit 0,20", $dbi);
-	while(list($artid, $secid, $title, $content, $slanguage) = sql_fetch_array($result, $dbi)) {
-	    $result2 = sql_query("select secid, secname from ".$prefix."_sections where secid='$secid'", $dbi);
-	    list($secid, $secname) = sql_fetch_row($result2, $dbi);
+	$result = mysqli_query($dbi, "select artid, secid, title, content, slanguage from ".$prefix."_seccont order by artid desc limit 0,20");
+	while(list($artid, $secid, $title, $content, $slanguage) = mysqli_fetch_array($result)) {
+	    $result2 = mysqli_query($dbi, "select secid, secname from ".$prefix."_sections where secid='$secid'");
+	    list($secid, $secname) = mysqli_fetch_row($result2);
 	    echo "<li>$title - ($slanguage) - ($secname) [ <a href=\"admin.php?op=secartedit&amp;artid=$artid\">"._EDIT."</a> | <a href=\"admin.php?op=secartdelete&amp;artid=$artid&amp;ok=0\">"._DELETE."</a> ]";
 	}
 	echo "</ul>"
@@ -120,7 +120,7 @@ function secarticleadd($secid, $title, $content, $slanguage) {
     global $prefix, $dbi;
     $title = stripslashes(FixQuotes($title));
     $content = stripslashes(FixQuotes($content));
-    sql_query("INSERT INTO ".$prefix."_seccont VALUES (NULL,'$secid','$title','$content','0','$slanguage')", $dbi);
+    mysqli_query($dbi, "INSERT INTO ".$prefix."_seccont VALUES (NULL,'$secid','$title','$content','0','$slanguage')");
     Header("Location: admin.php?op=sections");
 }
 
@@ -132,16 +132,16 @@ function secartedit($artid) {
     echo "<center><font class=\"title\"><b>"._SECTIONSADMIN."</b></font></center>";
     CloseTable();
     echo "<br>";
-    $result = sql_query("select artid, secid, title, content, slanguage from ".$prefix."_seccont where artid='$artid'", $dbi);
-    list($artid, $secid, $title, $content, $slanguage) = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "select artid, secid, title, content, slanguage from ".$prefix."_seccont where artid='$artid'");
+    list($artid, $secid, $title, $content, $slanguage) = mysqli_fetch_array($result);
     OpenTable();
     echo "<center><font class=\"option\"><b>"._EDITARTICLE."</b></font></center><br>"
 	."<form action=\"admin.php\" method=\"post\">"
 	."<b>"._TITLE."</b><br>"
 	."<input type=\"text\" name=\"title\" size=\"60\" value=\"$title\"><br><br>"
 	."<b>"._SELSECTION.":</b><br>";
-    $result2 = sql_query("select secid, secname from ".$prefix."_sections order by secname", $dbi);
-    while(list($secid2, $secname) = sql_fetch_array($result2, $dbi)) {
+    $result2 = mysqli_query($dbi, "select secid, secname from ".$prefix."_sections order by secname");
+    while(list($secid2, $secname) = mysqli_fetch_array($result2)) {
 	    if ($secid2==$secid) {
 		$che = "checked";
 	    }
@@ -186,7 +186,7 @@ function sectionmake($secname, $image) {
     global $prefix, $dbi;
     $secname = stripslashes(FixQuotes($secname));
     $image = stripslashes(FixQuotes($image));
-    sql_query("INSERT INTO ".$prefix."_sections VALUES (NULL,'$secname', '$image')", $dbi);
+    mysqli_query($dbi, "INSERT INTO ".$prefix."_sections VALUES (NULL,'$secname', '$image')");
     Header("Location: admin.php?op=sections");
 }
 
@@ -198,10 +198,10 @@ function sectionedit($secid) {
     echo "<center><font class=\"title\"><b>"._SECTIONSADMIN."</b></font></center>";
     CloseTable();
     echo "<br>";
-    $result = sql_query("select secid, secname, image from ".$prefix."_sections where secid=$secid", $dbi);
-    list($secid, $secname, $image) = sql_fetch_array($result, $dbi);
-    $result2 = sql_query("select artid from ".$prefix."_seccont where secid=$secid", $dbi);
-    $number = sql_num_rows($result2, $dbi);
+    $result = mysqli_query($dbi, "select secid, secname, image from ".$prefix."_sections where secid=$secid");
+    list($secid, $secname, $image) = mysqli_fetch_array($result);
+    $result2 = mysqli_query($dbi, "select artid from ".$prefix."_seccont where secid=$secid");
+    $number = sql_num_rows($result2);
     OpenTable();
     echo "<img src=\"images/sections/$image\" border=\"0\" alt=\"\"><br><br>"
 	."<font class=\"option\"><b>"._EDITSECTION.": $secname</b></font>"
@@ -224,7 +224,7 @@ function sectionchange($secid, $secname, $image) {
     global $prefix, $dbi;
     $secname = stripslashes(FixQuotes($secname));
     $image = stripslashes(FixQuotes($image));
-    sql_query("update ".$prefix."_sections set secname='$secname', image='$image' where secid=$secid", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_sections set secname='$secname', image='$image' where secid=$secid");
     Header("Location: admin.php?op=sections");
 }
 
@@ -232,15 +232,15 @@ function secartchange($artid, $secid, $title, $content, $slanguage) {
     global $prefix, $dbi;
     $title = stripslashes(FixQuotes($title));
     $content = stripslashes(FixQuotes($content));
-    sql_query("update ".$prefix."_seccont set secid='$secid', title='$title', content='$content', slanguage='$slanguage' where artid=$artid", $dbi);
+    mysqli_query($dbi, "update ".$prefix."_seccont set secid='$secid', title='$title', content='$content', slanguage='$slanguage' where artid=$artid");
     Header("Location: admin.php?op=sections");
 }
 
 function sectiondelete($secid, $ok=0) {
     global $prefix, $dbi;
     if ($ok==1) {
-        sql_query("delete from ".$prefix."_seccont where secid='$secid'", $dbi);
-        sql_query("delete from ".$prefix."_sections where secid='$secid'", $dbi);
+        mysqli_query($dbi, "delete from ".$prefix."_seccont where secid='$secid'");
+        mysqli_query($dbi, "delete from ".$prefix."_sections where secid='$secid'");
         Header("Location: admin.php?op=sections");
     } else {
         include("header.php");
@@ -249,8 +249,8 @@ function sectiondelete($secid, $ok=0) {
 	echo "<center><font class=\"title\"><b>"._SECTIONSADMIN."</b></font></center>";
 	CloseTable();
 	echo "<br>";
-	$result=sql_query("select secname from ".$prefix."_sections where secid=$secid", $dbi);
-	list($secname) = sql_fetch_row($result, $dbi);
+	$result=mysqli_query($dbi, "select secname from ".$prefix."_sections where secid=$secid");
+	list($secname) = mysqli_fetch_row($result);
 	OpenTable();
 	echo "<center><b>"._DELSECTION.": $secname</b><br><br>"
 	    .""._DELSECWARNING." $secname?<br>"
@@ -264,7 +264,7 @@ function sectiondelete($secid, $ok=0) {
 function secartdelete($artid, $ok=0) {
     global $prefix, $dbi;
     if ($ok==1) {
-        sql_query("delete from ".$prefix."_seccont where artid='$artid'", $dbi);
+        mysqli_query($dbi, "delete from ".$prefix."_seccont where artid='$artid'");
         Header("Location: admin.php?op=sections");
     } else {
         include("header.php");
@@ -273,8 +273,8 @@ function secartdelete($artid, $ok=0) {
 	echo "<center><font class=\"title\"><b>"._SECTIONSADMIN."</b></font></center>";
 	CloseTable();
 	echo "<br>";
-	$result = sql_query("select title from ".$prefix."_seccont where artid=$artid", $dbi);
-	list($title) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select title from ".$prefix."_seccont where artid=$artid");
+	list($title) = mysqli_fetch_row($result);
 	OpenTable();
 	echo "<center><b>"._DELARTICLE.": $title</b><br><br>"
 	    .""._DELARTWARNING."<br><br>"

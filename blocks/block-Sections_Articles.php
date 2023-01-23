@@ -19,8 +19,8 @@ if (eregi("block-Sections_Articles.php", $PHP_SELF)) {
 
 global $prefix, $dbi;
 
-$result = sql_query("SELECT artid, title FROM ".$prefix."_seccont order by artid DESC limit 0,10", $dbi);
-while(list($artid, $title) = sql_fetch_row($result, $dbi)) {
+$result = mysqli_query($dbi, "SELECT artid, title FROM ".$prefix."_seccont order by artid DESC limit 0,10");
+while(list($artid, $title) = mysqli_fetch_row($result)) {
     $content .= "<strong><big>&middot;</big></strong>&nbsp;<a href=\"modules.php?name=Sections&amp;sop=viewarticle&amp;artid=$artid\">$title</a><br>";
 }
 

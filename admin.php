@@ -19,22 +19,22 @@ $wysiwyg = 1;
 
 function create_first($name, $url, $email, $pwd, $user) {
     global $prefix, $dbi, $user_prefix;
-    $first = sql_num_rows(sql_query("select * from ".$prefix."_authors", $dbi),$dbi);
+    $first = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_authors"));
     if ($first == 0) {
         $pwd = md5($pwd);
         $the_adm = "God";
-        $result = sql_query("insert into ".$prefix."_authors values ('$name', '$the_adm', '$url', '$email', '$pwd', 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1, '')", $dbi);
+        $result = mysqli_query($dbi, "insert into ".$prefix."_authors values ('$name', '$the_adm', '$url', '$email', '$pwd', 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1, '')");
         if ($user == 1) {
             $user_regdate = date("M d, Y");
             $user_avatar = "blank.gif";
             $commentlimit = 4096;
-            $result = sql_query("insert into ".$user_prefix."_users values (NULL,'','$name','$email','','$url','$user_avatar','$user_regdate','','','','','','0','','','','','$pwd',10,'','0','0','0','','0','','$Default_Theme','$commentlimit','0','0','0','0','0','1')", $dbi);
+            $result = mysqli_query($dbi, "insert into ".$user_prefix."_users values (NULL,'','$name','$email','','$url','$user_avatar','$user_regdate','','','','','','0','','','','','$pwd',10,'','0','0','0','','0','','$Default_Theme','$commentlimit','0','0','0','0','0','1')");
         }
         login();
     }
 }
 
-$the_first = sql_num_rows(sql_query("select * from ".$prefix."_authors", $dbi), $dbi);
+$the_first = sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_authors"));
 if ($the_first == 0) {
     if (!$name) {
     include("header.php");
@@ -95,7 +95,7 @@ function login() {
 
 function deleteNotice($id, $table, $op_back) {
     global $dbi;
-    sql_query("delete from $table WHERE id = $id", $dbi);
+    mysqli_query($dbi, "delete from $table WHERE id = $id");
     Header("Location: admin.php?op=$op_back");
 }
 
@@ -123,8 +123,8 @@ function adminmenu($url, $title, $image) {
 
 function GraphicAdmin() {
     global $aid, $admingraphic, $language, $admin, $banners, $prefix, $dbi;
-    $result = sql_query("select radminarticle,radmintopic,radminuser,radminsurvey,radminsection,radminlink,radminephem,radminfaq,radmindownload,radminreviews,radminnewsletter,radminforum,radmincontent,radminency,radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
-    list($radminarticle,$radmintopic,$radminuser,$radminsurvey,$radminsection,$radminlink,$radminephem,$radminfaq,$radmindownload,$radminreviews,$radminnewsletter,$radminforum,$radmincontent,$radminency,$radminsuper) = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "select radminarticle,radmintopic,radminuser,radminsurvey,radminsection,radminlink,radminephem,radminfaq,radmindownload,radminreviews,radminnewsletter,radminforum,radmincontent,radminency,radminsuper from ".$prefix."_authors where aid='$aid'");
+    list($radminarticle,$radmintopic,$radminuser,$radminsurvey,$radminsection,$radminlink,$radminephem,$radminfaq,$radmindownload,$radminreviews,$radminnewsletter,$radminforum,$radmincontent,$radminency,$radminsuper) = mysqli_fetch_array($result);
     OpenTable();
     echo "<center>";
     echo"<table border=\"0\" width=\"100%\" cellspacing=\"1\"><tr>";
@@ -158,25 +158,25 @@ function adminMain() {
     include ("header.php");
     $dummy = 0;
     GraphicAdmin();
-    $result2 = sql_query("select radminarticle, radminsuper, admlanguage from ".$prefix."_authors where aid='$aid'", $dbi);
-    list($radminarticle, $radminsuper, $admlanguage) = sql_fetch_row($result2, $dbi);
+    $result2 = mysqli_query($dbi, "select radminarticle, radminsuper, admlanguage from ".$prefix."_authors where aid='$aid'");
+    list($radminarticle, $radminsuper, $admlanguage) = mysqli_fetch_row($result2);
     if ($admlanguage != "" ) {
         $queryalang = "WHERE alanguage='$admlanguage' ";
     } else {
         $queryalang = "";
     }
-    $main_m = sql_query("select main_module from ".$prefix."_main", $dbi);
-    list($main_module) = sql_fetch_row($main_m, $dbi);
+    $main_m = mysqli_query($dbi, "select main_module from ".$prefix."_main");
+    list($main_module) = mysqli_fetch_row($main_m);
     OpenTable();
     echo "<center><b>$sitename: "._DEFHOMEMODULE."</b><br><br>"
         .""._MODULEINHOME." <b>$main_module</b><br>[ <a href=\"admin.php?op=modules\">"._CHANGE."</a> ]</center>";
     CloseTable();
     echo "<br>";
     OpenTable();
-    $result = sql_query("SELECT username FROM ".$prefix."_session where guest=1", $dbi);
-    $guest_online_num = sql_num_rows($result, $dbi);
-    $result = sql_query("SELECT username FROM ".$prefix."_session where guest=0", $dbi);
-    $member_online_num = sql_num_rows($result, $dbi);
+    $result = mysqli_query($dbi, "SELECT username FROM ".$prefix."_session where guest=1");
+    $guest_online_num = $result->num_rows;
+    $result = mysqli_query($dbi, "SELECT username FROM ".$prefix."_session where guest=0");
+    $member_online_num = $result->num_rows;
     $who_online_num = $guest_online_num + $member_online_num;
     $who_online = "<center><font class=\"option\">"._WHOSONLINE."</font><br><br><font class=\"content\">"._CURRENTLY." $guest_online_num "._GUESTS." $member_online_num "._MEMBERS."<br>";
     echo "<center>$who_online</center>";

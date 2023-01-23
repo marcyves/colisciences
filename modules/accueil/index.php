@@ -24,12 +24,12 @@ function showpage($pid, $page=0) {
     global $prefix, $dbi, $sitename, $admin, $module_name, $desolePageInexitante;
     include("header.php");
     opentable();
-    $result = sql_query("SELECT * from ".$prefix."_pages where pid='$pid'", $dbi);
-    $mypage = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "SELECT * from ".$prefix."_pages where pid='$pid'");
+    $mypage = mysqli_fetch_array($result);
     if (($mypage[active] == 0) AND (!is_admin($admin))) {
         echo $desolePageInexitante;
     } else {
-        sql_query("update ".$prefix."_pages set counter=counter+1 where pid='$pid'", $dbi);
+        mysqli_query($dbi, "update ".$prefix."_pages set counter=counter+1 where pid='$pid'");
         $date = explode(" ", $mypage[date]);
         echo "<font class=\"title\">$mypage[title]</font><br>"
             ."<font class=\"content\">$mypage[subtitle]<br><br>";
@@ -94,11 +94,11 @@ function list_pages() {
 	$c = str_replace("@titre@", $sitename, $c);
 
 // Affichage de l'annonce
-    $result = sql_query("SELECT * from ".$prefix."_pages where title='Annonce'", $dbi);
-    $mypage = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "SELECT * from ".$prefix."_pages where title='Annonce'");
+    $mypage = mysqli_fetch_array($result);
 
 	if ($mypage[active] != 0){
-        sql_query("update ".$prefix."_pages set counter=counter+1 where pid='$pid'", $dbi);
+        mysqli_query($dbi, "update ".$prefix."_pages set counter=counter+1 where pid='$pid'");
         $date = explode(" ", $mypage[date]);
 
         $annonce = $mypage[subtitle]."<br><p>".nl2br($mypage[page_header])."</p><p>$mypage[text]</p><br><p>".nl2br($mypage[page_footer])."</p>";
@@ -109,12 +109,12 @@ function list_pages() {
 	if ($admin){
 
 		$compteur = 0;
-    	$result = sql_query("select * from ".$prefix."_pages_categories where description = 'accueil'", $dbi);
+    	$result = mysqli_query($dbi, "select * from ".$prefix."_pages_categories where description = 'accueil'");
 
-	    if (sql_num_rows($result, $dbi)> 0 AND sql_num_rows(sql_query("select * from ".$prefix."_pages WHERE cid!='0'", $dbi),$dbi)> 0) {
+	    if (sql_num_rows($result)> 0 AND sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_pages WHERE cid!='0'"))> 0) {
 
-	        while(list($cid, $title, $description) = sql_fetch_row($result, $dbi)) {
-    	        if (sql_num_rows(sql_query("select * from ".$prefix."_pages WHERE cid='$cid'", $dbi),$dbi)> 0) {
+	        while(list($cid, $title, $description) = mysqli_fetch_row($result)) {
+    	        if (sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_pages WHERE cid='$cid'"))> 0) {
 			        $lien[$compteur++] = "modules.php?name=accueil&amp;pa=list_pages_categories&amp;cid=$cid";
 				}
             }
@@ -129,12 +129,12 @@ function list_pages() {
     	$gauche = "";
 	    $droite = "";
 		$compteur = 0;
-	    $result = sql_query("select * from ".$prefix."_pages_categories where description = 'accueil'", $dbi);
+	    $result = mysqli_query($dbi, "select * from ".$prefix."_pages_categories where description = 'accueil'");
 
-	    if (sql_num_rows($result, $dbi)> 0 AND sql_num_rows(sql_query("select * from ".$prefix."_pages WHERE cid!='0'", $dbi),$dbi)> 0) {
+	    if (sql_num_rows($result)> 0 AND sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_pages WHERE cid!='0'"))> 0) {
 
-	        while(list($cid, $title, $description) = sql_fetch_row($result, $dbi)) {
-    	        if (sql_num_rows(sql_query("select * from ".$prefix."_pages WHERE cid='$cid'", $dbi),$dbi)> 0) {
+	        while(list($cid, $title, $description) = mysqli_fetch_row($result)) {
+    	        if (sql_num_rows(mysqli_query($dbi, "select * from ".$prefix."_pages WHERE cid='$cid'"))> 0) {
 					if ($compteur++<2){
 		    	        $gauche .= "<p><a class=\"navigation\" href=\"modules.php?name=accueil&amp;pa=list_pages_categories&amp;cid=$cid\">$title</a>";
 					} else {
@@ -157,16 +157,16 @@ function list_pages_categories($cid) {
 	$titre = "$sitename: "._PAGESLIST;
     include("header.php");
 
-    $result = sql_query("select title from ".$prefix."_pages_categories where cid ='$cid'", $dbi);
-	list($title) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select title from ".$prefix."_pages_categories where cid ='$cid'");
+	list($title) = mysqli_fetch_row($result);
     title($title);
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    	// opentable();
 	//    echo "<center><font class=\"content\">"._LISTOFCONTENT." $sitename:</center><br><br>";
-    $result = sql_query("SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='1' AND cid='$cid' order by date", $dbi);
+    $result = mysqli_query($dbi, "SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='1' AND cid='$cid' order by date");
     echo "<blockquote><font class=\"content\">";
 
-    while(list($pid, $title, $subtitle, $clanguage) = sql_fetch_row($result, $dbi)) {
+    while(list($pid, $title, $subtitle, $clanguage) = mysqli_fetch_row($result)) {
         if ($multilingual == 1) {
             $the_lang = "<img src=\"images/language/flag-$clanguage.png\" hspace=\"3\" border=\"0\" height=\"10\" width=\"20\">";
         } else {
@@ -185,11 +185,11 @@ function list_pages_categories($cid) {
     }
     echo "</blockquote>";
     if (is_admin($admin)) {
-        $result = sql_query("SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='0' and cid='$cid' order by date", $dbi);
+        $result = mysqli_query($dbi, "SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='0' and cid='$cid' order by date");
         echo "<br><br><center><b>"._YOURADMINLIST."</b></center><br><br>";
         echo "<blockquote>";
 
-        while(list($pid, $title, $subtitle, $clanguage) = sql_fetch_row($result, $dbi)) {
+        while(list($pid, $title, $subtitle, $clanguage) = mysqli_fetch_row($result)) {
             if ($multilingual == 1) {
                 $the_lang = "<img src=\"images/language/flag-$clanguage.png\" hspace=\"3\" border=\"0\" height=\"10\" width=\"20\">";
             } else {

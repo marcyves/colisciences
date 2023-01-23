@@ -14,11 +14,11 @@
 
 global $prefix, $dbi, $sitename;
 
-$result = sql_query("SELECT topic_id, topic_title, forum_id FROM ".$prefix."_bbtopics ORDER BY topic_time DESC LIMIT 10", $dbi);
+$result = mysqli_query($dbi, "SELECT topic_id, topic_title, forum_id FROM ".$prefix."_bbtopics ORDER BY topic_time DESC LIMIT 10");
 $content = "<br>";
-while(list($topic_id, $topic_title, $forum_id) = sql_fetch_row($result, $dbi)) {
-    $res = sql_query("SELECT image FROM ".$prefix."_posts where topic_id='$topic_id'", $dbi);
-    list ($image) = sql_fetch_row($res, $dbi);
+while(list($topic_id, $topic_title, $forum_id) = mysqli_fetch_row($result)) {
+    $res = mysqli_query($dbi, "SELECT image FROM ".$prefix."_posts where topic_id='$topic_id'");
+    list ($image) = mysqli_fetch_row($res);
     if (file_exists("images/forum/subject/$image")) {
 	$content .= "<img src=\"images/forum/subject/$image\" border=\"0\" alt=\"\" width=\"15\" height=\"15\">&nbsp;<a href=\"modules.php?mop=modload&name=Forum&amp;file=viewtopic&amp;topic=$topic_id&amp;forum=$forum_id\">$topic_title</a><br>";
     } else {

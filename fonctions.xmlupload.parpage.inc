@@ -9,12 +9,12 @@
 function decodeDocument($file) {	
     global $ouvrage;
     global $texte;
-// variables correspondant aux entit�s de la DTD
+// variables correspondant aux entités de la DTD
     global $titre;
     global $nom, $prenom;
     global $editeur, $ville, $date;
     global $numero, $partie, $chapitre, $souschapitre;
-// objets de stockage des entit�s de la DTD
+// objets de stockage des entités de la DTD
     global $flag , $notionsParagraphe;
     global $glossaire, $motclef;
 
@@ -23,7 +23,7 @@ function decodeDocument($file) {
     $glossaire         = new pile;
     $motclef           = new pile;
 
-// Initialisation pour pr�parer le parsing d'un fichier XML
+// Initialisation pour préparer le parsing d'un fichier XML
 
     $texte = "";
     $partie = "";
@@ -31,7 +31,7 @@ function decodeDocument($file) {
     $souschapitre = "";
 
     if (!(list($xml_parser, $fp) = new_xml_parser($file))) {
-	    die("Je n'ai pas trouv� de fichier XML correspondant � votre requ�te");
+	    die("Je n'ai pas trouvé de fichier XML correspondant é votre requéte");
     }
 
     while ($data = fread($fp, 4096)) {
@@ -64,7 +64,7 @@ function trustedFile($file) {
  */
 function startElement($parser, $name, $attribs) {
 
-// variables correspondant aux entit�s de la DTD
+// variables correspondant aux entités de la DTD
 global $titre, $baseDir, $front , $type;
 global $nom, $prenom;
 global $editeur, $ville, $date;
@@ -153,10 +153,10 @@ switch ($name) {
 						if ($flagSP == 0) {
 				    		$flagSP = $page;
 							$tmp = $numero + 1;
-							messageLog ("Info", "Le paragraphe num�ro $tmp est � cheval sur deux pages");
+							messageLog ("Info", "Le paragraphe numéro $tmp est é cheval sur deux pages");
 						} else {
 							$tmp = $numero + 1;
-							messageLog ("Erreur", "Le paragraphe num�ro $tmp est � cheval sur plus de deux pages<br>Une page vierge est g�n�r�e.");
+							messageLog ("Erreur", "Le paragraphe numéro $tmp est é cheval sur plus de deux pages<br>Une page vierge est générée.");
 							ecritFichier($page,"");
 						}
 			   		} else {
@@ -166,10 +166,10 @@ switch ($name) {
 						$xmlParagraphe = "";
 			   		}
 					if ($page+1 != $v){
-						messageLog ("Erreur", "Rupture de s�quence des pages de $page � $v");
+						messageLog ("Erreur", "Rupture de séquence des pages de $page é $v");
 					}
 			   		$page = $v;
-					messageLog ("Info", "D�but page = $v");
+					messageLog ("Info", "Début page = $v");
                	break;
 				}
 		    }
@@ -253,10 +253,10 @@ switch ($name) {
 //         $texte = $texte."<a class=\"motclef\" href=\"#";
          break;
          default:
-// On affiche tels quels les �l�ments HTML qui pourraient apparaitre dans le document XML.
-// BTW, les balises XML inconnues subiront le m�me sort.
+// On affiche tels quels les éléments HTML qui pourraient apparaitre dans le document XML.
+// BTW, les balises XML inconnues subiront le méme sort.
 //         print "<p>Element XML inconnu: $name";
-messageLog ("Erreur", "<p>Balise < $name > d�tect�e mais non trait�e");
+messageLog ("Erreur", "<p>Balise < $name > détectée mais non traitée");
          $texte = $texte."<".$name.">";
 
     }
@@ -280,7 +280,7 @@ function endElement($parser, $name) {
 
     switch ($name) {
          case "FRONT":
-// C'est la fin de l'ent�te, on peut �crire l'ent�te g�n�rique pour tous les documents
+// C'est la fin de l'entéte, on peut écrire l'entéte générique pour tous les documents
 
 	$front = "<?xml version=\"1.0\" encoding=\"iso-8859-1\" standalone=\"yes\"?>
 <?xml-stylesheet href=\"ouvrage.css\" type=\"text/css\" ?>
@@ -297,18 +297,18 @@ function endElement($parser, $name) {
 	      <auteur nom=\"$nom\" prenom=\"$prenom\"/>
 		     <edition editeur=\"$editeur\" ville=\"$ville\" date=\"$date\"/>
 			 ";
-		 messageLog ("Info", "L'ent�te est pr�t");
+		 messageLog ("Info", "L'entéte est prét");
 		 $page = 1;
 		 ecritFichier($page,$pageDeTitre);
 		 $page = 2;
 		 ecritFichier($page,$partiesLiminaires);
 		 $page = "3";
          break;
-		 /* Traitement de la balise "d�but de paragraphe" pour identifier s'il s'agit d'un r�el d�but
-		 *  de paragraphe textuel ou simplement d'un s�parateur.
-		 * On doit donc v�rifier:
-		 *   la partie front est termin�e
-		 *   un d�but de page a d�j� �t� identifi� */
+		 /* Traitement de la balise "début de paragraphe" pour identifier s'il s'agit d'un réel début
+		 *  de paragraphe textuel ou simplement d'un séparateur.
+		 * On doit donc vérifier:
+		 *   la partie front est terminée
+		 *   un début de page a déjé été identifié */
          case "P":
 		 	if ((strlen($front)>0)&&($page <> "")&&($texteParagraphe<>"")&&($flagNote<>"1")) {
 				$numero = $numero + 1;
@@ -318,7 +318,7 @@ function endElement($parser, $name) {
 				$flagP = 0;
 				if ($flagSP > 0) {
 					if ($flagSP==$page){
-						messageLog("Warning","V�rifier que la page $page existe.");
+						messageLog("Warning","Vérifier que la page $page existe.");
 						$page=0;
 					}
 					ecritFichier($flagSP,$xmlParagraphe);
@@ -331,24 +331,24 @@ function endElement($parser, $name) {
          case "TITREPROPRE":
               $titre = $titreTMP;
               $titreTMP = "";
-  			 messageLog ("Info", "<p>J'ai trouv� le titre de l'ouvrage: <b>$titre</b>");
+  			 messageLog ("Info", "<p>J'ai trouvé le titre de l'ouvrage: <b>$titre</b>");
          break;
          case "TITREPARTIE":
 		 	switch ($niveau){
 			case "partie":
               $partie = $partieTMP;
               $partieTMP = "";
-  			 messageLog ("Info", "J'ai trouv� le titre de la partie: <b>$partie</b>");
+  			 messageLog ("Info", "J'ai trouvé le titre de la partie: <b>$partie</b>");
 			break;
 			case "chapitre":
               $chapitre = $chapitreTMP ;
               $chapitreTMP = "";
-  			 messageLog ("Info", "J'ai trouv� le titre du chapitre: <b>$chapitre</b>");
+  			 messageLog ("Info", "J'ai trouvé le titre du chapitre: <b>$chapitre</b>");
 			break;
 			case "souschapitre":
               $souschapitre = $souschapitreTMP ;
               $souschapitreTMP = "";
-  			 messageLog ("Info", "J'ai trouv� le titre du sous-chapitre: <b>$souschapitre</b>");
+  			 messageLog ("Info", "J'ai trouvé le titre du sous-chapitre: <b>$souschapitre</b>");
 			break;
 			}
          break;
@@ -358,7 +358,7 @@ function endElement($parser, $name) {
 			$flagPartiesLiminaires = 0;
             $partiesLiminaires = $partiesLiminairesTMP ;
             $partiesLiminairesTMP = "";
-			 messageLog ("Info", "J'ai trouv� les parties liminaires: <b>$partiesLiminaires</b>");
+			 messageLog ("Info", "J'ai trouvé les parties liminaires: <b>$partiesLiminaires</b>");
          break;
          case "NOTE":
 		 	$flagNote = 0;
@@ -383,26 +383,26 @@ function endElement($parser, $name) {
 			$flagPageDeTitre = 0;
             $pageDeTitre = $pageDeTitreTMP ;
             $pageDeTitreTMP = "";
-			 messageLog ("Info", "J'ai trouv� la page de titre: <b>$pageDeTitre</b>");
+			 messageLog ("Info", "J'ai trouvé la page de titre: <b>$pageDeTitre</b>");
          break;
          case "TOMAISON":
          break;
          case "DIV1":
-		 	messageLog("Info", "Ecriture de la derni�re page par d�faut<br>Ignorer le message d'erreur de cr�ation XML suivant s'il apparait.");
+		 	messageLog("Info", "Ecriture de la derniére page par défaut<br>Ignorer le message d'erreur de création XML suivant s'il apparait.");
 			ecritFichier($page,$xmlParagraphe);
 			$texte = "";
 			$texteParagraphe = "";
 			$xmlParagraphe = "";
          break;
          case "DIV2":
-		 	messageLog("Info", "Ecriture de la derni�re page par d�faut<br>Ignorer le message d'erreur de cr�ation XML suivant s'il apparait.");
+		 	messageLog("Info", "Ecriture de la derniére page par défaut<br>Ignorer le message d'erreur de création XML suivant s'il apparait.");
 			ecritFichier($page,$xmlParagraphe);
 			$texte = "";
 			$texteParagraphe = "";
 			$xmlParagraphe = "";
          break;
          case "DIV3":
-		 	messageLog("Info", "Ecriture de la derni�re page par d�faut<br>Ignorer le message d'erreur de cr�ation XML suivant s'il apparait.");
+		 	messageLog("Info", "Ecriture de la derniére page par défaut<br>Ignorer le message d'erreur de création XML suivant s'il apparait.");
 			ecritFichier($page,$xmlParagraphe);
 			$texte = "";
 			$texteParagraphe = "";
@@ -428,11 +428,11 @@ function endElement($parser, $name) {
          break;
          default:
 //         print "<p>Element XML inconnu: $name";
-			messageLog("Erreur","Balise < /$name > d�tect�e mais non trait�e");
+			messageLog("Erreur","Balise < /$name > détectée mais non traitée");
          $texte = $texte."</".$name.">";
 
     }
-         if (!$flag->ote($name)) {echo "<p>Document XML Invalide -- El�ment fermant <$name> asym�trique";}
+         if (!$flag->ote($name)) {echo "<p>Document XML Invalide -- Elément fermant <$name> asymétrique";}
 }
 
 /**
@@ -508,7 +508,7 @@ function characterData($parser, $data) {
          break;
          default:
 		 	if (($data <> "")&&($data <> "\n")) {
-			 messageLog ("Erreur","Les donn�es de la balise ".$flag->valeur()." n'ont pas �t� trait�es:<br>Data = $data");
+			 messageLog ("Erreur","Les données de la balise ".$flag->valeur()." n'ont pas été traitées:<br>Data = $data");
     	     $texte = $texte.$data;
 			}
          }
@@ -533,7 +533,7 @@ function PIHandler($parser, $target, $data) {
    if (trustedFile($parser_file[$parser])) {
       eval($data);
    } else {
-     printf("Code PHP peu s�r : <B>%s</B>",
+     printf("Code PHP peu sér : <B>%s</B>",
      htmlspecialchars($data));
    }
    break;
@@ -637,7 +637,7 @@ function ecritParagraphe($numero){
     global $partie, $chapitre, $souschapitre ;
 	global $texte,$front,$page,$texteParagraphe ;
 	
-	messageLog ("Info", "Le <b>paragraphe: $numero</b> est termin�.");
+	messageLog ("Info", "Le <b>paragraphe: $numero</b> est terminé.");
 
 	$tmp = "";
 	if ($partie<>"") {
@@ -661,7 +661,7 @@ function ecritFichier(&$file, $texte){
 	global $baseDir , $front; 
 
 	if ($file==""){
-		messageLog ("Erreur","Le fichier XML ne peut �tre �crit: nom invalide.");
+		messageLog ("Erreur","Le fichier XML ne peut étre écrit: nom invalide.");
 	}else {
 		$texte = $front.$texte.'
     </ouvrage>';

@@ -28,14 +28,14 @@ case "moi":
 	$visiteur = api_colis_user_id($userColis);	
 
 	if ($pid!=""){
-			$sql = sql_query("select titre,nombre_noeuds,date_titre,type_book from cb_ouvrages where pid='$pid'",$dbi);
-			list($titre,$nb_noeuds, $date_titre,$type_book)=sql_fetch_row($sql, $dbi);
+			$sql = mysqli_query($dbi, "select titre,nombre_noeuds,date_titre,type_book from cb_ouvrages where pid='$pid'");
+			list($titre,$nb_noeuds, $date_titre,$type_book)=mysqli_fetch_row($sql);
 			$label = afficheTitreOuvrage($titre, $date_titre, $type_book);
-			afficheLeTitre("Les parcours dans $label pour $visiteur","du nombre de paragraphes visualisés par ce visiteur",$mode, $limit);
+			afficheLeTitre("Les parcours dans $label pour $visiteur","du nombre de paragraphes visualisÃ©s par ce visiteur",$mode, $limit);
 			$maxCount = afficheLesParagraphes($lecture,$visiteur,$mode, $limit,$pid,$nb_noeuds);
 			$limit = afficheEchelleCouleurs($maxCount, $compteur);
 	}else{
-			afficheLeTitre("Les parcours dans les ouvrages du corpus pour $visiteur","du nombre de paragraphes visualisés par ce visiteur",$mode, $limit);
+			afficheLeTitre("Les parcours dans les ouvrages du corpus pour $visiteur","du nombre de paragraphes visualisÃ©s par ce visiteur",$mode, $limit);
 			$maxCount = afficheListeOuvrages($lecture,$visiteur,$mode, $limit);
 			$limit = afficheEchelleCouleurs($maxCount, $compteur);
 	}
@@ -43,50 +43,50 @@ break;
 case "visiteur":
 	if ($visiteur!=""){
 		if ($pid!=""){
-			$sql = sql_query("select titre,nombre_noeuds,date_titre,type_book from cb_ouvrages where pid='$pid'",$dbi);
-			list($titre,$nb_noeuds, $date_titre,$type_book)=sql_fetch_row($sql, $dbi);
+			$sql = mysqli_query($dbi, "select titre,nombre_noeuds,date_titre,type_book from cb_ouvrages where pid='$pid'");
+			list($titre,$nb_noeuds, $date_titre,$type_book)=mysqli_fetch_row($sql);
 			$label = afficheTitreOuvrage($titre, $date_titre, $type_book);
-			afficheLeTitre("Les parcours dans $label pour $visiteur","du nombre de paragraphes visualisés par ce visiteur",$mode, $limit);
+			afficheLeTitre("Les parcours dans $label pour $visiteur","du nombre de paragraphes visualisÃ©s par ce visiteur",$mode, $limit);
 			$maxCount = afficheLesParagraphes($lecture,$visiteur,$mode, $limit,$pid,$nb_noeuds);
 			$limit = afficheEchelleCouleurs($maxCount, $compteur);
 		}else{
-			afficheLeTitre("Les parcours dans les ouvrages du corpus pour $visiteur","du nombre de paragraphes visualisés par ce visiteur",$mode, $limit);
+			afficheLeTitre("Les parcours dans les ouvrages du corpus pour $visiteur","du nombre de paragraphes visualisÃ©s par ce visiteur",$mode, $limit);
 			$maxCount = afficheListeOuvrages($lecture,$visiteur,$mode, $limit);
 			$limit = afficheEchelleCouleurs($maxCount, $compteur);
 		}
 	}else{
-		afficheLeTitre("Les parcours dans les ouvrages du corpus par visiteur","du nombre de paragraphes visualisés par ce visiteur",$mode, $limit);
+		afficheLeTitre("Les parcours dans les ouvrages du corpus par visiteur","du nombre de paragraphes visualisÃ©s par ce visiteur",$mode, $limit);
 		$maxCount = 0;
 		$tmp = "";
-		$sql = sql_query("select distinct user from cb_parcours order by user",$dbi);
-		while (list($visiteur)=sql_fetch_row($sql, $dbi)){
+		$sql = mysqli_query($dbi, "select distinct user from cb_parcours order by user");
+		while (list($visiteur)=mysqli_fetch_row($sql)){
 		//	echo "<p>recherche pour $titre";
 //creation table cb_parcours_count initialisation		
-//			$result = sql_query("select pid from cb_ouvrages",$dbi);
-//			while (list($pid)=sql_fetch_row($result, $dbi)){
-//				$requete = sql_query("select count(source) from cb_parcours where user='$visiteur' and ouvrage='$pid'",$dbi);
-//				list($count) = sql_fetch_row($requete, $dbi);
+//			$result = mysqli_query($dbi, "select pid from cb_ouvrages");
+//			while (list($pid)=mysqli_fetch_row($result)){
+//				$requete = mysqli_query($dbi, "select count(source) from cb_parcours where user='$visiteur' and ouvrage='$pid'");
+//				list($count) = mysqli_fetch_row($requete);
 //				if ($count>0){
-//					$insert = sql_query("INSERT INTO `cb_parcours_count` ( `ouvrage` , `count` , `user` ) VALUES ('$pid','$count','$visiteur' )", $dbi);
+//					$insert = mysqli_query($dbi, "INSERT INTO `cb_parcours_count` ( `ouvrage` , `count` , `user` ) VALUES ('$pid','$count','$visiteur' )");
 //				}
 //			}
 
-			$result = sql_query("select pid from cb_ouvrages",$dbi);
-			while (list($pid)=sql_fetch_row($result, $dbi)){
-				$requete = sql_query("select sum(elapsed) from cb_parcours where user='$visiteur' and ouvrage='$pid'",$dbi);
-				list($count) = sql_fetch_row($requete, $dbi);
+			$result = mysqli_query($dbi, "select pid from cb_ouvrages");
+			while (list($pid)=mysqli_fetch_row($result)){
+				$requete = mysqli_query($dbi, "select sum(elapsed) from cb_parcours where user='$visiteur' and ouvrage='$pid'");
+				list($count) = mysqli_fetch_row($requete);
 				if ($count>0){
-					sql_query("update `cb_parcours_count` set elapsed='$count' where `ouvrage`='$pid' and `user`='$visiteur'", $dbi);
+					mysqli_query($dbi, "update `cb_parcours_count` set elapsed='$count' where `ouvrage`='$pid' and `user`='$visiteur'");
 				}
 			}
 //fin creation
 		
 			if ($lecture=="click"){
-				$requete = sql_query("select sum(count) from cb_parcours_count where user='$visiteur'",$dbi);
+				$requete = mysqli_query($dbi, "select sum(count) from cb_parcours_count where user='$visiteur'");
 			}else if ($lecture=="elapse"){
-				$requete = sql_query("select sum(elapsed) from cb_parcours where user='$visiteur'",$dbi);
+				$requete = mysqli_query($dbi, "select sum(elapsed) from cb_parcours where user='$visiteur'");
 			}	
-			list($count) = sql_fetch_row($requete, $dbi);
+			list($count) = mysqli_fetch_row($requete);
 			$compteur->ajouteUnique($count);
 			if (($mode!="short")||($count>=$limit)) {
 				$tmp .= "<div class=\"C$count\">".boutonSelfCommande("&visiteur=$visiteur","Les lectures de $visiteur ($count)","_self","")."</div>";	
@@ -101,12 +101,12 @@ case "visiteur":
 	}
 break;
 case "corpus":
-	afficheLeTitre("Les parcours dans les ouvrages du corpus","du nombre de fois où le paragraphe a été visualisé",$mode, $limit);
+	afficheLeTitre("Les parcours dans les ouvrages du corpus","du nombre de fois oÃ© le paragraphe a Ã©tÃ© visualisÃ©",$mode, $limit);
 	$maxCount = afficheListeOuvrages($lecture,"",$mode, $limit);
 	$limit = afficheEchelleCouleurs($maxCount, $compteur);
 break;
 case "this":
-	afficheLeTitre("Les parcours dans cet ouvrage","du nombre de fois où le paragraphe a été visualisé",$mode, $limit);
+	afficheLeTitre("Les parcours dans cet ouvrage","du nombre de fois oÃ© le paragraphe a Ã©tÃ© visualisÃ©",$mode, $limit);
 	$maxCount = afficheLesParagraphes($lecture,"",$mode, $limit,$ouvrage,$nombre_noeuds);
 	afficheEchelleCouleurs($maxCount, $compteur);
 break;
@@ -116,7 +116,7 @@ default:
 	Vous devez choisir dans la liste ci-dessous le type d'analyse des parcours que vous voulez effectuer.
 	<br>
 	Vous pouvez choisir d'une part de traiter les informations sur les parcours au niveau d'un utilisateur, d'un ouvrage ou sur l'ensemble du corpus.
-	D'autre part vous pouvez aussi choisir de baser votre analyse sur la durée de lecture ou simplement sur l'appel d'un paragraphe particulier.
+	D'autre part vous pouvez aussi choisir de baser votre analyse sur la durÃ©e de lecture ou simplement sur l'appel d'un paragraphe particulier.
 	</font>
 	<p>
 	<h3>Afficher les parcours ...</h3>
@@ -133,7 +133,7 @@ default:
 	</tr>
 	<tr>
 	<td colspan=\"4\" align=\"center\" class=\"old\">
-	<h3>...par durée de lecture...</h3>
+	<h3>...par durÃ©e de lecture...</h3>
 	</tr>
 	<tr>
 	<td width=\"25%\" align=\"center\">".boutonSelfCommande("&scope=moi&lecture=elapse","... les votres","_self")."</td>
@@ -163,14 +163,14 @@ function afficheLesParagraphes($lecture,$visiteur,$mode, $limit,$ouvrage,$nombre
 
 //debug echo "<p>appel afficheLesParagraphes $visiteur,$mode, $limit,$ouvrage,$nombre_noeuds";
 	for ($i=2;$i<=$nombre_noeuds;$i++){
-	//  $sql = sql_query("select etape, ouvrage, source, parcours, cible, type, notion, user from cb_parcours where ouvrage=$ouvrage",$dbi);
+	//  $sql = mysqli_query($dbi, "select etape, ouvrage, source, parcours, cible, type, notion, user from cb_parcours where ouvrage=$ouvrage");
 		if ($lecture=="click"){
-			$sql = sql_query("select count(source) from cb_parcours where $sqlvisiteur ouvrage=$ouvrage and source=$i",$dbi);
+			$sql = mysqli_query($dbi, "select count(source) from cb_parcours where $sqlvisiteur ouvrage=$ouvrage and source=$i");
 		}else if ($lecture=="elapse"){
-			$sql = sql_query("select sum(elapsed) from cb_parcours where $sqlvisiteur ouvrage=$ouvrage and source=$i",$dbi);
+			$sql = mysqli_query($dbi, "select sum(elapsed) from cb_parcours where $sqlvisiteur ouvrage=$ouvrage and source=$i");
 		}	
 //debug		echo "select count(source) from cb_parcours where $sqlvisiteur ouvrage=$ouvrage and source=$i";
-		list($count) = sql_fetch_row($sql, $dbi);
+		list($count) = mysqli_fetch_row($sql);
 		$compteur->ajouteUnique($count);
 		if (($mode!="short")||($count>=$limit)) {
 			$tmp .= "\n".affichageIcone($i, "C".$count);
@@ -208,12 +208,12 @@ function afficheListeOuvrages($lecture,$visiteur,$mode, $limit){
 		$sql .= " user='$visiteur' and";
 	}
 	// On fait la liste des ouvrages
-	$result = sql_query("select pid, titre,debut,date_titre,type_book from cb_ouvrages where active=1 order by date_titre, titre",$dbi);
-	while (list($pid, $titre, $debut,$date_titre,$type_book)=sql_fetch_row($result, $dbi)){
-		// Pour chaque ouvrage, on vérifie combien de fois l'internaute l'a lu
+	$result = mysqli_query($dbi, "select pid, titre,debut,date_titre,type_book from cb_ouvrages where active=1 order by date_titre, titre");
+	while (list($pid, $titre, $debut,$date_titre,$type_book)=mysqli_fetch_row($result)){
+		// Pour chaque ouvrage, on vÃ©rifie combien de fois l'internaute l'a lu
 //	echo "<p>recherche pour $titre";
-		$requete = sql_query("$sql ouvrage=$pid",$dbi);
-		list($count) = sql_fetch_row($requete, $dbi);
+		$requete = mysqli_query($dbi, "$sql ouvrage=$pid");
+		list($count) = mysqli_fetch_row($requete);
 		if ($count != 0){
 			$compteur->ajouteUnique($count);
 			if (($mode!="short")||($count>=$limit)) {
@@ -246,8 +246,8 @@ function afficheListeOuvrages($lecture,$visiteur,$mode, $limit){
 function afficheLeTitre($titre, $quoi, $mode,$limit){
 	echo "<h2>$titre</h2>
 	<font class=\"content\">
-	L'échelle de couleur sur le côté donne les variation de teinte en fonction $quoi";
-	if ($mode=="short") echo "<br>Ne sont présentés que ceux qui ont été lus $limit fois ou plus.";
+	L'Ã©chelle de couleur sur le cÃ©tÃ© donne les variation de teinte en fonction $quoi";
+	if ($mode=="short") echo "<br>Ne sont prÃ©sentÃ©s que ceux qui ont Ã©tÃ© lus $limit fois ou plus.";
 	echo "</font>
 	<table>
 	<tr><td>";

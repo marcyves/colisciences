@@ -20,8 +20,8 @@ require_once("mainfile.php");
 
 function viewbanner() {
     global $prefix, $dbi, $admin;
-    $bresult = sql_query("select * from ".$prefix."_banner", $dbi);
-    $numrows = sql_num_rows($bresult, $dbi);
+    $bresult = mysqli_query($dbi, "select * from ".$prefix."_banner");
+    $numrows = sql_num_rows($bresult);
 
 /* Get a random banner if exist any. */
 /* More efficient random stuff, thanks to Cristian Arroyo from http://www.planetalinux.com.ar */
@@ -33,22 +33,22 @@ function viewbanner() {
     } else {
 	$bannum = 0;
     }
-    $bresult2 = sql_query("select bid, imageurl from ".$prefix."_banner limit $bannum,1", $dbi);
-    list($bid, $imageurl) = sql_fetch_row($bresult2, $dbi);
+    $bresult2 = mysqli_query($dbi, "select bid, imageurl from ".$prefix."_banner limit $bannum,1");
+    list($bid, $imageurl) = mysqli_fetch_row($bresult2);
     
     if (is_admin($admin)) {
     } else {
-	sql_query("update ".$prefix."_banner set impmade=impmade+1 where bid=$bid", $dbi);
+	mysqli_query($dbi, "update ".$prefix."_banner set impmade=impmade+1 where bid=$bid");
     }
     if($numrows>0) {
-	$aborrar = sql_query("select cid, imptotal, impmade, clicks, date from ".$prefix."_banner where bid=$bid", $dbi);
-	list($cid, $imptotal, $impmade, $clicks, $date) = sql_fetch_row($aborrar, $dbi);
+	$aborrar = mysqli_query($dbi, "select cid, imptotal, impmade, clicks, date from ".$prefix."_banner where bid=$bid");
+	list($cid, $imptotal, $impmade, $clicks, $date) = mysqli_fetch_row($aborrar);
 
 /* Check if this impression is the last one and print the banner */
 
 	if (($imptotal <= $impmade) AND ($imptotal != 0)) {
-	    sql_query("insert into ".$prefix."_bannerfinish values (NULL, '$cid', '$impmade', '$clicks', '$date', now())", $dbi);
-	    sql_query("delete from ".$prefix."_banner where bid=$bid", $dbi);
+	    mysqli_query($dbi, "insert into ".$prefix."_bannerfinish values (NULL, '$cid', '$impmade', '$clicks', '$date', now())");
+	    mysqli_query($dbi, "delete from ".$prefix."_banner where bid=$bid");
 	}
     echo"<center><a href=\"banners.php?op=click&amp;bid=$bid\" target=\"_blank\"><img src=\"$imageurl\" border=\"1\" alt=\"\"></a></center>";
     }
@@ -61,9 +61,9 @@ function viewbanner() {
 
 function clickbanner($bid) {
     global $prefix, $dbi;
-    $bresult = sql_query("select clickurl from ".$prefix."_banner where bid=$bid", $dbi);
-    list($clickurl) = sql_fetch_row($bresult, $dbi);
-    sql_query("update ".$prefix."_banner set clicks=clicks+1 where bid=$bid", $dbi);
+    $bresult = mysqli_query($dbi, "select clickurl from ".$prefix."_banner where bid=$bid");
+    list($clickurl) = mysqli_fetch_row($bresult);
+    mysqli_query($dbi, "update ".$prefix."_banner set clicks=clicks+1 where bid=$bid");
     Header("Location: $clickurl");
 }
 
@@ -103,8 +103,8 @@ function clientlogin() {
 
 function bannerstats($login, $pass) {
     global $prefix, $dbi;
-    $result = sql_query("select cid, name, passwd from ".$prefix."_bannerclient where login='$login'", $dbi);
-    list($cid, $name, $passwd) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select cid, name, passwd from ".$prefix."_bannerclient where login='$login'");
+    list($cid, $name, $passwd) = mysqli_fetch_row($result);
     
     if($login=="" AND $pass=="" OR $pass=="") {
 	echo "<center><br>Login Incorrect!!!<br><br><a href=\"javascript:history.go(-1)\">Back to Login Screen</a></center>";
@@ -129,8 +129,8 @@ function bannerstats($login, $pass) {
     <td bgcolor=\"#887765\"><font color=\"Black\"><center><b>Clicks</b></td>
     <td bgcolor=\"#887765\"><font color=\"Black\"><center><b>% Clicks</b></td>
     <td bgcolor=\"#887765\"><font color=\"Black\"><center><b>Functions</b></td><tr>";
-    $result = sql_query("select bid, imptotal, impmade, clicks, date from ".$prefix."_banner where cid='$cid'", $dbi);
-    while(list($bid, $imptotal, $impmade, $clicks, $date) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select bid, imptotal, impmade, clicks, date from ".$prefix."_banner where cid='$cid'");
+    while(list($bid, $imptotal, $impmade, $clicks, $date) = mysqli_fetch_row($result)) {
         if($impmade==0) {
     	    $percent = 0;
         } else {
@@ -156,10 +156,10 @@ function bannerstats($login, $pass) {
     <center><br><br>
     Following are your running Banners in $sitename<br><br>";
 
-    $result = sql_query("select bid, imageurl, clickurl from ".$prefix."_banner where cid='$cid'", $dbi);
-    while(list($bid, $imageurl, $clickurl) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select bid, imageurl, clickurl from ".$prefix."_banner where cid='$cid'");
+    while(list($bid, $imageurl, $clickurl) = mysqli_fetch_row($result)) {
 
-	$numrows = sql_num_rows($result, $dbi);
+	$numrows = $result->num_rows;
 	if ($numrows>1) {
 	    echo "<hr noshade width=\"80%\"><br>";
 	}
@@ -197,8 +197,8 @@ function bannerstats($login, $pass) {
     <td bgcolor=\"#887765\"><font color=\"Black\"><center><b>% Clicks</b></td>
     <td bgcolor=\"#887765\"><font color=\"Black\"><center><b>Start Date</b></td>
     <td bgcolor=\"#887765\"><font color=\"Black\"><center><b>End Date</b></td></tr>";
-    $result = sql_query("select bid, impressions, clicks, datestart, dateend from ".$prefix."_bannerfinish where cid='$cid'", $dbi);
-    while(list($bid, $impressions, $clicks, $datestart, $dateend) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select bid, impressions, clicks, datestart, dateend from ".$prefix."_bannerfinish where cid='$cid'");
+    while(list($bid, $impressions, $clicks, $datestart, $dateend) = mysqli_fetch_row($result)) {
         $percent = substr(100 * $clicks / $impressions, 0, 5);
 	echo "
         <tr><td bgcolor=\"#AA9985\" align=\"center\"><font color=\"White\">$bid</td>
@@ -228,8 +228,8 @@ echo "
 
 function EmailStats($login, $cid, $bid, $pass) {
     global $prefix, $dbi;
-    $result2 = sql_query("select name, email from ".$prefix."_bannerclient where cid='$cid'", $dbi);
-    list($name, $email) = sql_fetch_row($result2, $dbi);
+    $result2 = mysqli_query($dbi, "select name, email from ".$prefix."_bannerclient where cid='$cid'");
+    list($name, $email) = mysqli_fetch_row($result2);
     if ($email=="") {
 	echo "
 	<html>
@@ -241,8 +241,8 @@ function EmailStats($login, $cid, $bid, $pass) {
 	<a href=\"javascript:history.go(-1)\">Back to Banners Stats</a>
 	";
     } else {
-	$result = sql_query("select bid, imptotal, impmade, clicks, imageurl, clickurl, date from ".$prefix."_banner where bid='$bid' and cid='$cid'", $dbi);
-	list($bid, $imptotal, $impmade, $clicks, $imageurl, $clickurl, $date) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select bid, imptotal, impmade, clicks, imageurl, clickurl, date from ".$prefix."_banner where bid='$bid' and cid='$cid'");
+	list($bid, $imptotal, $impmade, $clicks, $imageurl, $clickurl, $date) = mysqli_fetch_row($result);
         if($impmade==0) {
     	    $percent = 0;
         } else {
@@ -279,10 +279,10 @@ function EmailStats($login, $cid, $bid, $pass) {
 
 function change_banner_url_by_client($login, $pass, $cid, $bid, $url) {
     global $prefix, $dbi;
-    $result = sql_query("select passwd from ".$prefix."_bannerclient where cid='$cid'", $dbi);
-    list($passwd) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select passwd from ".$prefix."_bannerclient where cid='$cid'");
+    list($passwd) = mysqli_fetch_row($result);
     if (!empty($pass) AND $pass==$passwd) {
-	sql_query("update ".$prefix."_banner set clickurl='$url' where bid='$bid'", $dbi);
+	mysqli_query($dbi, "update ".$prefix."_banner set clickurl='$url' where bid='$bid'");
 	echo "<center><br>You changed the URL<br><br><a href=\"javascript:history.go(-1)\">Back to Stats Page</a></center>";
     } else {
 	echo "<center><br>Your login/password doesn't match.<br><br>Please <a href=\"banners.php?op=login\">login again</a></center>";

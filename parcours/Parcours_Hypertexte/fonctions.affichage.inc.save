@@ -50,9 +50,9 @@ global $ouvrage, $taille, $nombre_noeuds, $valeur;
   $file = "/Fac/$ouvrage/$i.jpg";
  	creeLienNavigation($valeur);
 	if (file_exists("/var/www/html/".$file)) {
-	    echo "<p align=\"center\"><a href=\"$file\" target=\"popup\"><img src=\"$file\" alt=\"Ouvrir la page $num dans une fenêtre\" width=\"$taille%\"></a><p>";
+	    echo "<p align=\"center\"><a href=\"$file\" target=\"popup\"><img src=\"$file\" alt=\"Ouvrir la page $num dans une fenÃ©tre\" width=\"$taille%\"></a><p>";
 	} else {
-		echo "<h3>Désolé, le fac-similé de la page $num n'est pas encore disponible</h3>";
+		echo "<h3>DÃ©solÃ©, le fac-similÃ© de la page $num n'est pas encore disponible</h3>";
 	}
 }
 
@@ -80,8 +80,8 @@ function affichageIcone($num, $classe) {
 
 /**
  * affiche()
- * Cette fonction sert à afficher tout ce qui apparait dans la boite sous les onglets.
- * Au départ prévue pour afficher les textes du corpus, elle a été "étendue" pour afficher
+ * Cette fonction sert Ã© afficher tout ce qui apparait dans la boite sous les onglets.
+ * Au dÃ©part prÃ©vue pour afficher les textes du corpus, elle a Ã©tÃ© "Ã©tendue" pour afficher
  * aussi de simples messages. 
  * @param $num
  * @param $texte
@@ -98,16 +98,16 @@ function affiche($titre1, $notion, $titre2, $glossaire, $titre3, $parcours3) {
 	global $paragraphe, $texte , $admin , $ouvrage;
 	global $prefix, $dbi;
 	
-//debug	echo "<p>affiche avec les paramètres: $titre1, $notion, $titre2, $glossaire, $titre3, $parcours3";
+//debug	echo "<p>affiche avec les paramÃ©tres: $titre1, $notion, $titre2, $glossaire, $titre3, $parcours3";
 		
 if ($titre3 == "msg") {
-//Nous ne sommes pas en train de présenter un paragrpahe mais un simple message
+//Nous ne sommes pas en train de prÃ©senter un paragrpahe mais un simple message
 	echo "<table><tr><td valign=\"top\">";
 	afficheShowHide("NOT$num", $titre1, $notion);
 	echo "</td></tr></table>";
 } else {
-//Nous sommes en train de présenter un paragraphe
-//Nous commençons par récupérer l'identifiant du paragraphe et de la page'
+//Nous sommes en train de prÃ©senter un paragraphe
+//Nous commenÃ©ons par rÃ©cupÃ©rer l'identifiant du paragraphe et de la page'
 	$num   = $paragraphe['numero'];
 	$page  = $paragraphe['page'];
     if ($num == ""){
@@ -117,7 +117,7 @@ if ($titre3 == "msg") {
 	if (($parcours!="sommaire")&&($parcours!="signets")){
 		creeLienNavigation($num);
 	}
-//Affichage des titres quand ils apparaissent, sinon vu que html ignore les balises on économise les tests.
+//Affichage des titres quand ils apparaissent, sinon vu que html ignore les balises on Ã©conomise les tests.
 	echo "<h3>".$paragraphe['partie']."</h3>
 	<h4>".$paragraphe['chapitre']."</h4>
 	<h5>".$paragraphe['sous-chapitre']."</h5>";
@@ -160,10 +160,10 @@ if ($titre3 == "msg") {
 <table>
 	<tr><td>
 		<select name=\"notion\">
-				<option>sélectionner une notion principale</option>";
+				<option>sÃ©lectionner une notion principale</option>";
 
-	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._NOTION."'", $dbi);
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._NOTION."'");
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 		$listeNotions .= "<option>$title</option>";
 	}
 $tmp .= "
@@ -171,15 +171,15 @@ $tmp .= "
 		</select>
 	</td><td>
 		<select name=\"relation\">
-		<option>sélectionner une relation</option>
+		<option>sÃ©lectionner une relation</option>
 		<option>association</option>
 		<option>opposition</option>
 		<option>composition</option>
-		<option>réitération</option>
+		<option>rÃ©itÃ©ration</option>
 		</select>
 	</td><td>
 		<select name=\"liennotion\">
-		<option>sélectionner une notion liée</option>
+		<option>sÃ©lectionner une notion liÃ©e</option>
 		$listeNotions
 		</select>
 	</td></tr>
@@ -202,7 +202,7 @@ $tmp .= "
  * @return 
  */
 function parseEncyclopedie($texte, $eid){
-	// Variables globales pour accès à l'encyclopédie
+	// Variables globales pour accÃ©s Ã© l'encyclopÃ©die
     global $prefix, $dbi, $sitename, $admin, $multilingual, $module_name;
 
 	// pad it with a space so we can match things at the start of the 1st line.
@@ -212,21 +212,21 @@ function parseEncyclopedie($texte, $eid){
 		$label = "Glossaire";
 	break;
 	case _AUTEURS:
-		$label = "Auteurs_cités";
+		$label = "Auteurs_citÃ©s";
 	break;
 		}
-	// On lit la table des mots du glossaire par ordre alphabétique décroissant pour lire les mots composés
+	// On lit la table des mots du glossaire par ordre alphabÃ©tique dÃ©croissant pour lire les mots composÃ©s
 	// avant le mot simple.
-	// Par exemple 'sulfate de magnésium' avant 'sulfate'
+	// Par exemple 'sulfate de magnÃ©sium' avant 'sulfate'
 	// et pour les remplacer par un lien dans le texte
-	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='$eid' order by title desc", $dbi);
-	if (sql_num_rows($result, $dbi) == 0) {
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='$eid' order by title desc");
+	if ($result->num_rows == 0) {
 	    echo "<center>Le Glossaire n'est pas disponible.</center>";
 	}
 	$i = 0;
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 //debug 	echo "#$title#<br>";
-// Premier test pour ne pas imbriquer les liens dans le glossaire (mots composés)
+// Premier test pour ne pas imbriquer les liens dans le glossaire (mots composÃ©s)
 		if (!preg_match ( "{>".$title."}i", $ret) ){
 			$ret = preg_replace("{(".$title.")\b}i", 
 					"<a href=\"parcours.php?name=$label&op=content&tid=".$tid."\" class=\"$label\" target=\"_blank\">\\1</a>", 
@@ -335,7 +335,7 @@ function creeLienNotion($paragraphe, $notion, $type) {
  */
 function creeLienNavigation($paragraphe) {
     global $admin,$ouvrage,$parcours,$nombre_noeuds, $taille ;
-		// variables correspondant aux entités de la DTD
+		// variables correspondant aux entitÃ©s de la DTD
     global $titre;
     global $nom, $prenom;
     global $editeur, $ville, $date;
@@ -370,7 +370,7 @@ function creeLienNavigation($paragraphe) {
     if ($admin) {
          $lien .= "<input type=submit value=\"Modifier $paragraphe\">";
     } else {  
-         $lien .= "§: $paragraphe";
+         $lien .= "Ã©: $paragraphe";
     }
 		$lien .= creeLien($suivant, "menunav", ">", $parcours);
 	  $lien .= " ";
@@ -390,7 +390,7 @@ echo "</td>
 		if (!isset($taille)) $taille=60;
 	    echo "<td valign=\"top\"><form action=\"parcours.php?name=Parcours_Hypertexte&file=moteurCB&ouvrage=$ouvrage&parcours=Fac&valeur=$num\" method=\"post\">
 		Echelle: <input type=\"text\" name=\"newtaille\" value=\"$taille\" size=\"4\">
-		<input type=\"submit\" value=\"Modifier\">(exemple: 50 pour diminuer de moitié)
+		<input type=\"submit\" value=\"Modifier\">(exemple: 50 pour diminuer de moitiÃ©)
 		</form></td>";
 	}
 echo "	</tr>

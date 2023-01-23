@@ -19,8 +19,8 @@ if (eregi("block-Reviews.php", $PHP_SELF)) {
 
 global $prefix, $dbi;
 
-$result = sql_query("SELECT id, title FROM ".$prefix."_reviews order by id DESC limit 0,10", $dbi);
-while(list($id, $title) = sql_fetch_row($result, $dbi)) {
+$result = mysqli_query($dbi, "SELECT id, title FROM ".$prefix."_reviews order by id DESC limit 0,10");
+while(list($id, $title) = mysqli_fetch_row($result)) {
     $content .= "<strong><big>&middot;</big></strong>&nbsp;<a href=\"modules.php?name=Reviews&amp;rop=showcontent&amp;id=$id\">$title</a><br>";
 }
 
