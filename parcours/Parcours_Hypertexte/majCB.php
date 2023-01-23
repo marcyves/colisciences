@@ -19,11 +19,6 @@
 /*                                                                            */
 /******************************************************************************/
 
-if (!eregi("parcours.php", $PHP_SELF)) {
-    die ("You can't access this file directly...");
-}
-
-
 $colispage = 1;
 $index = 1;
 $parcourspage = 1;
@@ -33,17 +28,17 @@ $parcourspage = 1;
 require_once "fonctions.affichage.inc";
 
 /*
-$titre = "Mise à jour de la table cb_parcours_paragraphe";
+$titre = "Mise ï¿½ jour de la table cb_parcours_paragraphe";
 $sql = sql_query("select max(pid)  from cb_ouvrages",$dbi);
 list( $maxOuvrage) = sql_fetch_row($sql, $dbi);
 
 */
-$titre = "Mise à jour de la table cb_parcours_count";
+$titre = "Mise ï¿½ jour de la table cb_parcours_count";
  $titre = stripslashes($titre);
 
 
 // --------------------------------------------------------------------------------//	
-// On envoie l'en-tête de la page
+// On envoie l'en-tï¿½te de la page
 // --------------------------------------------------------------------------------//	
 include("header.php");
 
@@ -89,7 +84,7 @@ echo "<h1>Traitement cb_parcours</h1>";
 				$rc = sql_query($sql2,$dbi);
 //				echo $sql2.";<br>";
 			}else{
-				echo "$visiteur à revoir<br>";
+				echo "$visiteur ï¿½ revoir<br>";
 			}
 		}
 
@@ -101,7 +96,7 @@ echo "<h1>traitement cb_parcours_count</h1>";
 				echo "change $visiteur en $user<br>";
 				$sql2 = sql_query("update cb_parcours_count set user='$user' where user='$visiteur'",$dbi);
 			}else{
-				echo "$visiteur à revoir<br>";
+				echo "$visiteur ï¿½ revoir<br>";
 			}
 		}
 

@@ -12,11 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("block-Forums.php", $PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
-
 global $prefix, $dbi, $sitename;
 
 $result = sql_query("SELECT topic_id, topic_title, forum_id FROM ".$prefix."_bbtopics ORDER BY topic_time DESC LIMIT 10", $dbi);

@@ -12,8 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
-
 $result = sql_query("select radmindownload, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
 list($radmindownload, $radminsuper) = sql_fetch_row($result, $dbi);
 if (($radmindownload==1) OR ($radminsuper==1)) {
@@ -767,7 +765,7 @@ function DownloadsDelCat($cid, $sid, $sub, $ok=0) {
 	    sql_query("delete from ".$prefix."_downloads_downloads where cid=$cid", $dbi);
 	} else {
 	    sql_query("delete from ".$prefix."_downloads_downloads where cid=$cid", $dbi);
-		// suppression des liens de catégories filles
+		// suppression des liens de catï¿½gories filles
     	$result2 = sql_query("select cid from ".$prefix."_downloads_categories where parentid=$cid", $dbi);
     	while(list($cid2) = sql_fetch_row($result2, $dbi)) {
 			sql_query("delete from ".$prefix."_downloads_downloads where cid=$cid2", $dbi);

@@ -12,11 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("block-Login.php", $PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
-
 global $admin, $user;
 
 $content = "<form action=\"modules.php?name=Your_Account\" method=\"post\">";

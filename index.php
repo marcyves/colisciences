@@ -15,42 +15,39 @@ $sql_debug = 0;
 require_once("mainfile.php");
 
 $PHP_SELF = "modules.php";
-$result = sql_query("select main_module from ".$prefix."_main", $dbi);
-list($name) = sql_fetch_row($result, $dbi);
+$result = $dbi->query("select main_module from ".$prefix."_main");
+$line = $result->fetch_object();
+$name = $line->main_module;
 $home = 1;
 if ($httpref==1) {
     $referer = getenv("HTTP_REFERER");
-    if ($referer=="" OR eregi("^unknown", $referer) OR substr("$referer",0,strlen($nukeurl))==$nukeurl OR eregi("^bookmark",$referer)) {
+    if ($referer=="" OR preg_match("/^unknown/i", $referer) OR substr("$referer",0,strlen($nukeurl))==$nukeurl OR preg_match("/^bookmark/i",$referer)) {
     } else {
-        sql_query("insert into ".$prefix."_referer values (NULL, '$referer')", $dbi);
+        $dbi->query("insert into ".$prefix."_referer values (NULL, '$referer')");
     }
-    $result = sql_query("select * from ".$prefix."_referer", $dbi);
-    $numrows = sql_num_rows($result, $dbi);
+    $result = $dbi->query("select * from ".$prefix."_referer");
+    $numrows = $result->num_rows;
     if($numrows>=$httprefmax) {
-        sql_query("delete from ".$prefix."_referer", $dbi);
+        $dbi->query("delete from ".$prefix."_referer");
     }
 }
 if (!isset($mop)) { $mop="modload"; }
 if (!isset($mod_file)) { $mod_file="index"; }
-if (ereg("\.\.",$name) || ereg("\.\.",$file)) {
-    echo "You are so cool...";
-} else {
-    $modpath="modules/$name/$mod_file.php";
+$modpath="modules/$name/$mod_file.php";
 
-    if (file_exists($modpath)) {
-	        include($modpath);
+if (file_exists($modpath)) {
+        include($modpath);
+} else {
+    $index = 1;
+    include("headerMain.php");
+    OpenTable();
+    if (is_admin($admin)) {
+        echo "<center><font class=\"\"><b>"._HOMEPROBLEM."</b></font><br><br>[ <a href=\"admin.php?op=modules\">"._ADDAHOME."</a> ]</center>";
     } else {
-        $index = 1;
-        include("headerMain.php");
-        OpenTable();
-        if (is_admin($admin)) {
-            echo "<center><font class=\"\"><b>"._HOMEPROBLEM."</b></font><br><br>[ <a href=\"admin.php?op=modules\">"._ADDAHOME."</a> ]</center>";
-        } else {
-            echo "<center>"._HOMEPROBLEMUSER."</center>";
-        }
-        CloseTable();
-        include("footer.php");
+        echo "<center>"._HOMEPROBLEMUSER."</center>";
     }
+    CloseTable();
+    include("footer.php");
 }
 
 ?>

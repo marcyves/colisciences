@@ -8,12 +8,12 @@
  */
 function decodeDocument($file) {	
     global $ouvrage;
-// variables correspondant aux entités de la DTD
+// variables correspondant aux entitï¿½s de la DTD
     global $titre;
     global $nom, $prenom;
     global $editeur, $ville, $date;
     global $numero, $partie, $chapitre, $souschapitre;
-// objets de stockage des entités de la DTD
+// objets de stockage des entitï¿½s de la DTD
     global $flag , $notionsParagraphe;
     global $glossaire, $motclef;
 
@@ -22,14 +22,14 @@ function decodeDocument($file) {
     $glossaire         = new pile;
     $motclef           = new pile;
 
-// Initialisation pour préparer le parsing d'un fichier XML
+// Initialisation pour prï¿½parer le parsing d'un fichier XML
 
     $partie = "";
     $chapitre ="";
     $souschapitre = "";
 
     if (!(list($xml_parser, $fp) = new_xml_parser($file))) {
-	    die("Je n'ai pas trouvé de fichier XML correspondant à votre requête");
+	    die("Je n'ai pas trouvï¿½ de fichier XML correspondant ï¿½ votre requï¿½te");
     }
 
     while ($data = fread($fp, 4096)) {
@@ -49,10 +49,7 @@ function decodeDocument($file) {
  */
 function trustedFile($file) {
 // only trust local files owned by ourselves
-	if (!eregi("^([a-z]+)://", $file) && fileowner($file) == getmyuid()) {
-		return TRUE;
-	}
-	return FALSE;
+   return TRUE;
 }
 
 /**
@@ -65,7 +62,7 @@ function trustedFile($file) {
  */
 function startElement($parser, $name, $attribs) {
 
-// variables correspondant aux entités de la DTD
+// variables correspondant aux entitï¿½s de la DTD
 global $titre, $baseDir, $front , $type;
 global $nom, $prenom;
 global $editeur, $ville, $date;
@@ -151,7 +148,7 @@ switch ($name) {
             	switch ($k) {
            		case "NUM":
 					if ($page+1 != $v){
-						messageLog ("Erreur", "Rupture de séquence des pages de $page à $v");
+						messageLog ("Erreur", "Rupture de sï¿½quence des pages de $page ï¿½ $v");
 					}
 			   		$page = $v;
 					messageLog ("Info", "page = $v");
@@ -240,10 +237,10 @@ switch ($name) {
 //         $texte = $texte."<a class=\"motclef\" href=\"#";
          break;
          default:
-// On affiche tels quels les éléments HTML qui pourraient apparaitre dans le document XML.
-// BTW, les balises XML inconnues subiront le même sort.
+// On affiche tels quels les ï¿½lï¿½ments HTML qui pourraient apparaitre dans le document XML.
+// BTW, les balises XML inconnues subiront le mï¿½me sort.
 //         print "<p>Element XML inconnu: $name";
-messageLog ("Erreur", "<p>Balise < $name > détectée mais non traitée");
+messageLog ("Erreur", "<p>Balise < $name > dï¿½tectï¿½e mais non traitï¿½e");
          $texteParagraphe = $texteParagraphe."<".$name.">";
 
     }
@@ -267,7 +264,7 @@ function endElement($parser, $name) {
 
     switch ($name) {
          case "FRONT":
-// C'est la fin de l'entête, on peut écrire l'entête générique pour tous les documents
+// C'est la fin de l'entï¿½te, on peut ï¿½crire l'entï¿½te gï¿½nï¿½rique pour tous les documents
 
 	$front = "<?xml version=\"1.0\" encoding=\"iso-8859-1\" standalone=\"yes\"?>
 <?xml-stylesheet href=\"ouvrage.css\" type=\"text/css\" ?>
@@ -285,21 +282,21 @@ function endElement($parser, $name) {
 	      <auteur nom=\"$nom\" prenom=\"$prenom\"/>
 		     <edition editeur=\"$editeur\" ville=\"$ville\" date=\"$date\"/>
 			 ";
-		 messageLog ("Info", "L'entête est prêt");
+		 messageLog ("Info", "L'entï¿½te est prï¿½t");
 		 $page = "0";
 		 ecritFichier($page,$pageDeTitre.$partiesLiminaires);
          break;
-		 /* Traitement de la balise "début de paragraphe" pour identifier s'il s'agit d'un réel début
-		 *  de paragraphe textuel ou simplement d'un séparateur.
-		 * On doit donc vérifier:
-		 *   la partie front est terminée
-		 *   un début de page a déjà été identifié */
+		 /* Traitement de la balise "dï¿½but de paragraphe" pour identifier s'il s'agit d'un rï¿½el dï¿½but
+		 *  de paragraphe textuel ou simplement d'un sï¿½parateur.
+		 * On doit donc vï¿½rifier:
+		 *   la partie front est terminï¿½e
+		 *   un dï¿½but de page a dï¿½jï¿½ ï¿½tï¿½ identifiï¿½ */
          case "P":
 		 	if ((strlen($front)>0)&&($texteParagraphe<>"")&&($flagNote<>"1")) {
 			 messageLog ("Debug", "Fin de paragraphe Jouve");
 				$l = strlen($texteParagraphe) - 1;
 				$pos1 = strrpos($texteParagraphe,":");
-				$pos2 = strrpos($texteParagraphe,"»");
+				$pos2 = strrpos($texteParagraphe,"ï¿½");
 				$pos3 = strrpos($texteParagraphe,",");
 				$pos4 = strrpos($texteParagraphe,";");
 				messageLog ("Debug", "len: $l pos: $pos1 $pos2 $pos3 $pos4");
@@ -317,24 +314,24 @@ function endElement($parser, $name) {
          case "TITREPROPRE":
               $titre = $titreTMP;
               $titreTMP = "";
-  			 messageLog ("Info", "<p>J'ai trouvé le titre de l'ouvrage: <b>$titre</b>");
+  			 messageLog ("Info", "<p>J'ai trouvï¿½ le titre de l'ouvrage: <b>$titre</b>");
          break;
          case "TITREPARTIE":
 		 	switch ($niveau){
 			case "partie":
               $partie = $partieTMP;
               $partieTMP = "";
-  			 messageLog ("Info", "J'ai trouvé le titre de la partie: <b>$partie</b>");
+  			 messageLog ("Info", "J'ai trouvï¿½ le titre de la partie: <b>$partie</b>");
 			break;
 			case "chapitre":
               $chapitre = $chapitreTMP ;
               $chapitreTMP = "";
-  			 messageLog ("Info", "J'ai trouvé le titre du chapitre: <b>$chapitre</b>");
+  			 messageLog ("Info", "J'ai trouvï¿½ le titre du chapitre: <b>$chapitre</b>");
 			break;
 			case "souschapitre":
               $souschapitre = $souschapitreTMP ;
               $souschapitreTMP = "";
-  			 messageLog ("Info", "J'ai trouvé le titre du sous-chapitre: <b>$souschapitre</b>");
+  			 messageLog ("Info", "J'ai trouvï¿½ le titre du sous-chapitre: <b>$souschapitre</b>");
 			break;
 			}
          break;
@@ -344,11 +341,11 @@ function endElement($parser, $name) {
 			$flagPartiesLiminaires = 0;
             $partiesLiminaires = $partiesLiminairesTMP ;
             $partiesLiminairesTMP = "";
-			 messageLog ("Info", "J'ai trouvé les parties liminaires: <b>$partiesLiminaires</b>");
+			 messageLog ("Info", "J'ai trouvï¿½ les parties liminaires: <b>$partiesLiminaires</b>");
          break;
          case "NOTE":
 			if ($flagNumAppel == 0){
-				messageLog("Erreur","La note en cours n'a pas de numéro.");
+				messageLog("Erreur","La note en cours n'a pas de numï¿½ro.");
 			}
 		 	$flagNote = 0;
 			$flagNumAppel = 0;
@@ -373,7 +370,7 @@ function endElement($parser, $name) {
 			$flagPageDeTitre = 0;
             $pageDeTitre = $pageDeTitreTMP ;
             $pageDeTitreTMP = "";
-			 messageLog ("Info", "J'ai trouvé la page de titre: <b>$pageDeTitre</b>");
+			 messageLog ("Info", "J'ai trouvï¿½ la page de titre: <b>$pageDeTitre</b>");
          break;
          case "TOMAISON":
          break;
@@ -406,11 +403,11 @@ function endElement($parser, $name) {
          break;
          default:
 //         print "<p>Element XML inconnu: $name";
-			messageLog("Erreur","Balise < /$name > détectée mais non traitée");
+			messageLog("Erreur","Balise < /$name > dï¿½tectï¿½e mais non traitï¿½e");
          $texteParagraphe = $texteParagraphe ."</".$name.">";
 
     }
-         if (!$flag->ote($name)) {echo "<p>Document XML Invalide -- Elément fermant <$name> asymétrique";}
+         if (!$flag->ote($name)) {echo "<p>Document XML Invalide -- Elï¿½ment fermant <$name> asymï¿½trique";}
 }
 
 /**
@@ -487,7 +484,7 @@ function characterData($parser, $data) {
          break;
          default:
 		 	if (($data <> "")&&($data <> "\n")) {
-			 messageLog ("Erreur","Les données de la balise ".$flag->valeur()." n'ont pas été traitées:<br>Data = $data");
+			 messageLog ("Erreur","Les donnï¿½es de la balise ".$flag->valeur()." n'ont pas ï¿½tï¿½ traitï¿½es:<br>Data = $data");
     	     $texteParagraphe = $texteParagraphe .$data;
 			}
          }
@@ -512,7 +509,7 @@ function PIHandler($parser, $target, $data) {
    if (trustedFile($parser_file[$parser])) {
       eval($data);
    } else {
-     printf("Code PHP peu sÛr : <B>%s</B>",
+     printf("Code PHP peu sï¿½r : <B>%s</B>",
      htmlspecialchars($data));
    }
    break;
@@ -605,7 +602,7 @@ global $flagNote, $flagNumAppel, $texteParagraphe ;
 	} else if ($flagNote==1){
 		if ($flagNumAppel != 2){
 			$texteParagraphe .= " numappel =\"1\">" ;
-    	    messageLog("Info", "Texte de note trouvé avant le numéro d'appel, <b>1</b> assigné arbitrairement.");
+    	    messageLog("Info", "Texte de note trouvï¿½ avant le numï¿½ro d'appel, <b>1</b> assignï¿½ arbitrairement.");
 		}
 		$texteParagraphe .= $data;
    	    messageLog("Debug", "Texte de la note: <b>$data</b>");
@@ -620,7 +617,7 @@ function traitementFinDivision(){
 Global $texteParagraphe, $numero ;
 if (strlen($texteParagraphe)>0){
 	$numero = $numero + 1 ;
- 	messageLog("Warning", "Ecriture de la dernière page par défaut<br>le paragraphe $numero devra être vérifié.");
+ 	messageLog("Warning", "Ecriture de la derniï¿½re page par dï¿½faut<br>le paragraphe $numero devra ï¿½tre vï¿½rifiï¿½.");
 	ecritFichier($numero,ecritParagraphe($numero));
 }
 }

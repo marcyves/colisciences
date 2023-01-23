@@ -6,37 +6,44 @@
 /* http://www.nukescripts.com                           */
 /*                                                      */
 /********************************************************/
-
 $PHP_SELF = $_SERVER['PHP_SELF'];
-//$tmp = "post";
-foreach ($HTTP_GET_VARS as $key => $secvalue) {
-    if (eregi("<[^>]*script*\"?[^>]*>", $secvalue)) {
-        die ("I don't like you...");
-    }else{
-		eval("$\$key = \"$secvalue\";");
-	}
+
+// override old superglobals if php is higher then 4.1.0
+$HTTP_GET_VARS = $_GET;
+$HTTP_POST_VARS = $_POST;
+$HTTP_SERVER_VARS = $_SERVER;
+$HTTP_POST_FILES = $_FILES;
+$HTTP_ENV_VARS = $_ENV;
+$PHP_SELF = $_SERVER['PHP_SELF'];
+if(isset($_SESSION)) {
+  $HTTP_SESSION_VARS = $_SESSION;
 }
+if(isset($_COOKIE)) {
+  $HTTP_COOKIE_VARS= $_COOKIE;
+}
+
+
+
+foreach ($HTTP_GET_VARS as $key => $secvalue) {
+		eval("$\$key = \"$secvalue\";");
+    }
 
 foreach ($HTTP_POST_VARS as $key => $secvalue) {
-    if (eregi("<[^>]*script*\"?[^>]*>", $secvalue)) {
-        die ("I don't like you...");
-    }else{
 		eval("$\$key = \"$secvalue\";");
-//$tmp .= "<br>$key = $secvalue";
-	}
-}
-
-if (eregi("mainfile.php",$PHP_SELF)) {
-    Header("Location: index.php");
-    die();
 }
 
 require_once("config.php");
-require_once("includes/sql_layer.php");
-$dbi = sql_connect($dbhost, $dbuname, $dbpass, $dbname);
+$dbi= new mysqli($dbhost, $dbuname, $dbpass, $dbname);
+// Check for errors
+if(mysqli_connect_errno()){
+    echo mysqli_connect_error();
+    die();
+}
+
+$dbi->set_charset('utf8mb4');
 $mainfile = 1;
 
-$desolePageInexitante = "Désolé, cette page n'existe pas...<br>Veuillez utiliser la commande \"Page Précédente\" de votre navigateur pour continuer et avertir le webmaster pour que nous remédions à ce problème.";
+$desolePageInexitante = "DÃ©solÃ©, cette page n'existe pas...<br>Veuillez utiliser la commande \"Page PrÃ©cÃ©dente\" de votre navigateur pour continuer et avertir le webmaster pour que nous remÃ©dions Ã  ce problÃ¨me.";
 
 if (@$theme=="") $theme = get_theme();
 /*
@@ -65,7 +72,9 @@ if (isset($newlang)) {
     $currentlang = $language;
 }
 
-//echo $tmp;
+function ereg($pattern, $string){
+	return preg_match("[$pattern]", $string);
+}
 
 function RTESafe($strText) {
 	//returns safe code for preloading in the RTE
@@ -120,7 +129,7 @@ function boutonSelfCommande($command,$label,$target,$class="bouton"){
 function afficheEntreesBiblio($sql){
 	global $dbi, $theme;
 
-   	while (list($Dates, $type, $Titre, $Compil, $Lieu, $EditeurRevue, $Reference, $Commentaires, $Auteurs  ) = sql_fetch_row($sql, $dbi)) {
+   	while (list($Dates, $type, $Titre, $Compil, $Lieu, $EditeurRevue, $Reference, $Commentaires, $Auteurs  ) = mysqli_fetch_row($sql)) {
 		$type=strtolower($type);
 		switch ($type){
 		case "livre":
@@ -221,7 +230,7 @@ function ecritParagraphe($numero){
     global $partie, $chapitre, $souschapitre ;
 	global $page,$texteParagraphe ;
 	
-	messageLog ("Info", "Le <b>paragraphe: $numero</b> est terminé.$texteParagraphe");
+	messageLog ("Info", "Le <b>paragraphe: $numero</b> est terminï¿½.$texteParagraphe");
 
 	$tmp = "";
 	if ($partie<>"") {
@@ -278,7 +287,7 @@ function ecritFichier($file, $texte){
 	global $baseDir, $front; 
 
 	if ($file==""){
-		messageLog ("Erreur","Le fichier XML ne peut être écrit: nom invalide.");
+		messageLog ("Erreur","Le fichier XML ne peut ï¿½tre ï¿½crit: nom invalide.");
 	}else {
 		$texte = $front.$texte.'
 </ouvrage>';
@@ -305,28 +314,28 @@ function parcoursBox($paragraphe){
 &ouvrage=' . $ouvrage . '
 &valeur=' . $paragraphe . '">
 <table>
-<tr class="old"><td colspan="2" align="center">Pour démarrer un parcours notionnel vous devez sélectionner la notion à étudier, comment elle apparait et la manière dont vous voulez afficher le résultat.</td></tr>
+<tr class="old"><td colspan="2" align="center">Pour dï¿½marrer un parcours notionnel vous devez sï¿½lectionner la notion ï¿½ ï¿½tudier, comment elle apparait et la maniï¿½re dont vous voulez afficher le rï¿½sultat.</td></tr>
 <tr><td></td></tr>
-<tr class="odd"><td colspan="2">Vous voulez étudier la notion <select name=notion>';
+<tr class="odd"><td colspan="2">Vous voulez ï¿½tudier la notion <select name=notion>';
 
-	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._NOTION."' order by title", $dbi);
-	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
+	$result = mysqli_query($dbi, "select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._NOTION."' order by title");
+	while(list($tid, $title) = mysqli_fetch_row($result)) {
 		$tmp .= "<option>$title</option>";
 	}
 	$tmp .= '</select> quand elle apparait comme: <br>
 	<br><input type="radio" value="notion_principal"  name="parcours" checked>notion principale
 	<br><input type="radio" value="notion_secondaire" name="parcours">secondaire
-	<br><input type="radio" value="notion_entrambi"   name="parcours">indifféremment principale ou secondaire.
+	<br><input type="radio" value="notion_entrambi"   name="parcours">indiffï¿½remment principale ou secondaire.
 	</td></tr>
-<tr class="old"><td colspan="2" align="center">Présentation du résultat</td></tr>
-<tr class="even"><td width="50%" align="center">Le texte des paragraphes ne traitant pas la notion</td><td align="center">Le texte des paragraphes n\'est jamais montré</td></tr>
-<tr class="odd"><td><input type="radio" value="cache" name="type" checked>est caché
-<br><input type="radio" value="montre" name="type">est montré, grisé
-</td><td><input type="radio" value="icone" name="type">les paragraphes sont affichés sous forme d\'icones (vue "aérienne").
+<tr class="old"><td colspan="2" align="center">Prï¿½sentation du rï¿½sultat</td></tr>
+<tr class="even"><td width="50%" align="center">Le texte des paragraphes ne traitant pas la notion</td><td align="center">Le texte des paragraphes n\'est jamais montrï¿½</td></tr>
+<tr class="odd"><td><input type="radio" value="cache" name="type" checked>est cachï¿½
+<br><input type="radio" value="montre" name="type">est montrï¿½, grisï¿½
+</td><td><input type="radio" value="icone" name="type">les paragraphes sont affichï¿½s sous forme d\'icones (vue "aï¿½rienne").
 </table><p align="center"><input class="menulink" type="submit" value="Chercher">
 </form>
 ';
-	afficheShowHide("PPN","Sélection de Parcours notionnels", $tmp);
+	afficheShowHide("PPN","Sï¿½lection de Parcours notionnels", $tmp);
 }
 
 function NavigationMenu($active,$flag1,$flag2,$flag3, $menu=0) {
@@ -336,7 +345,7 @@ function NavigationMenu($active,$flag1,$flag2,$flag3, $menu=0) {
 
 	switch ($menu) {
 	case 0:
-		if ($flag3=="1") NavigationLien("Fac",$active,"Fac-similé");
+		if ($flag3=="1") NavigationLien("Fac",$active,"Fac-similï¿½");
 		if ($flag1=="1") NavigationLien("paragraphe",$active,"Texte");
 		if ($flag2=="1") NavigationLien("notion",$active,"Notions et Relations");
 		echo "<td>&nbsp;</td>";
@@ -354,7 +363,7 @@ function NavigationMenu($active,$flag1,$flag2,$flag3, $menu=0) {
 	cookiedecode($user);
 	$username =$cookie[1];
 	if ($username != ""&&$username!="Anonymous") {
-//Si l'utilisateur est enregistré, le menu "texte complet" apparait dans ses onnglets
+//Si l'utilisateur est enregistrï¿½, le menu "texte complet" apparait dans ses onnglets
 		if ($flag1=="1") NavigationLien("complet","admin","Texte Complet");
 	}
 	if ($admin) {
@@ -405,8 +414,8 @@ function NavigationLien($parcours, $active, $alt, $menu=0) {
 
 function creelienBiblio($aid,$categorie, $alt){
     global $prefix, $dbi;
-    $sql = sql_query("select Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs   from cb_biblio where Biblio='$aid' and categorie='$categorie' order by Dates",$dbi);
-	if (sql_num_rows($sql, $dbi) == 0) {
+    $sql = mysqli_query($dbi, "select Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs   from cb_biblio where Biblio='$aid' and categorie='$categorie' order by Dates",$dbi);
+	if (mysqli_num_rows($sql) == 0) {
 		return "&nbsp;";
 	} else {
 		return "&nbsp;<a class=\"biblio\" href=\"parcours.php?name=Bibliotheque&pa=biblio&id=$aid&categorie=$categorie\">$alt</a>&nbsp;";	}
@@ -422,12 +431,12 @@ function afficheDetailsAuteur($aid,$nom,$prenom) {
 	global $dbi, $prefix, $theme;
 	
 		$tmp = "";
-		// On retrouve ici l'entrée de l'encyclopédie 'savants cités' quand elle existe
-	    $result = sql_query("select title, text from ".$prefix."_encyclopedia_text where title like '".strtoupper($nom)."' and eid='"._AUTEURS."'", $dbi);
+		// On retrouve ici l'entrï¿½e de l'encyclopï¿½die 'savants citï¿½s' quand elle existe
+	    $result = mysqli_query($dbi, "select title, text from ".$prefix."_encyclopedia_text where title like '".strtoupper($nom)."' and eid='"._AUTEURS."'");
 		//echo "select title, text from ".$prefix."_encyclopedia_text where title like '".strtoupper($nom)."' and eid='"._AUTEURS."'";
-	    if (list($title, $text) = sql_fetch_row($result, $dbi)) {
+	    if (list($title, $text) = mysqli_fetch_row($result)) {
 			$text = autop($text);
-			$tmp .= "<font class=\"title3\">Nous trouvons dans <a href=\"/parcours.php?name=Auteurs_cités\">L'encyclopédie des Savants</a> de CoLiSciences:</font><br>$text<br>";
+			$tmp .= "<font class=\"title3\">Nous trouvons dans <a href=\"/parcours.php?name=Auteurs_citï¿½s\">L'encyclopï¿½die des Savants</a> de CoLiSciences:</font><br>$text<br>";
 		}
 		// On affiche les liens vers la biblio et la biographie
 		$tmp .= creelienBiblio($aid,"biblio","Sa bibliographie");
@@ -435,8 +444,8 @@ function afficheDetailsAuteur($aid,$nom,$prenom) {
 /*
  		$tmp .= "<br><font class=\"title3\">Les ouvrages de $prenom $nom</font><br>";
 
-	    $sql = sql_query("select pid,titre,debut, auteur, date_titre, type_book from cb_ouvrages where active='1' and auteur=$aid order by date_titre, titre",$dbi);
-    	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = sql_fetch_row($sql, $dbi)) {
+	    $sql = mysqli_query($dbi, "select pid,titre,debut, auteur, date_titre, type_book from cb_ouvrages where active='1' and auteur=$aid order by date_titre, titre",$dbi);
+    	while (list($pid, $titre, $debut, $auteur, $date_titre ,$type_book) = mysqli_fetch_row($sql)) {
  	    	$tmp .= "<table><tr><td valign=\"top\"><img width=\"30\" height=\"12\"  src=\"themes/$theme/img/plot.gif\"></td><td>".creeLienOuvrage($pid,$titre,$debut,$date_titre,$type_book) ."</td></tr></table>";
     	}
 		*/ 
@@ -529,15 +538,15 @@ function is_admin($admin) {
         $aid = "$admin[0]";
         $pwd = "$admin[1]";
     }
-    $result = sql_query("select pwd from ".$prefix."_authors where aid='$aid'", $dbi);
-    list($pass) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select pwd from ".$prefix."_authors where aid='$aid'");
+    list($pass) = mysqli_fetch_row($result);
     if($pass == $pwd && $pass != "") {
         return 1;
     }
     return 0;
 }
 
-function is_user($user) {
+/* function is_user($user) {
   global $prefix, $dbi, $user_prefix;
 
 //debug  echo "<p>user= ".$user;
@@ -554,12 +563,38 @@ function is_user($user) {
 	if ($pwd==""){
 		return 0;
 	}
-	$result = sql_query("select pass from ".$user_prefix."_users where uid='$uid'", $dbi);
-	list($pass) = sql_fetch_row($result, $dbi);
+	$result = mysqli_query($dbi, "select pass from ".$user_prefix."_users where uid='$uid'");
+	list($pass) = mysqli_fetch_row($result);
   if($pass == $pwd && $pass != "") {
         return 1;
   }
     return 0;
+}
+ */
+
+ function is_user($user) {
+    if (!$user) { return 0; }
+    static $userSave; 
+    if (isset($userSave)) return $userSave;
+    if (!is_array($user)) {
+        $user = base64_decode($user);
+        $user = addslashes($user);
+        $user = explode(":", $user);
+    }
+    $uid = $user[0];
+    $pwd = $user[2];
+    $uid = intval($uid);
+    if (!empty($uid) AND !empty($pwd)) {
+        global $db, $user_prefix;
+        $sql = "SELECT user_password FROM ".$user_prefix."_users WHERE user_id='$uid'";
+        $result = $db->mysqli_query($dbi, $sql);
+        list($row) = $db->mysqli_fetchrow($result);
+        $db->mysqli_freeresult($result);
+        if ($row == $pwd && !empty($row)) { 
+        	return $userSave = 1;
+        }
+    }
+    return $userSave = 0;
 }
 
 function title($text) {
@@ -571,8 +606,8 @@ function title($text) {
 
 function is_active($module) {
     global $prefix, $dbi;
-    $result = sql_query("select active from ".$prefix."_modules where title='$module'", $dbi);
-    list ($act) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select active from ".$prefix."_modules where title='$module'");
+    list ($act) = mysqli_fetch_row($result);
     if (!$result OR $act == 0) {
         return 0;
     } else {
@@ -616,12 +651,12 @@ function blocks($side) {
         $pos = "c";
     }
     $side = $pos;
-    $result = sql_query("select bid, bkey, title, content, url, blockfile, view from ".$prefix."_blocks where position='$pos' AND active='1' ORDER BY weight ASC", $dbi);
-    while(list($bid, $bkey, $title, $content, $url, $blockfile, $view) = sql_fetch_row($result, $dbi)) {
-//echo "<p>list: $bid, $bkey, $title, $content, $url, $blockfile, $view";
-		if ($bkey == admin) {
+    $result = mysqli_query($dbi, "select bid, bkey, title, content, url, blockfile, view from ".$prefix."_blocks where position='$pos' AND active='1' ORDER BY weight ASC");
+    while(list($bid, $bkey, $title, $content, $url, $blockfile, $view) = mysqli_fetch_row($result)) {
+//debug echo "<p>list: $bid, $bkey, $title, $content, $url, $blockfile, $view";
+		if ($bkey == "admin") {
 					adminblock();
-        } elseif ($bkey == userbox) {
+        } elseif ($bkey == "userbox") {
            userblock();
 		} elseif ($bkey == "") {
             if ($view == 0) {
@@ -644,11 +679,11 @@ function message_box() {
     } else {
         $querylang = "";
     }
-    $result = sql_query("select mid, title, content, date, expire, view from ".$prefix."_message where active='1' $querylang", $dbi);
-    if (sql_num_rows($result, $dbi) == 0) {
+    $result = mysqli_query($dbi, "select mid, title, content, date, expire, view from ".$prefix."_message where active='1' $querylang");
+    if (mysqli_num_rows($result) == 0) {
         return;
     } else {
-        while (list($mid, $title, $content, $mdate, $expire, $view) = sql_fetch_row($result, $dbi)) {
+        while (list($mid, $title, $content, $mdate, $expire, $view) = mysqli_fetch_row($result)) {
         if ($title != "" && $content != "") {
             if ($expire == 0) {
                 $remain = _UNLIMITED;
@@ -699,7 +734,7 @@ function message_box() {
             if ($expire != 0) {
                 $past = time()-$expire;
                 if ($mdate < $past) {
-                    $result = sql_query("update ".$prefix."_message set active='0' where mid='$mid'", $dbi);
+                    $result = mysqli_query($dbi, "update ".$prefix."_message set active='0' where mid='$mid'");
                 }
                 }
             }
@@ -717,13 +752,13 @@ function online() {
         $guest = 1;
     }
     $past = time()-1800;
-    sql_query("DELETE FROM ".$prefix."_session WHERE time < $past", $dbi);
-    $result = sql_query("SELECT time FROM ".$prefix."_session WHERE username='$username'", $dbi);
+    mysqli_query($dbi, "DELETE FROM ".$prefix."_session WHERE time < $past");
+    $result = mysqli_query($dbi, "SELECT time FROM ".$prefix."_session WHERE uname='$username'");
     $ctime = time();
-    if ($row = sql_fetch_array($result, $dbi)) {
-        sql_query("UPDATE ".$prefix."_session SET username='$username', time='$ctime', host_addr='$ip', guest='$guest' WHERE username='$username'", $dbi);
+    if ($row = mysqli_fetch_array($result)) {
+        mysqli_query($dbi, "UPDATE ".$prefix."_session SET username='$username', time='$ctime', host_addr='$ip', guest='$guest' WHERE username='$username'");
     } else {
-        sql_query("INSERT INTO ".$prefix."_session (username, time, host_addr, guest) VALUES ('$username', '$ctime', '$ip', '$guest')", $dbi);
+        mysqli_query($dbi, "INSERT INTO ".$prefix."_session (username, time, host_addr, guest) VALUES ('$username', '$ctime', '$ip', '$guest')");
     }
 }
 
@@ -752,6 +787,7 @@ function selectlanguage() {
     $title = _SELECTLANGUAGE;
     $content = "<center><font class=\"content\">"._SELECTGUILANG."<br><br>";
     $langdir = dir("language");
+    $menulist = "";
     while($func=$langdir->read()) {
         if(substr($func, 0, 5) == "lang-") {
             $menulist .= "$func ";
@@ -762,8 +798,8 @@ function selectlanguage() {
     sort($menulist);
     for ($i=0; $i < sizeof($menulist); $i++) {
         if($menulist[$i]!="") {
-            $tl = ereg_replace("lang-","",$menulist[$i]);
-            $tl = ereg_replace(".php","",$tl);
+            $tl = str_replace("lang-","",$menulist[$i]);
+            $tl = str_replace(".php","",$tl);
             $altlang = ucfirst($tl);
             $content .= "<a href=\"index.php?newlang=$tl\"><img src=\"images/language/flag-$tl.png\" border=\"0\" alt=\"$altlang\" hspace=\"3\" vspace=\"3\"></a> ";
         }
@@ -775,6 +811,7 @@ function selectlanguage() {
         $content = "<center><font class=\"content\">"._SELECTGUILANG."<br><br></font>";
     $content .= "<form action=\"index.php\" method=\"get\"><select name=\"newlanguage\" onChange=\"top.location.href=this.options[this.selectedIndex].value\">";
             $handle=opendir('language');
+            $languageslist = "";
             while ($file = readdir($handle)) {
                 if (preg_match("/^lang\-(.+)\.php/", $file, $matches)) {
                     $langFound = $matches[1];
@@ -801,10 +838,10 @@ function ultramode() {
     $ultra = "ultramode.txt";
     $file = fopen("$ultra", "w");
     fwrite($file, "General purpose self-explanatory file with news headlines\n");
-    $rfile=sql_query("select sid, aid, title, time, comments, topic from ".$prefix."_stories order by time DESC limit 0,10", $dbi);
-    while(list($sid, $aid, $title, $time, $comments, $topic) = sql_fetch_row($rfile, $dbi)) {
-        $rfile2=sql_query("select topictext, topicimage from ".$prefix."_topics where topicid=$topic", $dbi);
-        list($topictext, $topicimage) = sql_fetch_row($rfile2, $dbi);
+    $rfile=mysqli_query($dbi, "select sid, aid, title, time, comments, topic from ".$prefix."_stories order by time DESC limit 0,10");
+    while(list($sid, $aid, $title, $time, $comments, $topic) = mysqli_fetch_row($rfile)) {
+        $rfile2=mysqli_query($dbi, "select topictext, topicimage from ".$prefix."_topics where topicid=$topic");
+        list($topictext, $topicimage) = mysqli_fetch_row($rfile2);
         $content = "%%\n$title\n/modules.php?name=News&file=article&sid=$sid\n$time\n$aid\n$topictext\n$comments\n$topicimage\n";
         fwrite($file, $content);
     }
@@ -815,8 +852,8 @@ function cookiedecode($user) {
     global $cookie, $prefix, $dbi, $user_prefix;
     $user = base64_decode($user);
     $cookie = explode(":", $user);
-    $result = sql_query("select pass from ".$user_prefix."_users where uname='$cookie[1]'", $dbi);
-    list($pass) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select user_password  from ".$user_prefix."_users where username='$cookie[1]'");
+    list($pass) = mysqli_fetch_row($result);
     if ($cookie[2] == $pass && $pass != "") {
         return $cookie;
     } else {
@@ -829,9 +866,9 @@ function getusrinfo($user) {
     global $userinfo, $user_prefix, $dbi;
     $user2 = base64_decode($user);
     $user3 = explode(":", $user2);
-    $result = sql_query("select uid, name, uname, email, femail, user_avatar, user_occ, user_from, user_intrest, user_sig, user_viewemail, user_theme, pass, storynum, umode, uorder, thold, noscore, bio, ublockon, ublock, theme, commentmax, newsletter from ".$user_prefix."_users where uname='$user3[1]' and pass='$user3[2]'", $dbi);
-    if (sql_num_rows($result, $dbi) == 1) {
-        $userinfo = sql_fetch_array($result, $dbi);
+    $result = mysqli_query($dbi, "select uid, name, uname, email, femail, user_avatar, user_occ, user_from, user_intrest, user_sig, user_viewemail, user_theme, pass, storynum, umode, uorder, thold, noscore, bio, ublockon, ublock, theme, commentmax, newsletter from ".$user_prefix."_users where uname='$user3[1]' and pass='$user3[2]'");
+    if (mysqli_num_rows($result) == 1) {
+        $userinfo = mysqli_fetch_array($result);
     }
     return $userinfo;
 }
@@ -848,11 +885,9 @@ function searchblock() {
 }
 
 function FixQuotes ($what = "") {
-        $what = ereg_replace("'","''",$what);
-        while (eregi("\\\\'", $what)) {
-                $what = ereg_replace("\\\\'","'",$what);
-        }
-        return $what;
+    $what = str_replace("'","''",$what);
+    $what = str_replace("\'","'",$what);
+    return $what;
 }
 
 /*********************************************************/
@@ -869,15 +904,15 @@ function check_words($Message) {
             $Replace = $CensorReplace;
             if ($CensorMode == 1) {
                 for ($i = 0; $i < count($CensorList); $i++) {
-                    $EditedMessage = eregi_replace("$CensorList[$i]([^a-zA-Z0-9])","$Replace\\1",$EditedMessage);
+                    $EditedMessage = str_replace("$CensorList[$i]([^a-zA-Z0-9])","$Replace\\1",$EditedMessage);
                 }
             } elseif ($CensorMode == 2) {
                 for ($i = 0; $i < count($CensorList); $i++) {
-                    $EditedMessage = eregi_replace("(^|[^[:alnum:]])$CensorList[$i]","\\1$Replace",$EditedMessage);
+                    $EditedMessage = str_replace("(^|[^[:alnum:]])$CensorList[$i]","\\1$Replace",$EditedMessage);
                 }
             } elseif ($CensorMode == 3) {
                 for ($i = 0; $i < count($CensorList); $i++) {
-                    $EditedMessage = eregi_replace("$CensorList[$i]","$Replace",$EditedMessage);
+                    $EditedMessage = str_replace("$CensorList[$i]","$Replace",$EditedMessage);
                 }
             }
         }
@@ -941,13 +976,13 @@ function check_html ($str, $strip="") {
     if ($strip == "nohtml")
         $AllowableHTML=array('');
         $str = stripslashes($str);
-        $str = eregi_replace("<[[:space:]]*([^>]*)[[:space:]]*>",
+        $str = str_replace("<[[:space:]]*([^>]*)[[:space:]]*>",
                          '<\\1>', $str);
                // Delete all spaces from html tags .
-        $str = eregi_replace("<a[^>]*href[[:space:]]*=[[:space:]]*\"?[[:space:]]*([^\" >]*)[[:space:]]*\"?[^>]*>",
+        $str = str_replace("<a[^>]*href[[:space:]]*=[[:space:]]*\"?[[:space:]]*([^\" >]*)[[:space:]]*\"?[^>]*>",
                          '<a href="\\1">', $str); # "
                // Delete all attribs from Anchor, except an href, double quoted.
-        $str = eregi_replace("<img?",
+        $str = str_replace("<img?",
                          '', $str); # "
         $tmp = "";
         while (ereg("<(/?[[:alpha:]]*)[[:space:]]*([^>]*)>",$str,$reg)) {
@@ -962,7 +997,7 @@ function check_html ($str, $strip="") {
                           # Place here the double quote fix function.
                           $attrb_list=delQuotes($reg[2]);
                           // A VER
-                          $attrb_list = ereg_replace("&","&amp;",$attrb_list);
+                          $attrb_list = str_replace("&","&amp;",$attrb_list);
                           $tag = "<$tag" . $attrb_list . ">";
                         } # Attribs in tag allowed
                 else $tag = "";
@@ -973,7 +1008,7 @@ function check_html ($str, $strip="") {
         return $str;
         exit;
         /* Squash PHP tags unconditionally */
-        $str = ereg_replace("<\?","",$str);
+        $str = str_replace("<\?","",$str);
         return $str;
 }
 
@@ -999,12 +1034,12 @@ function formatTimestamp($time) {
 
 function formatAidHeader($aid) {
     global $prefix, $dbi;
-    $holder = sql_query("SELECT url, email FROM ".$prefix."_authors where aid='$aid'", $dbi);
+    $holder = mysqli_query($dbi, "SELECT url, email FROM ".$prefix."_authors where aid='$aid'");
     if (!$holder) {
         echo _ERROR;
         exit();
     }
-    list($url, $email) = sql_fetch_row($holder, $dbi);
+    list($url, $email) = mysqli_fetch_row($holder);
     if (isset($url)) {
         $aid = "<a href=\"$url\">$aid</a>";
     } elseif (isset($email)) {
@@ -1017,12 +1052,12 @@ function formatAidHeader($aid) {
 
 function get_author($aid) {
     global $prefix, $dbi;
-    $holder = sql_query("SELECT url, email FROM ".$prefix."_authors where aid='$aid'", $dbi);
+    $holder = mysqli_query($dbi, "SELECT url, email FROM ".$prefix."_authors where aid='$aid'");
     if (!$holder) {
         echo _ERROR;
         exit();
     }
-    list($url, $email) = sql_fetch_row($holder, $dbi);
+    list($url, $email) = mysqli_fetch_row($holder);
     if (isset($url)) {
         $aid = "<a href=\"$url\">$aid</a>";
     } elseif (isset($email)) {
@@ -1046,16 +1081,16 @@ function themepreview($title, $hometext, $bodytext="", $notes="") {
 function adminblock() {
     global $admin, $prefix, $dbi;
     if (is_admin($admin)) {
-        $result = sql_query("select title, content from ".$prefix."_blocks where bkey='admin'", $dbi);
-        while(list($title, $content) = sql_fetch_array($result, $dbi)) {
+        $result = mysqli_query($dbi, "select title, content from ".$prefix."_blocks where bkey='admin'");
+        while(list($title, $content) = mysqli_fetch_array($result)) {
 //            $content = "<font class=\"content\">$content</font>";
 //            themesidebox($title, $content);
             themecenterbox($title, $content);
         }
 /*        $title = ""._WAITINGCONT."";
         $content = "<font class=\"content\">";
-        $result = sql_query("select * from ".$prefix."_users_pending", $dbi); 
-        $num = sql_num_rows($result, $dbi);
+        $result = mysqli_query($dbi, "select * from ".$prefix."_users_pending"); 
+        $num = mysqli_num_rows($result);
         $content .= "<strong><big>&middot;</big></strong>&nbsp;<a href=\"admin.php?op=mod_users\">"._WAITINGUSER."</a>: $num<br></font>";
         themesidebox($title, $content);
 		*/ 
@@ -1082,9 +1117,9 @@ function userblock() {
 	global $user, $cookie, $prefix, $dbi, $user_prefix;
 
 	if((is_user($user)) AND ($cookie[8])) {
-		$getblock = sql_query("select ublock from ".$user_prefix."_users where uid='$cookie[0]'", $dbi);
+		$getblock = mysqli_query($dbi, "select ublock from ".$user_prefix."_users where uid='$cookie[0]'");
 		$title = ""._MENUFOR." $cookie[1]";
-    list($ublock) = sql_fetch_row($getblock, $dbi);
+    list($ublock) = mysqli_fetch_row($getblock);
     themesidebox($title, $ublock);
   }
 }
@@ -1092,16 +1127,16 @@ function userblock() {
 function getTopics($s_sid) {
     global $topicname, $topicimage, $topictext, $prefix, $dbi;
     $sid = $s_sid;
-    $result = sql_query("SELECT topic FROM ".$prefix."_stories where sid=$sid", $dbi);
-    list($topic) = sql_fetch_row($result, $dbi);
-    $result = sql_query("SELECT topicid, topicname, topicimage, topictext FROM ".$prefix."_topics where topicid=$topic", $dbi);
-    list($topicid, $topicname, $topicimage, $topictext) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "SELECT topic FROM ".$prefix."_stories where sid=$sid");
+    list($topic) = mysqli_fetch_row($result);
+    $result = mysqli_query($dbi, "SELECT topicid, topicname, topicimage, topictext FROM ".$prefix."_topics where topicid=$topic");
+    list($topicid, $topicname, $topicimage, $topictext) = mysqli_fetch_row($result);
 }
 
 function headlines($bid, $cenbox=0) {
     global $prefix, $dbi;
-    $result = sql_query("select title, content, url, refresh, time from ".$prefix."_blocks where bid='$bid'", $dbi);
-    list($title, $content, $url, $refresh, $otime) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select title, content, url, refresh, time from ".$prefix."_blocks where bid='$bid'");
+    list($title, $content, $url, $refresh, $otime) = mysqli_fetch_row($result);
     $past = time()-$refresh;
     if ($otime < $past) {
         $btime = time();
@@ -1110,7 +1145,7 @@ function headlines($bid, $cenbox=0) {
         if (!$fp) {
             $content = "";
             //$content = "<font class=\"content\">"._RSSPROBLEM."</font>";
-            $result = sql_query("update ".$prefix."_blocks set content='$content', time='$btime' where bid='$bid'", $dbi);
+            $result = mysqli_query($dbi, "update ".$prefix."_blocks set content='$content', time='$btime' where bid='$bid'");
             $cont = 0;
             if ($cenbox == 0) {
                 themesidebox($title, $content);
@@ -1132,13 +1167,13 @@ function headlines($bid, $cenbox=0) {
             $items = explode("</item>",$string);
             $content = "<font class=\"content\">";
             for ($i=0;$i<10;$i++) {
-                $link = ereg_replace(".*<link>","",$items[$i]);
-                $link = ereg_replace("</link>.*","",$link);
-                $title2 = ereg_replace(".*<title>","",$items[$i]);
-                $title2 = ereg_replace("</title>.*","",$title2);
+                $link = str_replace(".*<link>","",$items[$i]);
+                $link = str_replace("</link>.*","",$link);
+                $title2 = str_replace(".*<title>","",$items[$i]);
+                $title2 = str_replace("</title>.*","",$title2);
                 if ($items[$i] == "") {
                     $content = "";
-                    sql_query("update ".$prefix."_blocks set content='$content', time='$btime' where bid='$bid'", $dbi);
+                    mysqli_query($dbi, "update ".$prefix."_blocks set content='$content', time='$btime' where bid='$bid'");
                     $cont = 0;
                     if ($cenbox == 0) {
                         themesidebox($title, $content);
@@ -1155,9 +1190,9 @@ function headlines($bid, $cenbox=0) {
             }
 
         }
-        sql_query("update ".$prefix."_blocks set content='$content', time='$btime' where bid='$bid'", $dbi);
+        mysqli_query($dbi, "update ".$prefix."_blocks set content='$content', time='$btime' where bid='$bid'");
     }
-    $siteurl = ereg_replace("http://","",$url);
+    $siteurl = str_replace("http://","",$url);
     $siteurl = explode("/",$siteurl);
     if (($cont == 1) OR ($content != "")) {
         $content .= "<br><a href=\"http://$siteurl[0]\" target=\"blank\"><b>"._HREADMORE."</b></a></font>";
@@ -1191,26 +1226,26 @@ function automated_news() {
     $hour = $today[hours];
     $min = $today[minutes];
     $sec = "00";
-    $result = sql_query("select anid, time from ".$prefix."_autonews $querylang", $dbi);
-    while(list($anid, $time) = sql_fetch_row($result, $dbi)) {
+    $result = mysqli_query($dbi, "select anid, time from ".$prefix."_autonews $querylang");
+    while(list($anid, $time) = mysqli_fetch_row($result)) {
         ereg ("([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $time, $date);
         if (($date[1] <= $year) AND ($date[2] <= $month) AND ($date[3] <= $day)) {
             if (($date[4] < $hour) AND ($date[5] >= $min) OR ($date[4] <= $hour) AND ($date[5] <= $min)) {
-                $result2 = sql_query("select catid, aid, title, time, hometext, bodytext, topic, informant, notes, ihome, alanguage, acomm from ".$prefix."_autonews where anid='$anid'", $dbi);
-                while(list($catid, $aid, $title, $a_time, $hometext, $bodytext, $topic, $author, $notes, $ihome, $alanguage, $acomm) = sql_fetch_row($result2, $dbi)) {
+                $result2 = mysqli_query($dbi, "select catid, aid, title, time, hometext, bodytext, topic, informant, notes, ihome, alanguage, acomm from ".$prefix."_autonews where anid='$anid'");
+                while(list($catid, $aid, $title, $a_time, $hometext, $bodytext, $topic, $author, $notes, $ihome, $alanguage, $acomm) = mysqli_fetch_row($result2)) {
                     $title = stripslashes(FixQuotes($title));
                     $hometext = stripslashes(FixQuotes($hometext));
                     $bodytext = stripslashes(FixQuotes($bodytext));
                     $notes = stripslashes(FixQuotes($notes));
-                    sql_query("insert into ".$prefix."_stories values (NULL, '$catid', '$aid', '$title', '$a_time', '$hometext', '$bodytext', '0', '0', '$topic', '$author', '$notes', '$ihome', '$alanguage', '$acomm', '0', '0', '0', '0')", $dbi);
-                    sql_query("delete from ".$prefix."_autonews where anid='$anid'", $dbi);
+                    mysqli_query($dbi, "insert into ".$prefix."_stories values (NULL, '$catid', '$aid', '$title', '$a_time', '$hometext', '$bodytext', '0', '0', '$topic', '$author', '$notes', '$ihome', '$alanguage', '$acomm', '0', '0', '0', '0')");
+                    mysqli_query($dbi, "delete from ".$prefix."_autonews where anid='$anid'");
                 }
             }
         }
     }
 }
 
-// Fonction utilisée pour afficher le titre d'un ouvrage en respectant les normes bibliographiques
+// Fonction utilisï¿½e pour afficher le titre d'un ouvrage en respectant les normes bibliographiques
 function creeLienOuvrage($ouvrage, $titre, $debut, $date_titre, $type_book){
 	    return "<a href=\"parcours.php?name=Parcours_Hypertexte&amp;file=moteurCB&amp;valeur=$debut&amp;newouvrage=$ouvrage\">".afficheTitreOuvrage($titre, $date_titre, $type_book)."</a>";
 }

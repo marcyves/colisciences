@@ -12,11 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("block-Sample_Block.php",$PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
-
 $content = "Here goes the content you want in your new block";
 
 ?>

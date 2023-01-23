@@ -15,8 +15,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
-
 switch($op) {
 
     case "backup":

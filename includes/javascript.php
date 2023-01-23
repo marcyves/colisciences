@@ -12,11 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("javascript.php",$PHP_SELF)) {
-    Header("Location: ../index.php");
-    die();
-}
-
 ##################################################
 # Include for some common javascripts functions  #
 ##################################################

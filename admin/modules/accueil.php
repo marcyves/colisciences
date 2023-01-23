@@ -12,7 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 $result = sql_query("select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
 list($radmincontent, $radminsuper) = sql_fetch_row($result, $dbi);
 if (($radmincontent==1) OR ($radminsuper==1)) {
@@ -389,8 +388,8 @@ function accueil_save($title, $subtitle, $page_header, $text, $page_footer, $sig
 function accueil_save_edit($pid, $title, $subtitle, $page_header, $text, $page_footer, $signature, $clanguage, $active, $cid) {
     global $prefix, $dbi;
 
-// la ligne suivante ne sert qu'à debugger: elle génère une erreur de header
-//	echo "<h3>Le texte a été sauvé</h3>".stripslashes($text)."<p>";
+// la ligne suivante ne sert qu'ï¿½ debugger: elle gï¿½nï¿½re une erreur de header
+//	echo "<h3>Le texte a ï¿½tï¿½ sauvï¿½</h3>".stripslashes($text)."<p>";
     sql_query("update ".$prefix."_pages set cid='$cid', title='$title', subtitle='$subtitle', active='$active', page_header='$page_header', text='$text', page_footer='$page_footer', signature='$signature', clanguage='$clanguage' where pid='$pid'", $dbi);
     Header("Location: admin.php?op=accueil");
 }

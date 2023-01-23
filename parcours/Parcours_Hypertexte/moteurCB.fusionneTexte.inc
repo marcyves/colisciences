@@ -19,11 +19,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-if (!eregi("parcours.php", $PHP_SELF)) {
-    die ("You can't access this file directly...");
-}
-
-// Initialisation pour préparer le parsing d'un fichier XML
+// Initialisation pour prï¿½parer le parsing d'un fichier XML
 $file1 = "/var/www/html/Colis/$ouvrage/$valeur.xml";
 $suivant = $valeur + 1;
 $file2 = "/var/www/html/Colis/$ouvrage/$suivant.xml";
@@ -82,25 +78,25 @@ if (($paragraphe1['partie'] == $paragraphe2['partie'])&&($paragraphe1['chapitre'
 		}
 	} while ($i>0);
 	
-//Création du fichier XML pour écriture
+//Crï¿½ation du fichier XML pour ï¿½criture
 	$tmp = createHeaderXML().$xml1->get_file();
 
     if ($pointer = @fopen($file1, "w")) {
 		fwrite($pointer,$tmp);
 	}
-	echo "<h3>Les paragraphes $valeur et $suivant ont été fusionnés.</h3>";
+	echo "<h3>Les paragraphes $valeur et $suivant ont ï¿½tï¿½ fusionnï¿½s.</h3>";
 
-//Efface le deuxième paragraphe 
+//Efface le deuxiï¿½me paragraphe 
 	unlink($file2);	
-	echo "<h3>Le paragraphe $suivant est effacé.</h3>";
+	echo "<h3>Le paragraphe $suivant est effacï¿½.</h3>";
 
-//Renumérotation des paragraphes à partir de suivant
+//Renumï¿½rotation des paragraphes ï¿½ partir de suivant
 	for ($i=$suivant;$i<$nombre_noeuds;$i++){
 		$destination = "/var/www/html/Colis/$ouvrage/$i.xml";
 		$j = $i + 1;
 		$source = "/var/www/html/Colis/$ouvrage/$j.xml";
 		copy ($source,$destination);
-//On renumérote le paragraphe comme attribut XML dans le fichier
+//On renumï¿½rote le paragraphe comme attribut XML dans le fichier
 	    $xml = new XML($destination);
    
 // Selectionne toutes les balises de l'ouvrage.
@@ -109,7 +105,7 @@ if (($paragraphe1['partie'] == $paragraphe2['partie'])&&($paragraphe1['chapitre'
         $paragraphe = $xml->get_attributes($arbreXML."/paragraphe[1]");
 		$paragraphe['numero'] = $i;
 		$xml->set_attributes($arbreXML."/paragraphe[1]",$paragraphe);
-//Création du fichier XML pour écriture
+//Crï¿½ation du fichier XML pour ï¿½criture
 	$tmp = createHeaderXML().$xml->get_file();
 
     if ($pointer = @fopen($destination, "w")) {
@@ -118,12 +114,12 @@ if (($paragraphe1['partie'] == $paragraphe2['partie'])&&($paragraphe1['chapitre'
 		unset($xml);
 	}
 	$suivant = $suivant + 1;
-	echo "<h3>Les paragraphes $suivant à $nombre_noeuds ont été renumérotés.</h3>";
+	echo "<h3>Les paragraphes $suivant ï¿½ $nombre_noeuds ont ï¿½tï¿½ renumï¿½rotï¿½s.</h3>";
 
 	$nextStep = "paragraphe";
 
 } else {
-	echo "<h3>Les paragraphes $valeur et $suivant ne peuvent pas être fusionnés.</h3>Ils ne font pas partie de la même unité de texte.";
+	echo "<h3>Les paragraphes $valeur et $suivant ne peuvent pas ï¿½tre fusionnï¿½s.</h3>Ils ne font pas partie de la mï¿½me unitï¿½ de texte.";
 }
 
  ?>

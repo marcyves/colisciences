@@ -16,8 +16,8 @@ require_once("mainfile.php");
 
 if (isset($name)) {
 
-    $result = sql_query("select active, view from ".$prefix."_modules where title='$name'", $dbi);
-    list($mod_active, $view) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select active, view from ".$prefix."_modules where title='$name'", $dbi);
+    list($mod_active, $view) = mysqli_fetch_row($result, $dbi);
     if (($mod_active == 1) OR ($mod_active == 0 AND is_admin($admin) OR ($name == "Content"))) {
 	if (!isset($mop)) { $mop="modload"; }
 	if (!isset($file)) { $file="index"; }

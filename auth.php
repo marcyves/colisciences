@@ -14,11 +14,6 @@
 
 require_once("mainfile.php");
 
-if (eregi("auth.php",$PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
-
 if ((isset($aid)) && (isset($pwd)) && ($op == "login")) {
     if($aid!="" AND $pwd!="") {
 	$pwd = md5($pwd);

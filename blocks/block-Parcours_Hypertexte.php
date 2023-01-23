@@ -12,19 +12,14 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("block-Parcours_Hypertexte.php", $PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
-
 global $prefix, $dbi, $admin;
 
 	$main_module = "Parcours_Hypertexte";
     
 	/* If the module doesn't exist, it will be removed from the database automaticaly */
 
-	$result = sql_query("select title from ".$prefix."_modules_parcours", $dbi);
-	while (list($title) = sql_fetch_row($result, $dbi)) {
+	$result = mysqli_query($dbi, "select title from ".$prefix."_modules_parcours");
+	while (list($title) = mysqli_fetch_row($result)) {
 		$a = 0;
 		$handle=opendir('parcours');
 		while ($file = readdir($handle)) {
@@ -34,16 +29,16 @@ global $prefix, $dbi, $admin;
 		}
 		closedir($handle);
 		if ($a == 0) {
-			sql_query("delete from ".$prefix."_modules_parcours where title='$title'", $dbi);
+			mysqli_query($dbi, "delete from ".$prefix."_modules_parcours where title='$title'");
 		}
 	}
 
 	/* Now we make the Modules block with the correspondent links */
 
 	$content .= themeMenuOpen().themeMenuLien("<a href=\"index.php\">Accueil</a>");
-	$result = sql_query("select title, custom_title from ".$prefix."_modules_parcours where active='1' ORDER BY mid ASC", $dbi);
-	while(list($m_title, $custom_title) = sql_fetch_row($result, $dbi)) {
-	    $m_title2 = ereg_replace("_", " ", $m_title);
+	$result = mysqli_query($dbi, "select title, custom_title from ".$prefix."_modules_parcours where active='1' ORDER BY mid ASC");
+	while(list($m_title, $custom_title) = mysqli_fetch_row($result)) {
+	    $m_title2 = str_replace("_", " ", $m_title);
     	if ($custom_title != "") {
       		$m_title2 = $custom_title;
     	}
@@ -69,10 +64,10 @@ global $prefix, $dbi, $admin;
         sort($modlist);
         for ($i=0; $i < sizeof($modlist); $i++) {
             if($modlist[$i] != "") {
-                $result = sql_query("select mid from ".$prefix."_modules_parcours where title='$modlist[$i]'", $dbi);
-                list ($mid) = sql_fetch_row($result, $dbi);
+                $result = mysqli_query($dbi, "select mid from ".$prefix."_modules_parcours where title='$modlist[$i]'");
+                list ($mid) = mysqli_fetch_row($result);
                 if ($mid == "") {
-                    sql_query("insert into ".$prefix."_modules_parcours values (NULL, '$modlist[$i]', '', '0', '0')", $dbi);
+                    mysqli_query($dbi, "insert into ".$prefix."_modules_parcours values (NULL, '$modlist[$i]', '', '0', '0')");
                 }
             }
         }
@@ -81,9 +76,9 @@ global $prefix, $dbi, $admin;
 	
 	$tmp = themeboxgauche();
 
-  $result = sql_query("select title, custom_title from ".$prefix."_modules_parcours where active='0' ORDER BY title ASC", $dbi);
+  $result = mysqli_query($dbi, "select title, custom_title from ".$prefix."_modules_parcours where active='0' ORDER BY title ASC");
 	$count = 0;
-	while(list($m_title, $custom_title) = sql_fetch_row($result, $dbi)) {
+	while(list($m_title, $custom_title) = mysqli_fetch_row($result)) {
     $m_title2 = ereg_replace("_", " ", $m_title);
     if ($custom_title != "") {
       $m_title2 = $custom_title;

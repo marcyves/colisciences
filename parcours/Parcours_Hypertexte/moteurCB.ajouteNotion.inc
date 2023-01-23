@@ -19,16 +19,13 @@
 /*                                                                            */
 /******************************************************************************/
 
-if (!eregi("parcours.php", $PHP_SELF)) {
-    die ("You can't access this file directly...");
-}
-	if ($notion == "sélectionner une notion principale") {
-		echo "<p>Veuillez sélectionner une notion principale.<br>";
+	if ($notion == "sï¿½lectionner une notion principale") {
+		echo "<p>Veuillez sï¿½lectionner une notion principale.<br>";
 	} else {
-		if ($liennotion == "sélectionner une notion liée") {
+		if ($liennotion == "sï¿½lectionner une notion liï¿½e") {
 			$liennotion = "";
 		}
-// Initialisation pour préparer le parsing d'un fichier XML
+// Initialisation pour prï¿½parer le parsing d'un fichier XML
   	 	$file = "/var/www/html/Colis/$ouvrage/$valeur.xml";
 		        
 // Include the <phpXML/> class.
@@ -48,15 +45,15 @@ if (!eregi("parcours.php", $PHP_SELF)) {
 		$xml->set_attributes($ouvrageXML, $attributes);
 		$tmp = createHeaderXML().$xml->get_file();
 
-//	echo "<P>Le document XML généré<pre>$tmp</pre>";
+//	echo "<P>Le document XML gï¿½nï¿½rï¿½<pre>$tmp</pre>";
 
 	    if ($pointer = @fopen($file, "w")) {
 			fwrite($pointer,$tmp);
 		}
-	echo "<h3>La notion : <b>$notion</b> a été ajoutée.</h3>Vous pouvez cliquer sur un onglet pour continuer.<p>";
+	echo "<h3>La notion : <b>$notion</b> a ï¿½tï¿½ ajoutï¿½e.</h3>Vous pouvez cliquer sur un onglet pour continuer.<p>";
 	}
 
-/* Ceci devrait permettre d'afficher directement le paragraphe modifié
+/* Ceci devrait permettre d'afficher directement le paragraphe modifiï¿½
 *  mais cela ne marche pas ????
 	$nextStep = "notion";
 	$notion = "";

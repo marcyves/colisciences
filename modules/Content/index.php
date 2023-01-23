@@ -12,10 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (!eregi("modules.php", $PHP_SELF)) {
-    die ("You can't access this file directly...");
-}
-
 require_once("mainfile.php");
 $module_name = basename(dirname(__FILE__));
 get_lang($module_name);
@@ -24,17 +20,17 @@ function showpage($pid, $page=0) {
     global $theme,$prefix, $dbi, $sitename, $admin, $module_name;
     include("header.php");
     opentable();
-    $result = sql_query("SELECT * from ".$prefix."_pages where pid='$pid'", $dbi);
-    $mypage = sql_fetch_array($result, $dbi);
-    if (($mypage[active] == 0) AND (!is_admin($admin))) {
+    $result = mysqli_query($dbi, "SELECT * from ".$prefix."_pages where pid='$pid'");
+    $mypage = mysqli_fetch_array($result);
+    if (($mypage["active"] == 0) AND (!is_admin($admin))) {
         echo "Sorry... This page doesn't exist.";
     } else {
-        sql_query("update ".$prefix."_pages set counter=counter+1 where pid='$pid'", $dbi);
-        $date = explode(" ", $mypage[date]);
+        mysqli_query($dbi, "update ".$prefix."_pages set counter=counter+1 where pid='$pid'");
+        $date = explode(" ", $mypage["date"]);
         echo "<font class=\"title\">$mypage[title]</font><br>"
             ."<font class=\"content\">$mypage[subtitle]<br>
 <br>";
-        $contentpages = explode( "<!--pagebreak-->", $mypage[text] );
+        $contentpages = explode( "<!--pagebreak-->", $mypage["text"] );
         $pageno = count($contentpages);
         if ( $page=="" || $page < 1 )
             $page = 1;
@@ -46,7 +42,7 @@ function showpage($pid, $page=0) {
             echo ""._PAGE.": $page/$pageno<br>";
         }
         if ($page == 1) {
-            echo "<p align=\"justify\">".nl2br($mypage[page_header])."</p><br>";
+            echo "<p align=\"justify\">".nl2br($mypage["page_header"])."</p><br>";
         }
         echo "<p align=\"justify\">$contentpages[$arrayelement]</p>";
         if($page>= $pageno) {
@@ -59,7 +55,7 @@ function showpage($pid, $page=0) {
             $next_page .= "<a href=\"modules.php?name=$module_name&pa=showpage&pid=$pid&page=$next_pagenumber\">"._NEXT." ($next_pagenumber/$pageno)</a> <a href=\"modules.php?name=$module_name&pa=showpage&pid=$pid&page=$next_pagenumber\"><img src=\"themes/$theme/img/right.gif\" border=\"0\" alt=\""._NEXT."\"></a>";
         }
         if ($page == $pageno) {
-            echo "<br><p align=\"justify\">".nl2br($mypage[page_footer])."</p><br><br>";
+            echo "<br><p align=\"justify\">".nl2br($mypage["page_footer"])."</p><br><br>";
         }
         if($page <= 1) {
             $previous_page = "";
@@ -70,7 +66,7 @@ function showpage($pid, $page=0) {
         echo "<br>
 <center>$previous_page $next_page</center><br><br>";
         if ($page == $pageno) {
-            echo "<p align=\"right\">".nl2br($mypage[signature])."</p>"
+            echo "<p align=\"right\">".nl2br($mypage["signature"])."</p>"
                 ."<p align=\"right\">"._COPYRIGHT."</p><br><br></font>"
                 ."<p align=\"right\"><font class=\"tiny\">"._PUBLISHEDON.": $date[0] ($mypage[counter] "._READS.")</font></p>"
                 ."<center>"._GOBACK."</center>";
@@ -88,19 +84,19 @@ function list_pages() {
     $gauche = "";
 	$droite = "";
 
-    $result = sql_query("SELECT * from ".$prefix."_pages where title='Annonce'", $dbi);
-    $mypage = sql_fetch_array($result, $dbi);
-    if (($mypage[active] == 0) AND (is_admin($admin))) {
+    $result = mysqli_query($dbi, "SELECT * from ".$prefix."_pages where title='Annonce'");
+    $mypage = mysqli_fetch_array($result);
+    if (($mypage["active"] == 0) AND (is_admin($admin))) {
 	    opentable();
         echo "Pas de page d'annonce.";
 	    CloseTable();
 		echo "<br>";
-    } else if ($mypage[active] != 0){
+    } else if ($mypage["active"] != 0){
 	include ("includes/swap_img.js");	
 
 	    opentable();
-        sql_query("update ".$prefix."_pages set counter=counter+1 where pid='$pid'", $dbi);
-        $date = explode(" ", $mypage[date]);
+        mysqli_query($dbi, "update ".$prefix."_pages set counter=counter+1 where pid='$pid'");
+        $date = explode(" ", $mypage["date"]);
  echo "
 	<div id=\"acces\" style=\"position:absolute; width:200px; height:115px; z-index:1; top: 220px;\"><img src=\"themes/$theme/img/acces_2.gif\" name=\"acces\" width=\"418\" height=\"215\" border=\"0\" usemap=\"#accesMap\" id=\"acces\">
 	<map name=\"accesMap\">
@@ -120,7 +116,7 @@ function list_pages() {
         echo "<td><font class=\"content\"><b>$mypage[subtitle]</b><br>";
   /*      echo "<p align=\"justify\">".nl2br($mypage[page_header])."</p>";*/
         echo "<p align=\"justify\">$mypage[text]</p>";
-        echo "<br><p align=\"justify\">".nl2br($mypage[page_footer])."</p>";
+        echo "<br><p align=\"justify\">".nl2br($mypage["page_footer"])."</p>";
         echo "<p align=\"right\"><font class=\"tiny\">"._PUBLISHEDON.": $date[0]</font></p>";
 			
 		
@@ -140,16 +136,16 @@ function list_pages_categories($cid) {
 	$titre = "$sitename: "._PAGESLIST;
     include("header.php");
 
-    $result = sql_query("select title from ".$prefix."_pages_categories where cid ='$cid'", $dbi);
-	list($title) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select title from ".$prefix."_pages_categories where cid ='$cid'");
+	list($title) = mysqli_fetch_row($result);
     title($title);
 	
     opentable();
 //    echo "<center><font class=\"content\">"._LISTOFCONTENT." $sitename:</center><br><br>";
-    $result = sql_query("SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='1' AND cid='$cid' order by date", $dbi);
+    $result = mysqli_query($dbi, "SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='1' AND cid='$cid' order by date");
     echo "<blockquote>";
 
-    while(list($pid, $title, $subtitle, $clanguage) = sql_fetch_row($result, $dbi)) {
+    while(list($pid, $title, $subtitle, $clanguage) = mysqli_fetch_row($result)) {
         if ($multilingual == 1) {
             $the_lang = "<img src=\"images/language/flag-$clanguage.png\" hspace=\"3\" border=\"0\" height=\"10\" width=\"20\">";
         } else {
@@ -168,11 +164,11 @@ function list_pages_categories($cid) {
     }
     echo "</blockquote>";
     if (is_admin($admin)) {
-        $result = sql_query("SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='0' and cid='$cid' order by date", $dbi);
+        $result = mysqli_query($dbi, "SELECT pid, title, subtitle, clanguage from ".$prefix."_pages WHERE active='0' and cid='$cid' order by date");
         echo "<br><br><center><b>"._YOURADMINLIST."</b></center><br><br>";
         echo "<blockquote>";
 
-        while(list($pid, $title, $subtitle, $clanguage) = sql_fetch_row($result, $dbi)) {
+        while(list($pid, $title, $subtitle, $clanguage) = mysqli_fetch_row($result)) {
             if ($multilingual == 1) {
                 $the_lang = "<img src=\"images/language/flag-$clanguage.png\" hspace=\"3\" border=\"0\" height=\"10\" width=\"20\">";
             } else {
@@ -192,7 +188,9 @@ function list_pages_categories($cid) {
     include("footerMain.php");
 }
 
-switch($pa) {
+list_pages();
+
+/* switch($pa) {
 
     case "showpage":
     showpage($pid, $page);
@@ -207,5 +205,4 @@ switch($pa) {
     break;
 
 }
-
-?>
+ */

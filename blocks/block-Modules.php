@@ -12,11 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("block-Modules.php", $PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
-
 global $prefix, $dbi, $admin;
 
     $result = sql_query("select main_module from ".$prefix."_main", $dbi);

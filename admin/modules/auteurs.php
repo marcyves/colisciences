@@ -12,13 +12,12 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 $result = sql_query("select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
 list($radmincontent, $radminsuper) = sql_fetch_row($result, $dbi);
 if (($radmincontent==1) OR ($radminsuper==1)) {
 
 ######################################################################
-# Spécifique CoLiSciences
+# Spï¿½cifique CoLiSciences
 ######################################################################
 //$colisroot = "/var/www/html/Colis/";
 
@@ -41,15 +40,15 @@ function auteurs() {
 	<button type=\"submit\" name=\"op\" value=\"fichiers_auteur\">Afficher tous les fichiers</button>
 </td></tr>
 <tr><td colspan=\"2\">
-	Transférer un fichier:
+	Transfï¿½rer un fichier:
 	<td>
 	<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"30000\" />
 	<input type=\"file\" name=\"userfile\" size=\"55\" >\n",
-	"<input type=\"submit\" value=\"Transférer\">
+	"<input type=\"submit\" value=\"Transfï¿½rer\">
     <input type=\"hidden\" name=\"op\" value=\"auteur_upload\">
 Commentaire (html)ou Image (jpg)",
 "</td></tr>
-<tr><td width=\"2%\"></td><td></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>Nom et prénom</b></td></tr>";
+<tr><td width=\"2%\"></td><td></td><td align=\"center\" bgcolor=\"$bgcolor2\"><b>Nom et prï¿½nom</b></td></tr>";
 
     $result0 = sql_query("select aid, nom, prenom from cb_auteurs order by nom, prenom", $dbi);
     while($mypages0 = sql_fetch_array($result0, $dbi)) {
@@ -67,7 +66,7 @@ Commentaire (html)ou Image (jpg)",
 	."<form action=\"admin.php\" method=\"post\">"
 	."<input type=\"hidden\" name=\"op\" value=\"add_auteur\">"
 	." <b>Nom:</b> <input type=\"text\" name=\"nom\" size=\"30\">"
-	." <b>Prénom:</b> <input type=\"text\" name=\"prenom\" size=\"30\"><br><br>"
+	." <b>Prï¿½nom:</b> <input type=\"text\" name=\"prenom\" size=\"30\"><br><br>"
 	." <input type=\"submit\" value=\""._ADD."\">"
 	."</form>";
     CloseTable();
@@ -76,7 +75,7 @@ Commentaire (html)ou Image (jpg)",
     include("footer.php");
 }
 
-// Formulaire d'édition des caractéristiques d'un auteur
+// Formulaire d'ï¿½dition des caractï¿½ristiques d'un auteur
 
 function displayForm($caption, $title, $auteur, $active, $debut, $nombre_pages,$nombre_noeuds,$dossier,$signature,$texteActif,$notionActif, $facActif) {
     global $prefix, $dbi, $language, $multilingual, $bgcolor2;
@@ -112,7 +111,7 @@ function displayForm($caption, $title, $auteur, $active, $debut, $nombre_pages,$
 	echo ">Notions<br>"
 	."<input type=\"checkbox\" name=\"facActif\" value=\"1\"";
 	if ($facActif) echo "checked";
-	echo ">Fac-similé<br>";
+	echo ">Fac-similï¿½<br>";
 	if ($caption=="Ajouter un nouvel ouvrage"){
 		echo "<input type=\"hidden\" name=\"op\" value=\"add_ouvrage\">"
 		."<tr><td colspan=\"4\" align=\"center\"><input type=\"submit\" value=\""._ADD."\">";
@@ -162,13 +161,13 @@ function auteur_upload($pid){
 			if ($ext!=""){
 				$target = $webroot."auteurs/".$prenom."_".$nom.$ext;
 				$target = str_replace(" ","_",$target);
-				echo "<center><b>Transfert pour: $prenom $nom ($pid)</b><br>Fichier créé : ".$target."</center>";	
+				echo "<center><b>Transfert pour: $prenom $nom ($pid)</b><br>Fichier crï¿½ï¿½ : ".$target."</center>";	
 
 				/* COPY THE FILE TO THE DESIRED DESTINATION */	
 				copy ($file, $target);
 			}
 		}else{
-			echo "<p>Il faut sélectionner un auteur";
+			echo "<p>Il faut sï¿½lectionner un auteur";
 		}
 	}
 	CloseTable();

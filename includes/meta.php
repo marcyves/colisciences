@@ -12,11 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("meta.php",$PHP_SELF)) {
-    Header("Location: ../index.php");
-    die();
-}
-
 ##################################################
 # Include for Meta Tags generation               #
 ##################################################
@@ -28,7 +23,7 @@ echo "<META NAME=\"RESOURCE-TYPE\" CONTENT=\"DOCUMENT\">\n";
 echo "<META NAME=\"DISTRIBUTION\" CONTENT=\"GLOBAL\">\n";
 echo "<META NAME=\"AUTHOR\" CONTENT=\"$sitename\">\n";
 echo "<META NAME=\"COPYRIGHT\" CONTENT=\"Copyright (c) 2002 by $sitename\">\n";
-echo "<META NAME=\"KEYWORDS\" CONTENT=\"Corpus, Littérature, Hypertexte, Scientifique, Claude Bernard, Armand de Quatrefages, Isidore Geoffroy Saint-Hilaire, CNRS\">\n";
+echo "<META NAME=\"KEYWORDS\" CONTENT=\"Corpus, Littï¿½rature, Hypertexte, Scientifique, Claude Bernard, Armand de Quatrefages, Isidore Geoffroy Saint-Hilaire, CNRS\">\n";
 echo "<META NAME=\"DESCRIPTION\" CONTENT=\"$slogan\">\n";
 echo "<META NAME=\"ROBOTS\" CONTENT=\"INDEX, FOLLOW\">\n";
 echo "<META NAME=\"REVISIT-AFTER\" CONTENT=\"1 DAYS\">\n";

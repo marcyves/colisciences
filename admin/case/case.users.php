@@ -7,8 +7,6 @@
 /*                                                      */
 /********************************************************/
 
-if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
-
 switch($op) {
 
     case "mod_users":

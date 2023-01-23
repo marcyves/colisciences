@@ -11,7 +11,7 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
+if (!("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 $result = sql_query("select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
 list($radmincontent, $radminsuper) = sql_fetch_row($result, $dbi);
 if (($radmincontent==1) OR ($radminsuper==1)) {
@@ -41,11 +41,11 @@ function bibliographies() {
 
     OpenTable();
     echo "<table border=\"1\" width=\"100%\">
-	<tr><td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des disciplines citées dans CoLiSciences</b></td></tr>";
+	<tr><td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des disciplines citï¿½es dans CoLiSciences</b></td></tr>";
 
 	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._DISCIPLINE."'", $dbi);
 	if (sql_num_rows($result, $dbi) == 0) {
-	    echo "<center><i>Il n'y a pas de discipline définie'.</i></center>";
+	    echo "<center><i>Il n'y a pas de discipline dï¿½finie'.</i></center>";
 	}
 	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
 		echo "<tr><td bgcolor=\"#BBCCDD\">$title</td><td width=\"8%\" align=\"center\">[ <a href=\"admin.php?op=bibliographie_display&id=$tid&categorie=discipline\"> Biblio</a> ]</td></tr>";
@@ -56,11 +56,11 @@ function bibliographies() {
 
     OpenTable();
     echo "<table border=\"1\" width=\"100%\">
-	<tr><td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des domaines cités dans CoLiSciences</b></td></tr>";
+	<tr><td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des domaines citï¿½s dans CoLiSciences</b></td></tr>";
 
 	$result = sql_query("select tid, title from ".$prefix."_encyclopedia_text WHERE eid='"._DOMAINE."'", $dbi);
 	if (sql_num_rows($result, $dbi) == 0) {
-	    echo "<center><i>Il n'y a pas de discipline définie'.</i></center>";
+	    echo "<center><i>Il n'y a pas de discipline dï¿½finie'.</i></center>";
 	}
 	while(list($tid, $title) = sql_fetch_row($result, $dbi)) {
 		echo "<tr><td bgcolor=\"#BBCCDD\">$title</td><td width=\"8%\" align=\"center\">[ <a href=\"admin.php?op=bibliographie_display&id=$tid&categorie=domaine\"> Biblio</a> ]</td></tr>";
@@ -70,7 +70,7 @@ function bibliographies() {
     echo "<br>";
 
 
-    title("Ajouter une nouvelle entrée de bibliographie");
+    title("Ajouter une nouvelle entrï¿½e de bibliographie");
     OpenTable();
 	displayForm("Bibliographie sur les auteurs (bio)", "","bio","","","","","","","","","","");
     CloseTable();
@@ -129,10 +129,10 @@ function bibliographie_display($id, $categorie){
     $sql = sql_query("select Numero, Dates, Type, Titre, Compil, Lieu, EditeurRevue, Reference, Commentaires, Auteurs from cb_biblio where Biblio='$id' and categorie='$categorie' order by Dates",$dbi);
 
 	if (sql_num_rows($sql, $dbi) == 0) {
-	    echo "<center><i>Il n'y a pas de références bibliographiques.</i></center>";
+	    echo "<center><i>Il n'y a pas de rï¿½fï¿½rences bibliographiques.</i></center>";
 	} else {
 	    echo "<table border=\"1\" width=\"100%\"><tr>"
-		."<td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des références bibliographiques</b></td></tr>";
+		."<td bgcolor=\"$bgcolor2\" colspan=\"3\"><b>Liste des rï¿½fï¿½rences bibliographiques</b></td></tr>";
 	   	while (list($numero, $Dates, $type, $Titre, $Compil, $Lieu, $EditeurRevue, $Reference, $Commentaires, $Auteurs  ) = sql_fetch_row($sql, $dbi)) {
 			$lien = "<td width=\"8%\" align=\"center\">[ <a href=\"admin.php?op=bibliographie_edit&id=$numero&categorie=$categorie\"> Modifier</a> ]</td><td width=\"8%\" align=\"center\">[ <a href=\"admin.php?op=bibliographie_delete&id=$numero&categorie=$categorie\"> Supprimer</a> ]</td>";
 			switch ($type){
@@ -154,12 +154,12 @@ echo "</table>";
     include("footer.php");
 }
 
-// Formulaire d'édition des caractéristiques d'un bibliographie
+// Formulaire d'ï¿½dition des caractï¿½ristiques d'un bibliographie
 
 function displayForm($caption, $numero, $categorie, $biblio, $dates, $type, $titre, $compil, $lieu, $editeurRevue, $reference, $commentaires, $auteurs ) {
     global $prefix, $dbi, $language, $multilingual, $bgcolor2;
 
-//Traduction champ type pour des boites à cocher "radio"
+//Traduction champ type pour des boites ï¿½ cocher "radio"
 	$checkLivre = "";
 	$checkArticle = "";
 	if ($type=="Livre") {$checkLivre = "checked";}
@@ -184,7 +184,7 @@ function displayForm($caption, $numero, $categorie, $biblio, $dates, $type, $tit
 		$tmp .= "</select>";
 	} else {
 	//Traduction champ biblio en nom d'auteur CoLiSciences
-		$tmp ="Auteur concerné<br>dans CoLiSciences <select name=\"biblio\">";
+		$tmp ="Auteur concernï¿½<br>dans CoLiSciences <select name=\"biblio\">";
    		$result = sql_query("select aid, nom, prenom from cb_auteurs order by nom, prenom", $dbi);
 		while (list($aid, $nom, $prenom) = sql_fetch_row($result, $dbi)) {
 			$tmp .= "<option value=\"$aid\"";
@@ -210,7 +210,7 @@ function displayForm($caption, $numero, $categorie, $biblio, $dates, $type, $tit
 	<td><b>Auteur</b><br><input type=\"text\" name=\"auteurs\" value=\"$auteurs\" size=\"30\">
 <tr><td colspan=\"4\" ><b>commentaires</b><br><input type=\"text\" name=\"commentaires\" value=\"$commentaires\" size=\"100\">";
 
-//Les boutons de commande affichés dépendent de la fonction, identifiée par le numero d'enregistrement à modifier vide
+//Les boutons de commande affichï¿½s dï¿½pendent de la fonction, identifiï¿½e par le numero d'enregistrement ï¿½ modifier vide
  	if ($numero ==""){
 		echo "<input type=\"hidden\" name=\"op\" value=\"add_bibliographie\">"
 		."<tr><td colspan=\"4\" align=\"center\"><input type=\"submit\" value=\""._ADD."\">";
@@ -234,7 +234,7 @@ function bibliographie_edit($pid, $type) {
 
     include("header.php");
     GraphicAdmin();
-    title("Modification d'une entrée de bibliographie");
+    title("Modification d'une entrï¿½e de bibliographie");
     $result = sql_query("select * from cb_biblio WHERE Numero='$pid'", $dbi);
     $mypages = sql_fetch_array($result, $dbi);
 
@@ -265,7 +265,7 @@ function bibliographie_delete($pid, $ok=0) {
 		list($title) = sql_fetch_row($result, $dbi);
 		OpenTable();
 		echo "<center><b>Supprimer $title</b><br><br>"
-	    ."Etes-vous sur de vouloir supprimer cette référence?<br><br>"
+	    ."Etes-vous sur de vouloir supprimer cette rï¿½fï¿½rence?<br><br>"
 	    ."[ <a href=\"admin.php?op=biblio\">"._NO."</a> | <a href=\"admin.php?op=bibliographie_delete&amp;id=$pid&amp;ok=1\">"._YES."</a> ]</center>";
 		CloseTable();
         include("footer.php");

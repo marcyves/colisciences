@@ -12,11 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("header.php",$PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
-
 require_once("mainfile.php");
 
 ##################################################

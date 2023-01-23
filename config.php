@@ -29,8 +29,8 @@
 #               Be sure to write it exactly as above, case SeNsItIvE!
 ######################################################################
 
-$webroot =  "/www/var/colisciences/";
-$colisroot = "/www/var/colisciences/Colis/";
+$webroot =  "/Applications/MAMP/htdocs/";
+$colisroot = "/Applications/MAMP/htdocs/Colis/";
 
 /*
 
@@ -39,7 +39,7 @@ $colisroot = "/www/htdocs/Colis/";
 */
 //if ($theme=="") $theme = "Clean";
 $Default_Theme = "Clean";
-//Définition des encyclopédies pour référence
+//Dï¿½finition des encyclopï¿½dies pour rï¿½fï¿½rence
 
 define("_NOTION",1);
 //define("_BIBLIOGRAPHIE",4);
@@ -55,7 +55,6 @@ $dbname = "colisciences";
 $prefix = "nuke";
 $user_prefix = "nuke";
 $dbtype = "MySQL";
-
 /*********************************************************************/
 /* You finished to configure the Database. Now you can change all    */
 /* you want in the Administration Section.   To enter just launch    */
@@ -94,9 +93,9 @@ $dbtype = "MySQL";
 ######################################################################
 
 $sitename = "Colisciences";
-$nukeurl = "http://www.colisciences.org";
+$nukeurl = "http://localhost:8888/colisciences/";
 $site_logo = "bernard1.jpg";
-$slogan = "Corpus de littérature scientifique";
+$slogan = "Corpus de littÃ©rature scientifique";
 $startdate = "Avril 2002";
 $adminmail = "colisciences@colisciences.fr";
 $anonpost = 0;
@@ -294,11 +293,6 @@ $CensorReplace = "*****";
 # Do not touch the following options!
 ######################################################################
 
-$Version_Num = "5.5 hautement modifiée";
-
-if (eregi("config.php",$PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
+$Version_Num = "5.5 hautement modifiï¿½e";
 
 ?>

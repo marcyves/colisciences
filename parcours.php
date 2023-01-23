@@ -17,8 +17,8 @@ $wysiwyg = 1;
 
 if (isset($name)) {
 
-    $result = sql_query("select active, view from ".$prefix."_modules_parcours where title='$name'", $dbi);
-    list($mod_active, $view) = sql_fetch_row($result, $dbi);
+    $result = mysqli_query($dbi, "select active, view from ".$prefix."_modules_parcours where title='$name'");
+    list($mod_active, $view) = mysqli_fetch_row($result);
     if (($mod_active == 1) OR ($mod_active == 0 AND is_admin($admin) OR ($name == "Content"))) {
         if (!isset($mop)) { $mop="modload"; }
         if (!isset($file)) { $file="index"; }

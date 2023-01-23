@@ -12,7 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (!eregi("admin.php", $PHP_SELF)) { die ("Access Denied"); }
 $result = sql_query("select radmincontent, radminsuper from ".$prefix."_authors where aid='$aid'", $dbi);
 list($radmincontent, $radminsuper) = sql_fetch_row($result, $dbi);
 if (($radmincontent==1) OR ($radminsuper==1)) {

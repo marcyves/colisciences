@@ -12,11 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("footer.php",$PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
-
 $footer = 1;
 
 function footmsg() {

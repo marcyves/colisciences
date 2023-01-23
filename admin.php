@@ -13,7 +13,7 @@
 /************************************************************************/
 
 require_once("mainfile.php");
-get_lang(admin);
+get_lang("admin");
 $adminpage = 1;
 $wysiwyg = 1;
 

@@ -12,10 +12,6 @@
 # the Free Software Foundation; either version 2 of the License.
 ######################################################################
 
-if (!eregi("parcours.php", $PHP_SELF)) {
-    die ("You can't access this file directly...");
-}
-
 require_once("mainfile.php");
 $module_name = basename(dirname(__FILE__));
 get_lang($module_name);
@@ -77,8 +73,8 @@ function list_content($quoi) {
 		if ($quoi=="") {
 			$quoi = "titre";
 		}
-    echo "<center><b>Bibliographie complète</b></center><br>"
-	."<p align=\"justify\">Triée par $quoi</p>";
+    echo "<center><b>Bibliographie complï¿½te</b></center><br>"
+	."<p align=\"justify\">Triï¿½e par $quoi</p>";
     CloseTable();
     echo "<br>";
     OpenTable();
@@ -97,7 +93,7 @@ function terms($quoi, $ltr) {
 		include("header.php");
 		title("Bibliographie");
 		OpenTable();
-		echo "<center>Vous pouvez sélectionner un terme dans la liste ci-dessous:</center><br><br>"
+		echo "<center>Vous pouvez sï¿½lectionner un terme dans la liste ci-dessous:</center><br><br>"
 	    ."<table border=\"0\" align=\"center\">";
     $result = sql_query("select Numero, $quoi, Titre from cb_biblio where UPPER($quoi) LIKE '$ltr%' order by $quoi", $dbi);
     //list($numero, $biblio, $categorie, $dates, $type, $titre, $compil, $lieu, $editeurRevue, $reference, $commentaires, $auteurs) = sql_fetch_row($result, $dbi);

@@ -12,11 +12,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("sql_layer.php",$PHP_SELF)) {
-    Header("Location: ../index.php");
-    die();
-}
-
 /* $dbtype = "MySQL"; */
 /* $dbtype = "mSQL"; */
 /* $dbtype = "PostgreSQL"; */
@@ -74,15 +69,10 @@ global $dbtype;
 switch ($dbtype) {
 
     case "MySQL":
-        $dbi=@mysql_connect($host, $user, $password);
-        mysql_select_db($db);
-        return $dbi;
-    break;;
+        $dbi=mysqli_connect($host, $user, $password, $db);
+        $dbi->set_charset('utf8mb4');
 
-    case "mSQL":
-         $dbi=msql_connect($host);
-         msql_select_db($db);
-         return $dbi;
+        return $dbi;
     break;;
 
               
@@ -106,17 +96,6 @@ switch ($dbtype) {
 	 return $dbi;  
     break;;
 
-    case "Interbase":
-         $dbi=@ibase_connect($host.":".$db,$user,$password);
-         return $dbi;
-    break;;
-
-    case "Sybase":
-        $dbi=@sybase_connect($host, $user, $password);
-        sybase_select_db($db,$dbi);
-        return $dbi;
-    break;;
-
     default:
     break;;
     }
@@ -129,13 +108,8 @@ global $dbtype;
 switch ($dbtype) {
 
     case "MySQL":
-        $dbi=@mysql_close($id);
+        $dbi=mysqli_close($id);
         return $dbi;
-    break;;
-
-    case "mSQL":
-         $dbi=@msql_close($id);
-         return $dbi;
     break;;
 
     case "PostgreSQL":
@@ -148,16 +122,6 @@ switch ($dbtype) {
     case "ODBC_Adabas":
          $dbi=@odbc_close($id);
          return $dbi;  
-    break;;
-
-    case "Interbase":
-         $dbi=@ibase_close($id);
-         return $dbi;
-    break;;
-
-    case "Sybase":
-        $dbi=@sybase_close($id);
-        return $dbi;
     break;;
   
     default:
@@ -180,15 +144,10 @@ if($sql_debug) echo "SQL query: ".str_replace(",",", ",$query)."<BR>";
 switch ($dbtype) {
 
     case "MySQL":
-        $res=mysql_query($query, $id);
+        $res=mysqli_query($query, $id);
         return $res;
     break;;
     
-    case "mSQL":
-        $res=@msql_query($query, $id);
-        return $res; 
-    break;;
-
     case "PostgreSQL":
     case "PostgreSQL_local":
         $res=pg_exec($id,$query);
@@ -205,16 +164,6 @@ switch ($dbtype) {
         return $res;  
     break;;
   
-    case "Interbase":
-        $res=@ibase_query($id,$query);
-        return $res;
-    break;;
-
-    case "Sybase":
-        $res=@sybase_query($query, $id);
-        return $res;
-    break;;
-
     default:
     break;;
     
@@ -232,12 +181,7 @@ global $dbtype;
 switch ($dbtype) {
  
     case "MySQL":
-        $rows=mysql_num_rows($res);
-        return $rows;
-    break;;
-
-    case "mSQL":  
-        $rows=msql_num_rows($res);
+        $rows=mysqli_num_rows($res);
         return $rows;
     break;;
         
@@ -253,16 +197,6 @@ switch ($dbtype) {
         return $rows; 
     break;;
         
-    case "Interbase":
-	echo "<BR>Error! PHP dosen't support ibase_numrows!<BR>";
-        return $rows; 
-    break;;
-
-    case "Sybase":
-        $rows=sybase_num_rows($res);
-        return $rows; 
-    break;;
-
     default:
     break;;                          
     }                                
@@ -281,13 +215,8 @@ global $dbtype;
 switch ($dbtype) {                   
                                      
     case "MySQL":
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row;
-    break;;                          
-                                     
-    case "mSQL":                     
-        $row = msql_fetch_row($res); 
-        return $row;                 
     break;;                          
                                      
     case "PostgreSQL":               
@@ -305,16 +234,6 @@ switch ($dbtype) {
     case "ODBC_Adabas":
         $row = array();              
         $cols = odbc_fetch_into($res, $nr, $row);                     
-        return $row;                 
-    break;;                          
-                                     
-    case "Interbase":
-        $row = ibase_fetch_row($res);
-        return $row;                 
-    break;;                          
-
-    case "Sybase":
-        $row = sybase_fetch_row($res);
         return $row;                 
     break;;                          
 
@@ -337,13 +256,7 @@ switch ($dbtype)
     {
     case "MySQL":                    
         $row = array();              
-        $row = mysql_fetch_array($res);
-        return $row;                 
-    break;;                          
-                                     
-    case "mSQL":                     
-        $row = array();              
-        $row = msql_fetch_array($res);
+        $row = mysqli_fetch_array($res);
         return $row;                 
     break;;                          
                                      
@@ -392,17 +305,6 @@ switch ($dbtype)
         return $row;                 
     break;;                          
 
-    case "Interbase":
-	$orow=ibase_fetch_object($res);
-	$row=get_object_vars($orow);
-        return $row;
-    break;;                          
-
-    case "Sybase":
-        $row = sybase_fetch_array($res);
-        return $row;                 
-    break;;                          
-
     }                                
 }
 
@@ -412,13 +314,7 @@ global $dbtype;
 switch ($dbtype) 
     {
     case "MySQL":                    
-        $row = mysql_fetch_object($res);
-	if($row) return $row;
-	else return false;
-    break;;                          
-                                     
-    case "mSQL":                     
-        $row = msql_fetch_object($res);
+        $row = mysqli_fetch_object($res);
 	if($row) return $row;
 	else return false;
     break;;                          
@@ -461,25 +357,6 @@ switch ($dbtype)
         return $row;                 
     break;;                          
 
-    case "Interbase":
-        $orow = ibase_fetch_object($res);
-	if($orow)
-	{
-	    $arow=get_object_vars($orow);
-	    while(list($name,$key)=each($arow))
-	    {
-		$name=strtolower($name);
-		$row->$name=$key;
-	    }
-    	    return $row;
-	}else return false;
-    break;;                          
-
-    case "Sybase":
-        $row = sybase_fetch_object($res);
-        return $row;                 
-    break;;                          
-
     }                                
 }
 
@@ -489,17 +366,11 @@ global $dbtype;
 switch ($dbtype) {
 
     case "MySQL":
-        $row = mysql_free_result($res);
+        $row = mysqli_free_result($res);
         return $row;
-    break;; 
+    break;; 	
 	
-	   case "mSQL":
-        $row = msql_free_result($res);
-        return $row;
-    break;; 
-	
-	
-	    case "PostgreSQL":
+    case "PostgreSQL":
     case "PostgreSQL_local":
         $rows=pg_FreeResult( $res->get_result() );
         return $rows;
@@ -508,16 +379,6 @@ switch ($dbtype) {
     case "ODBC":
     case "ODBC_Adabas":
         $rows=odbc_free_result($res);
-        return $rows; 
-    break;;
-        
-    case "Interbase":
-	echo "<BR>Error! PHP dosen't support ibase_numrows!<BR>";
-        return $rows; 
-    break;;
-
-    case "Sybase":
-        $rows=sybase_free_result($res);
         return $rows; 
     break;;
 	}

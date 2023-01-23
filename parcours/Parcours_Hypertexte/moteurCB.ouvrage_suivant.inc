@@ -19,9 +19,9 @@
 /*                                                                            */
 /******************************************************************************/
 
-$sql = sql_query("select pid, titre, nom, prenom,nombre_noeuds from cb_ouvrages, cb_auteurs where aid=auteur and pid > $ouvrage and active='1'",$dbi);
+$sql = mysqli_query($dbi, "select pid, titre, nom, prenom,nombre_noeuds from cb_ouvrages, cb_auteurs where aid=auteur and pid > $ouvrage and active='1'");
 
-if (list($pid, $titre, $nom, $prenom,$nombre_noeuds ) = sql_fetch_row($sql, $dbi)) {
+if (list($pid, $titre, $nom, $prenom,$nombre_noeuds ) = mysqli_fetch_row($sql)) {
 	$ouvrage = $pid;
 	echo "<font class=\"title2\"><ul><li>$titre ($prenom $nom)</ul></font><br>";
 	$nextStep = $parcours;
@@ -30,5 +30,3 @@ if (list($pid, $titre, $nom, $prenom,$nombre_noeuds ) = sql_fetch_row($sql, $dbi
 } else {
 	$nextStep = "";
 }
-
-?>

@@ -12,10 +12,6 @@
 # the Free Software Foundation; either version 2 of the License.
 ######################################################################
 
-if (!eregi("parcours.php", $PHP_SELF)) {
-    die ("You can't access this file directly...");
-}
-
 require_once("mainfile.php");
 $module_name = basename(dirname(__FILE__));
 get_lang($module_name);

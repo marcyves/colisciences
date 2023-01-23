@@ -9,7 +9,7 @@
 /*                                                                      */
 /* Enhanced with NukeStats Module Version 1.0                           */
 /* ==========================================                           */
-/* Copyright ©2002 by Harry Mangindaan (sens@indosat.net) and           */
+/* Copyright ï¿½2002 by Harry Mangindaan (sens@indosat.net) and           */
 /*                    Sudirman (sudirman@akademika.net)                 */
 /* http://www.nuketest.com                                              */
 /*                                                                      */
@@ -18,10 +18,6 @@
 /* the Free Software Foundation; either version 2 of the License.       */
 /************************************************************************/
 
-if (eregi("counter.php",$PHP_SELF)) {
-    Header("Location: index.php");
-    die();
-}
 require_once("mainfile.php");
 global $prefix, $dbi;
 
@@ -33,7 +29,7 @@ elseif(ereg("Lynx", getenv("HTTP_USER_AGENT"))) $browser = "Lynx";
 elseif(ereg("Opera", getenv("HTTP_USER_AGENT"))) $browser = "Opera";
 elseif(ereg("WebTV", getenv("HTTP_USER_AGENT"))) $browser = "WebTV";
 elseif(ereg("Konqueror", getenv("HTTP_USER_AGENT"))) $browser = "Konqueror";
-elseif((eregi("bot", getenv("HTTP_USER_AGENT"))) || (ereg("Google", getenv("HTTP_USER_AGENT"))) || (ereg("Slurp", getenv("HTTP_USER_AGENT"))) || (ereg("Scooter", getenv("HTTP_USER_AGENT"))) || (eregi("Spider", getenv("HTTP_USER_AGENT"))) || (eregi("Infoseek", getenv("HTTP_USER_AGENT")))) $browser = "Bot";
+elseif((ereg("bot", getenv("HTTP_USER_AGENT"))) || (ereg("Google", getenv("HTTP_USER_AGENT"))) || (ereg("Slurp", getenv("HTTP_USER_AGENT"))) || (ereg("Scooter", getenv("HTTP_USER_AGENT"))) || (eregi("Spider", getenv("HTTP_USER_AGENT"))) || (eregi("Infoseek", getenv("HTTP_USER_AGENT")))) $browser = "Bot";
 else $browser = "Other";
 
 /* Get the Operating System data */
@@ -51,7 +47,7 @@ else $os = "Other";
 
 /* Save on the databases the obtained values */
 
-sql_query("update $prefix"._counter." set count=count+1 where (type='total' and var='hits') or (var='$browser' and type='browser') or (var='$os' and type='os')", $dbi);
+mysqli_query($dbi, "update $prefix"."_counter set count=count+1 where (type='total' and var='hits') or (var='$browser' and type='browser') or (var='$os' and type='os')");
 
 /* Start Detailed Statistics */
 
@@ -62,12 +58,12 @@ $nowYear = $now[2];
 $nowMonth = $now[1];
 $nowDate = $now[0];
 
-$resultyear = sql_query("select year from $prefix"."_stats_year where year='$nowYear'",$dbi);
-$jml = sql_num_rows($resultyear,$dbi);
+$resultyear = mysqli_query($dbi, "select year from $prefix"."_stats_year where year='$nowYear'");
+$jml = mysqli_num_rows($resultyear);
 if ($jml <= 0) {
-    sql_query("insert into $prefix"."_stats_year values('$nowYear','0')",$dbi);
+    mysqli_query($dbi, "insert into $prefix"."_stats_year values('$nowYear','0')");
     for ($i=1;$i<=12;$i++) {
-	sql_query("insert into $prefix"."_stats_month values('$nowYear','$i','0')",$dbi);
+	mysqli_query($dbi, "insert into $prefix"."_stats_month values('$nowYear','$i','0')");
 	if ($i == 1) $TotalDay = 31;
 	if ($i == 2) {
 	    if (($nowYear % 4) == 0) {
@@ -87,24 +83,23 @@ if ($jml <= 0) {
 	if ($i == 11) $TotalDay = 30;
 	if ($i == 12) $TotalDay = 31;
 	for ($k=1;$k<=$TotalDay;$k++) {
-	    sql_query("insert into $prefix"."_stats_date values('$nowYear','$i','$k','0')",$dbi);
+	    mysqli_query($dbi, "insert into $prefix"."_stats_date values('$nowYear','$i','$k','0')");
 	}
     }
 }
+$resulthour = mysqli_query($dbi, "select hour from $prefix"."_stats_hour where (year='$nowYear') and (month='$nowMonth') and (date='$nowDate')");
 
-$resulthour = sql_query("select hour from $prefix"."_stats_hour where (year='$nowYear') and (month='$nowMonth') and (date='$nowDate')",$dbi);
-
-if (sql_num_rows($resulthour,$dbi) <= 0) {
+if (mysqli_num_rows($resulthour) <= 0) {
     for ($z = 0;$z<=23;$z++) {
-	sql_query("insert into $prefix"."_stats_hour values('$nowYear','$nowMonth','$nowDate','$z','0')",$dbi);
+	mysqli_query($dbi, "insert into $prefix"."_stats_hour values('$nowYear','$nowMonth','$nowDate','$z','0')");
     }
 }
 
-sql_free_result($resulthour, $dbi);
+mysqli_free_result($resulthour);
 
-sql_query("update $prefix"."_stats_year  set hits=hits+1 where year='$nowYear'",$dbi);
-sql_query("update $prefix"."_stats_month set hits=hits+1 where (year='$nowYear') and (month='$nowMonth')",$dbi);
-sql_query("update $prefix"."_stats_date  set hits=hits+1 where (year='$nowYear') and (month='$nowMonth') and (date='$nowDate')",$dbi);
-sql_query("update $prefix"."_stats_hour  set hits=hits+1 where (year='$nowYear') and (month='$nowMonth') and (date='$nowDate') and (hour='$nowHour')",$dbi);
+mysqli_query($dbi, "update $prefix"."_stats_year  set hits=hits+1 where year='$nowYear'");
+mysqli_query($dbi, "update $prefix"."_stats_month set hits=hits+1 where (year='$nowYear') and (month='$nowMonth')");
+mysqli_query($dbi, "update $prefix"."_stats_date  set hits=hits+1 where (year='$nowYear') and (month='$nowMonth') and (date='$nowDate')");
+mysqli_query($dbi, "update $prefix"."_stats_hour  set hits=hits+1 where (year='$nowYear') and (month='$nowMonth') and (date='$nowDate') and (hour='$nowHour')");
 
 ?>
