@@ -6,8 +6,8 @@ CoLiSciences est l'acronyme de "`Corpus de Littérature Scientique`". C'est un p
 
 Nous avons mis en ligne 2 sites :
 
-* [http://colisciences.in2p3.fr]()
-* [http://claudebernard.in2p3.fr]()
+* [http://colisciences.in2p3.fr](http://colisciences.in2p3.fr)
+* [http://claudebernard.in2p3.fr](http://claudebernard.in2p3.fr)
 
 Le problème de ce premier projet est qu'il est basé sur un CMS aujourd'hui disparu (phpNuke) et qu'il est écrit pour une version de Php largement obsolète.
 
