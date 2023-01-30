@@ -15,13 +15,13 @@
 /*                                                                            */
 /* Copyright (c) 2002 LCP - MEDIATEC                                          */
 /*                                                                            */
-/* This file is part of phpCB (http://colisciences.net/)                      */
+/* This file is part of CoLiSciences (https://github.com/marcyves/colisciences)                      */
 /*                                                                            */
 /******************************************************************************/
 
 	decodeDocument($valeur);
 
-//    affiche("Votre Parcours à travers les ouvrages", $memoire->paragraphe("icone"),"","","","");
+//    affiche("Votre Parcours ï¿½ travers les ouvrages", $memoire->paragraphe("icone"),"","","","");
     affiche("","","","","","");
 //	$memoire->ajoute($valeur);
 

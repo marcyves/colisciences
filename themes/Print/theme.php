@@ -34,15 +34,15 @@ function themeheaderMain() {
     global $slogan, $sitename, $userinfo, $user, $cookie;
 
 echo "\n<body>
-<!-- Début de l'en-tête  -->
+<!-- DÃ©but de l'en-tÃªte  -->
 <table border=\"0\" width=\"100%\">
 <tr>
-    <td valign=\"top\" align=\"center\" colspan=\"3\">Cette page a été imprimée sur CoLiSciences<br>http://www.colisciences.net</td>
+    <td valign=\"top\" align=\"center\" colspan=\"3\">Cette page a Ã©tÃ© imprimÃ©e sur CoLiSciences</td>
 </tr>
 <tr>
     <td width=\"33%\" align=\"center\"><a href=\"http://www.cnrs.fr\" ><img src=\"images/logo-cnrs.gif\" align=\"right\" alt=\"CNRS\"></a></td>
     <td width=\"33%\" align=\"center\"><a href=\"http://www.lcp.cnrs.fr\"><img src=\"images/logo-lettres.gif\" align=\"right\" alt=\"LCP\"></a></td>
-    <td width=\"33%\" align=\"center\"><a href=\"http://www.unice.fr/MediaTec/\"><img src=\"images/logo-mediatec.gif\" align=\"right\" alt=\"MédiaTeC\"></a></td>
+    <td width=\"33%\" align=\"center\"><a href=\"http://www.unice.fr/MediaTec/\"><img src=\"images/logo-mediatec.gif\" align=\"right\" alt=\"Mï¿½diaTeC\"></a></td>
 </tr>
 </table>\n"
 	."<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\" >\n"
@@ -51,7 +51,7 @@ echo "\n<body>
         ."<td align=\"right\" width=\"140\" ><font class=\"content\">\n"
         ."<script type=\"text/javascript\">\n\n"
         ."<!--   // Array ofmonth Names\n"
-        ."var monthNames = new Array( \"Janvier\",\"Février\",\"Mars\",\"Avril\",\"Mai\",\"Juin\",\"Juillet\",\"Août\",\"Septembre\",\"Octobre\",\"Novembre\",\"Décembre\");\n"
+        ."var monthNames = new Array( \"Janvier\",\"Fï¿½vrier\",\"Mars\",\"Avril\",\"Mai\",\"Juin\",\"Juillet\",\"Aoï¿½t\",\"Septembre\",\"Octobre\",\"Novembre\",\"Dï¿½cembre\");\n"
         ."var now = new Date();\n"
         ."thisYear = now.getYear();\n"
         ."if(thisYear < 1900) {thisYear += 1900}; // corrections if Y2K display problem\n"
@@ -75,15 +75,15 @@ function themeheader() {
 
 echo "\n<body>
 
-<!-- Début de l'en-tête  -->
+<!-- Dï¿½but de l'en-tï¿½te  -->
 <table border=\"0\" width=\"100%\">
 <tr>
-    <td valign=\"top\" align=\"center\" colspan=\"3\">Cette page a été imprimée sur CoLiSciences<br>http://www.colisciences.net</td>
+    <td valign=\"top\" align=\"center\" colspan=\"3\">Cette page a Ã©tÃ© imprimÃ©e sur CoLiSciences</td>
 </tr>
 <tr>
     <td width=\"33%\" align=\"center\"><a href=\"http://www.cnrs.fr\" ><img src=\"images/logo-cnrs.gif\" align=\"right\" alt=\"CNRS\"></a></td>
     <td width=\"33%\" align=\"center\"><a href=\"http://www.lcp.cnrs.fr\"><img src=\"images/logo-lettres.gif\" align=\"right\" alt=\"LCP\"></a></td>
-    <td width=\"33%\" align=\"center\"><a href=\"http://www.unice.fr/MediaTec/\"><img src=\"images/logo-mediatec.gif\" align=\"right\" alt=\"MédiaTeC\"></a></td>
+    <td width=\"33%\" align=\"center\"><a href=\"http://www.unice.fr/MediaTec/\"><img src=\"images/logo-mediatec.gif\" align=\"right\" alt=\"Mï¿½diaTeC\"></a></td>
 </tr>
 </table>\n"
 	."<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\" align=\"center\" >\n"
@@ -92,7 +92,7 @@ echo "\n<body>
         ."<td align=\"right\" width=\"140\" ><font class=\"content\">\n"
         ."<script type=\"text/javascript\">\n\n"
         ."<!--   // Array ofmonth Names\n"
-        ."var monthNames = new Array( \"Janvier\",\"Février\",\"Mars\",\"Avril\",\"Mai\",\"Juin\",\"Juillet\",\"Août\",\"Septembre\",\"Octobre\",\"Novembre\",\"Décembre\");\n"
+        ."var monthNames = new Array( \"Janvier\",\"Fï¿½vrier\",\"Mars\",\"Avril\",\"Mai\",\"Juin\",\"Juillet\",\"Aoï¿½t\",\"Septembre\",\"Octobre\",\"Novembre\",\"Dï¿½cembre\");\n"
         ."var now = new Date();\n"
         ."thisYear = now.getYear();\n"
         ."if(thisYear < 1900) {thisYear += 1900}; // corrections if Y2K display problem\n"
@@ -124,7 +124,7 @@ function themefooter() {
 	<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\" align=\"center\" >\n
 	<tr valign=\"middle\" >\n
 	<td height=\"20\"><font class=\"content\" color=\"#363636\">\n
-	&nbsp;Cette page a été modidiée le: " . date("D j F Y g:i a", getlastmod()) . "</td></tr></table>";
+	&nbsp;Cette page a ï¿½tï¿½ modidiï¿½e le: " . date("D j F Y g:i a", getlastmod()) . "</td></tr></table>";
 
 footmsg();
 }

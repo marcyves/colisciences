@@ -14,7 +14,7 @@
 /*                                                                            */
 /* Copyright (c) 2002 LCP - MEDIATEC                                          */
 /*                                                                            */
-/* This file is part of phpCB (http://colisciences.net/)                      */
+/* This file is part of CoLiSciences (https://github.com/marcyves/colisciences)                      */
 /*                                                                            */
 /******************************************************************************/
 
@@ -24,7 +24,7 @@ require("fonctions.php");
 	if ($ouvrage!=""){
 	    $chemintotal = $webroot."vignettes/$ouvrage/";
 		echo $baseDir;
-// ------------------------------- Récupération des fichiers et répertoires dans tableau-- //
+// ------------------------------- Rï¿½cupï¿½ration des fichiers et rï¿½pertoires dans tableau-- //
 
 
 $handle  = @opendir($chemintotal);
@@ -67,7 +67,7 @@ for($i=0;$i<$fileind;$i++)
 
 ?><BR><?
 	}else{
-		echo "<p>Il faut sélectionner un ouvrage";
+		echo "<p>Il faut sï¿½lectionner un ouvrage";
 	}
 
 

@@ -110,7 +110,7 @@ function list_pages() {
          <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
          <p><img src=\"themes/$theme/img/acces_0.gif\" name=\"largeur\" width=\"418\" height=\"8\" id=\"largeur\"></p>
 	<p>&nbsp;</p><p>&nbsp;</p>
-	  <p><a href=\"http://www.colisciences.net/modules.php?name=accueil&pa=showpage&pid=62\"><img src=\"themes/$theme/img/pdfgift.gif\" title=\"Liste des paratextes &agrave; t&eacute;l&eacute;charger en PDF\"></a> <a href=\"http://www.colisciences.net/parcours.php?name=Parcours_Hypertexte&file=moteurCB&ouvrage=18&parcours=signets&valeur=1\"><img src=\"themes/$theme/img/grossegorge.gif\" title=\"Acc&eacute;s &agrave; un choix d'illustrations\"></a></p>
+	  <p><a href=\"/modules.php?name=accueil&pa=showpage&pid=62\"><img src=\"themes/$theme/img/pdfgift.gif\" title=\"Liste des paratextes &agrave; t&eacute;l&eacute;charger en PDF\"></a> <a href=\"/parcours.php?name=Parcours_Hypertexte&file=moteurCB&ouvrage=18&parcours=signets&valeur=1\"><img src=\"themes/$theme/img/grossegorge.gif\" title=\"Acc&eacute;s &agrave; un choix d'illustrations\"></a></p>
 				</td>";
               
         echo "<td><font class=\"content\"><b>$mypage[subtitle]</b><br>";

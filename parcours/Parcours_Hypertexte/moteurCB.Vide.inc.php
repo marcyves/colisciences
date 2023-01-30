@@ -15,9 +15,9 @@
 /*                                                                            */
 /* Copyright (c) 2002 LCP - MEDIATEC                                          */
 /*                                                                            */
-/* This file is part of phpCB (http://colisciences.net/)                      */
+/* This file is part of CoLiSciences (https://github.com/marcyves/colisciences)                      */
 /*                                                                            */
 /******************************************************************************/
 
-	echo "<font class=\"title2\">Cet ouvrage n'est pas encore prêt pour sa publication dans CoLiSciences.</font>";
+	echo "<font class=\"title2\">Cet ouvrage n'est pas encore prï¿½t pour sa publication dans CoLiSciences.</font>";
 ?>

@@ -7,7 +7,7 @@ How to create your XML menu:
 
   <TREE FUNCTION="_root|prova|bonjour">Title</TREE>
 
-  <TREE URL="http://www.colisciences.net|_blank">Title</TREE>
+  <TREE URL="|_blank">Title</TREE>
 
   <TREE FRAME="_root|5">Title</T="url | window";
   

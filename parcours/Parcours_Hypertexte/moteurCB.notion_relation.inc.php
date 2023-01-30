@@ -15,7 +15,7 @@
 /*                                                                            */
 /* Copyright (c) 2002 LCP - MEDIATEC                                          */
 /*                                                                            */
-/* This file is part of phpCB (http://colisciences.net/)                      */
+/* This file is part of CoLiSciences (https://github.com/marcyves/colisciences)                      */
 /*                                                                            */
 /******************************************************************************/
 
@@ -24,7 +24,7 @@ if ($notion == "") {
 	affiche( "Notions et relations de ce paragraphe", $notionsParagraphe->lien($valeur), "Mots et notions", $motclef->liste("motclef"),"Parcours", $memoire->paragraphe("icone"));
 } else {
 	if ($valeur >= $nombre_noeuds) {
-		affiche( "Recherche terminée",  "La fin de l'ouvrage est atteinte.", "", "","msg","");
+		affiche( "Recherche terminï¿½e",  "La fin de l'ouvrage est atteinte.", "", "","msg","");
 		$nextStep = "";
 	} else {
 		$nextStep = "notion_relation";

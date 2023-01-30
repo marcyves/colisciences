@@ -15,7 +15,7 @@
 /*                                                                            */
 /* Copyright (c) 2002 LCP - MEDIATEC                                          */
 /*                                                                            */
-/* This file is part of phpCB (http://colisciences.net/)                      */
+/* This file is part of CoLiSciences (https://github.com/marcyves/colisciences)                      */
 /*                                                                            */
 /******************************************************************************/
 
@@ -50,7 +50,7 @@
 			} while ($valeur < $nombre_noeuds);
 			$sommaireText .= "</table>";
 			if (!fwrite(fopen ($file, "w") , $sommaireText)){
-				echo "Erreur écriture fichier sommaire: ".$file;
+				echo "Erreur ï¿½criture fichier sommaire: ".$file;
 			}
 		}
 		include ($file);
