@@ -19,5 +19,5 @@
 /*                                                                            */
 /******************************************************************************/
 
-	echo "<font class=\"title2\">Cet ouvrage n'est pas encore pr�t pour sa publication dans CoLiSciences.</font>";
+	echo "<font class=\"title2\">Cet ouvrage n'est pas encore prét pour sa publication dans CoLiSciences.</font>";
 ?>

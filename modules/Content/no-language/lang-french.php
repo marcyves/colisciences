@@ -26,12 +26,12 @@ define("_NEXT","Page Suivante");
 define("_PAGE","Page");
 define("_DEACTIVATE","D&eacute;sactiver");
 define("_ACTIVATE","Activer");
-define("_PUBLISHEDON","PubliÃ© le");
+define("_PUBLISHEDON","Publié le");
 define("_PAGESLIST","Informations disponibles");
 define("_LISTOFCONTENT","Liste du contenu accessibles dans");
-define("_YOURADMINLIST","Vous Ã©tes un administrateur: voici la liste des pages inactives:");
-define("_COPYRIGHT","Copyright &copy; par $sitename. Tous droits rÃ©servÃ©s.");
-define("_CONTENTCATEGORIES","Contenu par catÃ©gories");
-define("_NONCLASSCONT","Contenu non triÃ©");
+define("_YOURADMINLIST","Vous êtes un administrateur: voici la liste des pages inactives:");
+define("_COPYRIGHT","Copyright &copy; par $sitename. Tous droits réservés.");
+define("_CONTENTCATEGORIES","Contenu par catégories");
+define("_NONCLASSCONT","Contenu non trié");
 
 ?>

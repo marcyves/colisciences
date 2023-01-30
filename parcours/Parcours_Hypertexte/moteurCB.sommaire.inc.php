@@ -50,7 +50,7 @@
 			} while ($valeur < $nombre_noeuds);
 			$sommaireText .= "</table>";
 			if (!fwrite(fopen ($file, "w") , $sommaireText)){
-				echo "Erreur �criture fichier sommaire: ".$file;
+				echo "Erreur écriture fichier sommaire: ".$file;
 			}
 		}
 		include ($file);

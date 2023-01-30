@@ -21,7 +21,7 @@
 
 	decodeDocument($valeur);
 
-//    affiche("Votre Parcours � travers les ouvrages", $memoire->paragraphe("icone"),"","","","");
+//    affiche("Votre parcours à travers les ouvrages", $memoire->paragraphe("icone"),"","","","");
     affiche("","","","","","");
 //	$memoire->ajoute($valeur);
 

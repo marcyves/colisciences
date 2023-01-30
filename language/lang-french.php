@@ -18,7 +18,7 @@
 /**************************************************************************/
 
 define("_WYSIWYGEDITOR","Editeur de contenu");
-define("_PREVIEW","PrÈvisualisation");
+define("_PREVIEW","Pr√©visualisation");
 define("_OK","Ok !");
 
 define("_PREVIOUS","Page Pr&eacute;c&eacute;dente");
@@ -29,13 +29,13 @@ define("_WAITINGUSER","Utilisateurs en attente");
 define("_PAGE","Page");
 define("_DEACTIVATE","D&eacute;sactiver");
 define("_ACTIVATE","Activer");
-define("_PUBLISHEDON","PubliÈ le");
+define("_PUBLISHEDON","Publi√© le");
 define("_PAGESLIST","Informations disponibles");
 define("_LISTOFCONTENT","Liste du contenu accessibles dans");
-define("_YOURADMINLIST","Vous Ítes un administrateur: voici la liste des pages inactives:");
-define("_COPYRIGHT","Copyright &copy; par $sitename. Tous droits rÈservÈs.");
-define("_CONTENTCATEGORIES","Contenu par catÈgories");
-define("_NONCLASSCONT","Contenu non triÈ");
+define("_YOURADMINLIST","Vous √©tes un administrateur: voici la liste des pages inactives:");
+define("_COPYRIGHT","Copyright &copy; par $sitename. Tous droits r√©serv√©s.");
+define("_CONTENTCATEGORIES","Contenu par cat√©gories");
+define("_NONCLASSCONT","Contenu non tri√©");
 
 
 define("_CHARSET","ISO-8859-1");
@@ -102,15 +102,15 @@ define("_SELECTGUILANG","Selectionnez la langue de l'interface:");
 define("_NONE","Aucun");
 define("_BLOCKPROBLEM","<center>Il y a un probleme avec ce bloc.</center>");
 define("_BLOCKPROBLEM2","<center>Il n'y a rien dans ce block.</center>");
-define("_ALLCATEGORIES","Toutes les catÈgories");
-define("_MODULENOTACTIVE","DÈsolÈ, ce module n'est pas activÈ");
+define("_ALLCATEGORIES","Toutes les cat√©gories");
+define("_MODULENOTACTIVE","D√©sol√©, ce module n'est pas activ√©");
 define("_NOACTIVEMODULES","Modules inactifs");
 define("_FORADMINTESTS","(Pour des tests administratifs)");
 define("_BBFORUMS","Forums");
-define("_ACCESSDENIED","AccËs refusÈ");
-define("_RESTRICTEDAREA","Vous essayez d'accÈder ‡ un espace rÈservÈ.");
-define("_MODULEUSERS","Nous sommes dÈsolÈ mais cette section de notre site est pour les <i>utilisateurs enregistrÈs seulement</i><br><br>Vous pouvez vous enregistrer gratuitement en cliquant <a href=\"user.php?op=new_user\">ici</a>, puis vous pouvez<br>accÈder ‡ cette section sans rÈstriction. Merci.<br><br>");
-define("_MODULESADMINS","Nous sommes dÈsolÈ mais cette section de notre site est rÈservÈe aux <i>administrateurs seulement</i><br><br>");
+define("_ACCESSDENIED","Acc√©s refus√©");
+define("_RESTRICTEDAREA","Vous essayez d'acc√©der √© un espace r√©serv√©.");
+define("_MODULEUSERS","Nous sommes d√©sol√© mais cette section de notre site est pour les <i>utilisateurs enregistr√©s seulement</i><br><br>Vous pouvez vous enregistrer gratuitement en cliquant <a href=\"user.php?op=new_user\">ici</a>, puis vous pouvez<br>acc√©der √© cette section sans r√©striction. Merci.<br><br>");
+define("_MODULESADMINS","Nous sommes d√©sol√© mais cette section de notre site est r√©serv√©e aux <i>administrateurs seulement</i><br><br>");
 define("_HOME","Accueil");
 define("_HOMEPROBLEM","There is a big problem here: we have not a Homepage!!!");
 define("_ADDAHOME","Add a Module in your Home");
@@ -118,6 +118,24 @@ define("_HOMEPROBLEMUSER","There is a problem right now on the Homepage. Please 
 define("_MORENEWS","More in News Section");
 define("_DATESTRING","%d %B %Y &agrave; %H:%M:%S %Z ");
 define("_DATESTRING2","%A, %d %B");
+
+
+define("_SEARCHRESULTS","R&eacute;sultats de la recherche");
+define("_RETURNTO","Retour &agrave;");
+define("_ENCYCLOPEDIA","Encyclop√©die");
+define("_NOCONTENTFORLETTER","D√©sol√©, il n'y a aucun contenu pour cette lettre");
+define("_ENCYSELECTLETTER","Merci de choisir un lettre dans la liste suivante pour consulter son contenu:");
+define("_YOURADMINENCY","Vous √©tes un administrateur, cette encyclop√©die n'est pas active!");
+define("_ENCYNOTACTIVE","D√©sol√©, cette encyclop√©die n'est pour le moment pas activ√©e.");
+define("_AVAILABLEENCYLIST","Liste des encyclop√©dies accessible dans");
+define("_YOURADMININACTIVELIST","Vous √©tes un administrateur: regardez la liste des encyclop√©dies inactives:");
+define("_NORESULTSTEXT","Aucun r√©sultats dans le texte du terme...");
+define("_NORESULTSTITLE","Aucun r√©sultats dans le titre du terme...");
+define("_SEARCHRESULTSFOR","R√©sultats de la recherche pour:");
+define("_SEARCHNOTCOMPLETE","Les options de la recherche sont incompl√©tes. Merci de recommencer.");
+define("_RESULTSINTERMTITLE","R√©sultats dans le titre du terme:");
+define("_RESULTSINTERMTEXT","R√©sultats dans le texte du terme:");
+
 
 
 /*****************************************************/

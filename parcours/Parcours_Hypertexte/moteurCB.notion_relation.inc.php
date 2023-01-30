@@ -24,7 +24,7 @@ if ($notion == "") {
 	affiche( "Notions et relations de ce paragraphe", $notionsParagraphe->lien($valeur), "Mots et notions", $motclef->liste("motclef"),"Parcours", $memoire->paragraphe("icone"));
 } else {
 	if ($valeur >= $nombre_noeuds) {
-		affiche( "Recherche termin�e",  "La fin de l'ouvrage est atteinte.", "", "","msg","");
+		affiche( "Recherche terminée",  "La fin de l'ouvrage est atteinte.", "", "","msg","");
 		$nextStep = "";
 	} else {
 		$nextStep = "notion_relation";

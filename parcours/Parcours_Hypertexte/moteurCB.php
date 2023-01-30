@@ -207,6 +207,7 @@ $notion0 = $notion;
 
 do {
 //debug	 
+/* 
 echo "<p>parcours = $parcours<br>
 notion = $notion<br>
 type = $type<br>
@@ -214,11 +215,12 @@ type2 = $type2<br>
 valeur = $valeur<br>
 module = $nextStep<br>
 nombre noeuds = $nombre_noeuds<br>";
+ */
 	$module = "moteurCB.".$nextStep.".inc.php";
 	$nextStep = "";
 	include($module);
 //debug	
-echo "<p>retour du module $module<br>valeur : $valeur<br>nextStep : $nextStep";
+//echo "<p>retour du module $module<br>valeur : $valeur<br>nextStep : $nextStep";
 	if ($flagParcours) {
 		// Enregistrement de cette étape du parcours
 		$etape = $memoire->nombre();

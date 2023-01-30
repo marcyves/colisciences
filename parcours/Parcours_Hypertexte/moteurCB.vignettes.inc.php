@@ -24,7 +24,7 @@ require("fonctions.php");
 	if ($ouvrage!=""){
 	    $chemintotal = $webroot."vignettes/$ouvrage/";
 		echo $baseDir;
-// ------------------------------- R�cup�ration des fichiers et r�pertoires dans tableau-- //
+// ------------------------------- Récupération des fichiers et répertoires dans tableau-- //
 
 
 $handle  = @opendir($chemintotal);
@@ -67,7 +67,7 @@ for($i=0;$i<$fileind;$i++)
 
 ?><BR><?
 	}else{
-		echo "<p>Il faut s�lectionner un ouvrage";
+		echo "<p>Il faut sélectionner un ouvrage";
 	}
 
 
