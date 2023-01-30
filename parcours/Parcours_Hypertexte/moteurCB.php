@@ -19,7 +19,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-require_once "class.inc";
+require_once "class.inc.php";
 require_once "fonctions.xml.inc.php";
 require_once "fonctions.affichage.inc.php";
 ob_start();
