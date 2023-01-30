@@ -150,7 +150,7 @@ echo "$barcolor=\"boxcontent\" ";
 else { 
 echo "$barcolor=\"boxcontent2\" ";
  }*/
-	if (is_admin($admin)) {
+	if (isset($admin) && is_admin($admin)) {
 		/*echo "</tr></table></td></tr></table>";*/ /*xc3 genere du code sup*/
 		echo "<!-- Footer -->
  <table width=\"100%\" height=\"20\" border=0 cellPadding=0 cellSpacing=0 class=\"boxcontent\">

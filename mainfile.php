@@ -266,12 +266,12 @@ function doTag($tag, &$texte){
 		$pos = strpos(strtolower($texte),"<$tag", $debut);
 		$debut = $pos + 1;
 		if ($pos){
-			if($texte{$pos+strlen($tag)+1}!=">"){
+			if($texte[$pos+strlen($tag)+1]!=">"){
 				$pos1 = strpos(strtolower($texte),"=", $pos);
 				$pos9 = strpos(strtolower($texte),">", $pos);
 				if ($pos9>$pos1){
 					echo "<p>Il y a un attribut <$pos1> <$pos9>";
-					if($texte{$pos1+1}!='"'){
+					if($texte[$pos1+1]!='"'){
 						$tmp1 = substr($texte, 0,$pos1+1);
 						$tmp2 = substr($texte, $pos1+1, $pos9-$pos1-1);
 						$tmp3 = substr($texte, $pos9);
@@ -360,8 +360,11 @@ function NavigationMenu($active,$flag1,$flag2,$flag3, $menu=0) {
 	break;
 	}
 
-	cookiedecode($user);
-	$username =$cookie[1];
+	if (cookiedecode($user)){
+        $username =$cookie[1];
+    }else{
+        $username = "";
+    }
 	if ($username != ""&&$username!="Anonymous") {
 //Si l'utilisateur est enregistré, le menu "texte complet" apparait dans ses onnglets
 		if ($flag1=="1") NavigationLien("complet","admin","Texte Complet");
@@ -532,11 +535,19 @@ function is_admin($admin) {
     if(!is_array($admin)) {
         $admin = base64_decode($admin);
         $admin = explode(":", $admin);
-        $aid = "$admin[0]";
-        $pwd = "$admin[1]";
+        $aid = $admin[0];
+        if(isset($admin[1])){
+            $pwd = $admin[1];
+        }else{
+            $pwd = "";
+        }
     } else {
-        $aid = "$admin[0]";
-        $pwd = "$admin[1]";
+        $aid = $admin[0];
+        if(isset($admin[1])){
+            $pwd = $admin[1];
+        }else{
+            $pwd = "";
+        }
     }
     $result = mysqli_query($dbi, "select pwd from ".$prefix."_authors where aid='$aid'");
     list($pass) = mysqli_fetch_row($result);
@@ -744,13 +755,15 @@ function message_box() {
 
 function online() {
     global $user, $cookie, $prefix, $dbi;
-    cookiedecode($user);
+
     $ip = getenv("REMOTE_ADDR");
-    $username = $cookie[1];
-    if (!isset($username)) {
-        $username = "$ip";
-        $guest = 1;
+    if (cookiedecode($user)){
+        $username = $cookie[1];
+    } else {
+        $username = $ip;
     }
+    $guest = 1;
+
     $past = time()-1800;
     mysqli_query($dbi, "DELETE FROM ".$prefix."_session WHERE time < $past");
     $result = mysqli_query($dbi, "SELECT time FROM ".$prefix."_session WHERE uname='$username'");
@@ -852,14 +865,22 @@ function cookiedecode($user) {
     global $cookie, $prefix, $dbi, $user_prefix;
     $user = base64_decode($user);
     $cookie = explode(":", $user);
-    $result = mysqli_query($dbi, "select user_password  from ".$user_prefix."_users where username='$cookie[1]'");
-    list($pass) = mysqli_fetch_row($result);
-    if ($cookie[2] == $pass && $pass != "") {
-        return $cookie;
-    } else {
+    if(isset($cookie[1])){
+        $result = mysqli_query($dbi, "select user_password  from ".$user_prefix."_users where username='".$cookie[1]."'");
+        list($pass) = mysqli_fetch_row($result);
+        if ($cookie[2] == $pass && $pass != "") {
+            return true;
+        } else {
+            unset($user);
+            unset($cookie);
+            return false;
+        }
+    }else {
         unset($user);
         unset($cookie);
+        return false;
     }
+
 }
 
 function getusrinfo($user) {

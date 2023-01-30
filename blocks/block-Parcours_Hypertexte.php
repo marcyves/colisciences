@@ -35,7 +35,7 @@ global $prefix, $dbi, $admin;
 
 	/* Now we make the Modules block with the correspondent links */
 
-	$content .= themeMenuOpen().themeMenuLien("<a href=\"index.php\">Accueil</a>");
+	$content = themeMenuOpen().themeMenuLien("<a href=\"index.php\">Accueil</a>");
 	$result = mysqli_query($dbi, "select title, custom_title from ".$prefix."_modules_parcours where active='1' ORDER BY mid ASC");
 	while(list($m_title, $custom_title) = mysqli_fetch_row($result)) {
 	    $m_title2 = str_replace("_", " ", $m_title);

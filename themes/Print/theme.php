@@ -42,7 +42,7 @@ echo "\n<body>
 <tr>
     <td width=\"33%\" align=\"center\"><a href=\"http://www.cnrs.fr\" ><img src=\"images/logo-cnrs.gif\" align=\"right\" alt=\"CNRS\"></a></td>
     <td width=\"33%\" align=\"center\"><a href=\"http://www.lcp.cnrs.fr\"><img src=\"images/logo-lettres.gif\" align=\"right\" alt=\"LCP\"></a></td>
-    <td width=\"33%\" align=\"center\"><a href=\"http://www.unice.fr/MediaTec/\"><img src=\"images/logo-mediatec.gif\" align=\"right\" alt=\"M�diaTeC\"></a></td>
+    <td width=\"33%\" align=\"center\"><a href=\"http://www.unice.fr/MediaTec/\"><img src=\"images/logo-mediatec.gif\" align=\"right\" alt=\"MédiaTeC\"></a></td>
 </tr>
 </table>\n"
 	."<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\" >\n"
@@ -51,7 +51,7 @@ echo "\n<body>
         ."<td align=\"right\" width=\"140\" ><font class=\"content\">\n"
         ."<script type=\"text/javascript\">\n\n"
         ."<!--   // Array ofmonth Names\n"
-        ."var monthNames = new Array( \"Janvier\",\"F�vrier\",\"Mars\",\"Avril\",\"Mai\",\"Juin\",\"Juillet\",\"Ao�t\",\"Septembre\",\"Octobre\",\"Novembre\",\"D�cembre\");\n"
+        ."var monthNames = new Array( \"Janvier\",\"Février\",\"Mars\",\"Avril\",\"Mai\",\"Juin\",\"Juillet\",\"Aoét\",\"Septembre\",\"Octobre\",\"Novembre\",\"Décembre\");\n"
         ."var now = new Date();\n"
         ."thisYear = now.getYear();\n"
         ."if(thisYear < 1900) {thisYear += 1900}; // corrections if Y2K display problem\n"
@@ -75,7 +75,7 @@ function themeheader() {
 
 echo "\n<body>
 
-<!-- D�but de l'en-t�te  -->
+<!-- Début de l'en-téte  -->
 <table border=\"0\" width=\"100%\">
 <tr>
     <td valign=\"top\" align=\"center\" colspan=\"3\">Cette page a été imprimée sur CoLiSciences</td>
@@ -83,7 +83,7 @@ echo "\n<body>
 <tr>
     <td width=\"33%\" align=\"center\"><a href=\"http://www.cnrs.fr\" ><img src=\"images/logo-cnrs.gif\" align=\"right\" alt=\"CNRS\"></a></td>
     <td width=\"33%\" align=\"center\"><a href=\"http://www.lcp.cnrs.fr\"><img src=\"images/logo-lettres.gif\" align=\"right\" alt=\"LCP\"></a></td>
-    <td width=\"33%\" align=\"center\"><a href=\"http://www.unice.fr/MediaTec/\"><img src=\"images/logo-mediatec.gif\" align=\"right\" alt=\"M�diaTeC\"></a></td>
+    <td width=\"33%\" align=\"center\"><a href=\"http://www.unice.fr/MediaTec/\"><img src=\"images/logo-mediatec.gif\" align=\"right\" alt=\"MédiaTeC\"></a></td>
 </tr>
 </table>\n"
 	."<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\" align=\"center\" >\n"
@@ -92,7 +92,7 @@ echo "\n<body>
         ."<td align=\"right\" width=\"140\" ><font class=\"content\">\n"
         ."<script type=\"text/javascript\">\n\n"
         ."<!--   // Array ofmonth Names\n"
-        ."var monthNames = new Array( \"Janvier\",\"F�vrier\",\"Mars\",\"Avril\",\"Mai\",\"Juin\",\"Juillet\",\"Ao�t\",\"Septembre\",\"Octobre\",\"Novembre\",\"D�cembre\");\n"
+        ."var monthNames = new Array( \"Janvier\",\"Février\",\"Mars\",\"Avril\",\"Mai\",\"Juin\",\"Juillet\",\"Aoét\",\"Septembre\",\"Octobre\",\"Novembre\",\"Décembre\");\n"
         ."var now = new Date();\n"
         ."thisYear = now.getYear();\n"
         ."if(thisYear < 1900) {thisYear += 1900}; // corrections if Y2K display problem\n"
@@ -124,7 +124,7 @@ function themefooter() {
 	<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\" align=\"center\" >\n
 	<tr valign=\"middle\" >\n
 	<td height=\"20\"><font class=\"content\" color=\"#363636\">\n
-	&nbsp;Cette page a �t� modidi�e le: " . date("D j F Y g:i a", getlastmod()) . "</td></tr></table>";
+	&nbsp;Cette page a été modidiée le: " . date("D j F Y g:i a", getlastmod()) . "</td></tr></table>";
 
 footmsg();
 }
